@@ -877,13 +877,16 @@ CHEWING_API int chewing_handle_Enter(ChewingContext *ctx)
     nCommitStr = pgdata->chiSymbolBufLen;
 
     if (!ChewingIsEntering(pgdata)) {
+	LOG_API("");
         keystrokeRtn = KEYSTROKE_IGNORE;
     } else if (pgdata->bSelect) {
+	LOG_API("");
         keystrokeRtn = KEYSTROKE_ABSORB | KEYSTROKE_BELL;
     } else if (pgdata->PointStart > -1) {
         int buf = pgdata->chiSymbolCursor;
         int key;
 
+	LOG_API("");
         if (pgdata->PointEnd > 1) {
             if (!pgdata->config.bAddPhraseForward) {
                 pgdata->chiSymbolCursor = pgdata->PointStart;
@@ -905,10 +908,14 @@ CHEWING_API int chewing_handle_Enter(ChewingContext *ctx)
         pgdata->PointStart = -1;
         pgdata->PointEnd = 0;
     } else {
+	LOG_API("");
         keystrokeRtn = KEYSTROKE_COMMIT;
         WriteChiSymbolToCommitBuf(pgdata, pgo, nCommitStr);
+	LOG_API("");
         AutoLearnPhrase(pgdata);
+	LOG_API("");
         CleanAllBuf(pgdata);
+	LOG_API("");
         pgo->commitBufLen = nCommitStr;
     }
 
@@ -1527,18 +1534,21 @@ CHEWING_API int chewing_handle_Default(ChewingContext *ctx, int key)
             }
 
             rtn = BopomofoPhoInput(pgdata, key);
-            DEBUG_OUT("\t\tChinese mode key, " "BopomofoPhoInput return value = %d\n", rtn);
+            DEBUG_OUT("\n\t\tChinese mode key, " "BopomofoPhoInput return value = %d\n", rtn);
 
             if (rtn == BOPOMOFO_KEY_ERROR)
                 rtn = SpecialSymbolInput(key, pgdata);
             switch (rtn) {
             case BOPOMOFO_ABSORB:
+                DEBUG_OUT("\t\tBOPOMOFO_ABSORB=%d\n", key);
                 keystrokeRtn = KEYSTROKE_ABSORB;
                 break;
             case BOPOMOFO_COMMIT:
                 AddChi(pgdata->bopomofoData.phone, pgdata->bopomofoData.phoneAlt, pgdata);
+                DEBUG_OUT("\t\tBOPOMOFO_COMMIT=%d\n", key);
                 break;
             case BOPOMOFO_NO_WORD:
+                DEBUG_OUT("\t\tBOPOMOFO_NO_WORD=%d\n", key);
                 keystrokeRtn = KEYSTROKE_BELL | KEYSTROKE_ABSORB;
                 break;
             case BOPOMOFO_KEY_ERROR:

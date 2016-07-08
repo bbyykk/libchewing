@@ -119,6 +119,7 @@ uint16_t UintFromPhone(const char *zhuin)
         ++zhuin_index;
         iter += len;
     }
+    printf("%d\t%s\n", result, zhuin);
     return result;
 }
 
@@ -129,6 +130,7 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     int s;
     const char *pTarget;
 
+    printf("%s, inputkey=%s\n", __func__, inputkey);
     len = strlen(inputkey);
 
     pho[0] = '\0';
@@ -149,6 +151,7 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     }
     pho = ueStrSeek(pho, len);
     pho[0] = '\0';
+    printf("%s, get pho=%s\n", __func__, pho);
     return 1;
 }
 
@@ -183,7 +186,7 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
 
     keyStr[0] = key;
     keyStr[1] = '\0';
-
+    printf("%s, key=%d, type=%d\n", __func__, key, type);
     if (!PhoneFromKey(rtStr, keyStr, kbtype, searchTimes))
         return 0;
 

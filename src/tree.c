@@ -542,6 +542,7 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to)
 
     for (i = start; i < start - from + to; ++i) {
         ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
+	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s", i, pgdata->preeditBuf[i].char_);
     }
 }
 

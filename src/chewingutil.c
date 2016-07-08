@@ -443,6 +443,7 @@ void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
     for (i = 0; i < pgo->commitBufLen; ++i) {
         assert(pos + MAX_UTF8_SIZE + 1 < pgo->commitBuf + sizeof(pgo->commitBuf));
         strcpy(pos, pgdata->preeditBuf[i].char_);
+	printf("%s, copying %s\n", __func__, pgdata->preeditBuf[i].char_);
         pos += strlen(pgdata->preeditBuf[i].char_);
     }
     *pos = 0;
@@ -721,6 +722,7 @@ int CallPhrasing(ChewingData *pgdata, int all_phrasing)
     /* set "bSymbolArrBrkpt" && "bArrBrkpt" */
     int i, ch_count = 0;
 
+    DEBUG_OUT("all_phrasing: %d\n", all_phrasing);
     memcpy(pgdata->bArrBrkpt, pgdata->bUserArrBrkpt, (MAX_PHONE_SEQ_LEN + 1) * sizeof(int));
     memset(pgdata->bSymbolArrBrkpt, 0, (MAX_PHONE_SEQ_LEN + 1) * sizeof(int));
 
@@ -839,6 +841,7 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
     int inx;
     char *pos;
 
+    DEBUG_OUT("\n");
     /* fill zero to chiSymbolBuf first */
     pgo->preeditBuf[0] = 0;
     pgo->bopomofoBuf[0] = 0;
@@ -881,7 +884,8 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
 }
 
 int MakeOutputWithRtn(ChewingOutput *pgo, ChewingData *pgdata, int keystrokeRtn)
-{
+{  
+    DEBUG_OUT("keystrokeRtn=%d\n", keystrokeRtn);
     pgo->keystrokeRtn = keystrokeRtn;
     return MakeOutput(pgo, pgdata);
 }
@@ -896,6 +900,7 @@ int AddSelect(ChewingData *pgdata, int sel_i)
 {
     int length, nSelect, cursor;
 
+    DEBUG_OUT("sel_i=%d\n", sel_i);
     /* save the typing time */
     length = pgdata->availInfo.avail[pgdata->availInfo.currentAvail].len;
     nSelect = pgdata->nSelect;
@@ -914,6 +919,7 @@ int CountSelKeyNum(int key, const ChewingData *pgdata)
 {
     int i;
 
+    DEBUG_OUT("key=%d\n", key);
     for (i = 0; i < MAX_SELKEY; i++)
         if (pgdata->config.selKey[i] == key)
             return i;
@@ -925,6 +931,7 @@ int CountSymbols(ChewingData *pgdata, int to)
     int chi;
     int i;
 
+    DEBUG_OUT("to=%d\n", to);
     for (chi = i = 0; i < to; i++) {
         if (ChewingIsChiAt(i, pgdata))
             chi++;
@@ -936,6 +943,7 @@ int PhoneSeqCursor(ChewingData *pgdata)
 {
     int cursor = pgdata->chiSymbolCursor - CountSymbols(pgdata, pgdata->chiSymbolCursor);
 
+    DEBUG_OUT("\n");
     return cursor > 0 ? cursor : 0;
 }
 
