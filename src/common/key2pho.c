@@ -130,7 +130,7 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     int s;
     const char *pTarget;
 
-    printf("%s, inputkey=%s\n", __func__, inputkey);
+    printf("\t\t\t\t%s, inputkey=%s\n", __func__, inputkey);
     len = strlen(inputkey);
 
     pho[0] = '\0';
@@ -142,8 +142,10 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
         for (s = 0; s < searchTimes; s++) {
             findptr = strchr(pTarget, inputkey[i]);
             if (!findptr) {
+		printf("\t\t\t\tfindptr is NULL\n");
                 return 0;
             }
+	    printf("%c ", pTarget);
             pTarget = findptr + 1;
         }
         _index = findptr - key_str[kbtype];
@@ -151,7 +153,7 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     }
     pho = ueStrSeek(pho, len);
     pho[0] = '\0';
-    printf("%s, get pho=%s\n", __func__, pho);
+    printf("\t\t\t\t%s, get pho=%s\n", __func__, pho);
     return 1;
 }
 
@@ -186,14 +188,26 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
 
     keyStr[0] = key;
     keyStr[1] = '\0';
-    printf("%s, key=%d, type=%d\n", __func__, key, type);
+    printf("\t\t\t%s, key=%d, type=%d\n", __func__, key, type);
     if (!PhoneFromKey(rtStr, keyStr, kbtype, searchTimes))
         return 0;
 
     p = strstr(zhuin_tab[type], rtStr);
     if (!p)
         return 0;
+    {
+	    int i;
 
+	    printf("rtStr:\n");
+	    for (i=0; i<10;++i) {
+		    printf("%x ", (unsigned char) rtStr[i]);
+	    }
+	    printf("\n");
+	    for (i=0; i<10;++i) {
+		    printf("%c ", (unsigned char) rtStr[i]);
+	    }
+	    printf("\n");
+    }
     return zhuin_tab_num[type] - ueStrLen(p);
 }
 

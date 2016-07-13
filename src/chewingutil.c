@@ -649,6 +649,7 @@ int AddChi(uint16_t phone, uint16_t phoneAlt, ChewingData *pgdata)
     int i;
     int cursor = PhoneSeqCursor(pgdata);
 
+    LOG_VERBOSE("\t\t%s, phone=%d, phoneAlt=%d, cursor=%d\n", __func__, phone, phoneAlt, cursor);
     /* shift the selectInterval */
     for (i = 0; i < pgdata->nSelect; i++) {
         if (pgdata->selectInterval[i].from >= cursor) {
@@ -690,31 +691,32 @@ static void ShowChewingData(ChewingData *pgdata)
 {
     int i;
 
-    DEBUG_OUT("nPhoneSeq : %d\n" "phoneSeq  : ", pgdata->nPhoneSeq);
+    DEBUG_OUT("\n------ %s -----\n", __func__);
+    DEBUG_OUT("\tnPhoneSeq : %d\n" "phoneSeq  : ", pgdata->nPhoneSeq);
     for (i = 0; i < pgdata->nPhoneSeq; i++)
         DEBUG_OUT("%hu ", pgdata->phoneSeq[i]);
-    DEBUG_OUT("[cursor : %d]\n"
-              "nSelect : %d\n" "selectStr       selectInterval\n", PhoneSeqCursor(pgdata), pgdata->nSelect);
+    DEBUG_OUT("\t[cursor : %d]\n"
+              "\tnSelect : %d\n" "\tselectStr       selectInterval\n", PhoneSeqCursor(pgdata), pgdata->nSelect);
     for (i = 0; i < pgdata->nSelect; i++) {
         DEBUG_OUT("  %14s%4d%4d\n", pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to);
     }
 
-    DEBUG_OUT("bUserArrCnnct : ");
+    DEBUG_OUT("\tbUserArrCnnct : ");
     for (i = 0; i <= pgdata->nPhoneSeq; i++)
         DEBUG_OUT("%d ", pgdata->bUserArrCnnct[i]);
     DEBUG_OUT("\n");
 
-    DEBUG_OUT("bUserArrBrkpt : ");
+    DEBUG_OUT("\tbUserArrBrkpt : ");
     for (i = 0; i <= pgdata->nPhoneSeq; i++)
         DEBUG_OUT("%d ", pgdata->bUserArrBrkpt[i]);
     DEBUG_OUT("\n");
 
-    DEBUG_OUT("bArrBrkpt     : ");
+    DEBUG_OUT("\tbArrBrkpt     : ");
     for (i = 0; i <= pgdata->nPhoneSeq; i++)
         DEBUG_OUT("%d ", pgdata->bArrBrkpt[i]);
     DEBUG_OUT("\n");
 
-    DEBUG_OUT("bChiSym : %d , bSelect : %d\n", pgdata->bChiSym, pgdata->bSelect);
+    DEBUG_OUT("\tbChiSym : %d , bSelect : %d\n", pgdata->bChiSym, pgdata->bSelect);
 }
 
 int CallPhrasing(ChewingData *pgdata, int all_phrasing)
@@ -722,7 +724,8 @@ int CallPhrasing(ChewingData *pgdata, int all_phrasing)
     /* set "bSymbolArrBrkpt" && "bArrBrkpt" */
     int i, ch_count = 0;
 
-    DEBUG_OUT("all_phrasing: %d\n", all_phrasing);
+    DEBUG_OUT("------ %s -----\n", __func__);
+    DEBUG_OUT("\tall_phrasing: %d\n", all_phrasing);
     memcpy(pgdata->bArrBrkpt, pgdata->bUserArrBrkpt, (MAX_PHONE_SEQ_LEN + 1) * sizeof(int));
     memset(pgdata->bSymbolArrBrkpt, 0, (MAX_PHONE_SEQ_LEN + 1) * sizeof(int));
 
@@ -778,6 +781,7 @@ static void MakePreferInterval(ChewingData *pgdata)
     int belong_set[MAX_PHONE_SEQ_LEN + 1];
     int parent[MAX_PHONE_SEQ_LEN + 1];
 
+    DEBUG_OUT("\n");
     memset(belong_set, 0, sizeof(int) * (MAX_PHONE_SEQ_LEN + 1));
     memset(parent, 0, sizeof(int) * (MAX_PHONE_SEQ_LEN + 1));
 
@@ -931,7 +935,7 @@ int CountSymbols(ChewingData *pgdata, int to)
     int chi;
     int i;
 
-    DEBUG_OUT("to=%d\n", to);
+    DEBUG_OUT("--%s: to=%d\n", __func__, to);
     for (chi = i = 0; i < to; i++) {
         if (ChewingIsChiAt(i, pgdata))
             chi++;
@@ -949,11 +953,13 @@ int PhoneSeqCursor(ChewingData *pgdata)
 
 int ChewingIsChiAt(int chiSymbolCursor, ChewingData *pgdata)
 {
+    DEBUG_OUT("\n");
     return pgdata->preeditBuf[chiSymbolCursor].category == CHEWING_CHINESE;
 }
 
 void RemoveSelectElement(int i, ChewingData *pgdata)
 {
+    DEBUG_OUT("\n");
     if (--pgdata->nSelect == i)
         return;
     pgdata->selectInterval[i] = pgdata->selectInterval[pgdata->nSelect];
@@ -964,6 +970,7 @@ static int ChewingKillSelectIntervalAcross(int cursor, ChewingData *pgdata)
 {
     int i;
 
+    DEBUG_OUT("\n");
     for (i = 0; i < pgdata->nSelect; i++) {
         if (pgdata->selectInterval[i].from < cursor && pgdata->selectInterval[i].to > cursor) {
             RemoveSelectElement(i, pgdata);

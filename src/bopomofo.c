@@ -145,7 +145,7 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     int type = 0, inx = 0;
     int i;
 
-    printf("%s, key=%d\n", __func__, key);
+    printf("\t\t%s, key=%d\n", __func__, key);
     if (IsDefPhoEndKey(key, pBopomofo->kbtype)) {
         for (i = 0; i < BOPOMOFO_SIZE; ++i)
             if (pBopomofo->pho_inx[i] != 0)
@@ -619,7 +619,7 @@ int BopomofoPhoInput(ChewingData *pgdata, int key)
 {
     BopomofoData *pBopomofo = &(pgdata->bopomofoData);
 
-    DEBUG_OUT("\n%s, key=%d\n", __func__, key);
+    DEBUG_OUT("\n\t%s, key=%d\n", __func__, key);
     /* open symbol table */
     if (key == '`') {
         pgdata->bSelect = 1;

@@ -1005,6 +1005,7 @@ int Phrasing(ChewingData *pgdata, int all_phrasing)
 {
     TreeDataType treeData;
 
+    DEBUG_OUT("\n");
     InitPhrasing(&treeData);
 
     FindInterval(pgdata, &treeData);
