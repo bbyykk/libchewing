@@ -178,6 +178,7 @@ int compare_word_no_duplicated(const void *x, const void *y)
 {
     int ret = compare_word_by_text(x, y);
 
+//    printf("a=%s, b=%s\n", ((const WordData*)x)->text->phrase, ((const WordData*)y)->text->phrase);
     if (!ret) {
         const WordData *a = (const WordData *) x;
 
@@ -385,8 +386,8 @@ void read_tsi_src(const char *filename)
 
 void store_word(const char *line, const int line_num)
 {
-    char phone_buf[MAX_UTF8_SIZE * BOPOMOFO_SIZE + 1];
-    char key_buf[BOPOMOFO_SIZE + 1];
+    char phone_buf[32];
+    char key_buf[16];
     char buf[MAX_LINE_LEN + 1] = {0};
 
     strncpy(buf, line, sizeof(buf) - 1);
@@ -408,13 +409,14 @@ void store_word(const char *line, const int line_num)
 #define UTF8_FORMAT_STRING(len1, len2) \
     "%" __stringify(len1) "[^ ]" " " \
     "%" __stringify(len2) "[^ ]"
-    sscanf(buf, UTF8_FORMAT_STRING(BOPOMOFO_SIZE, MAX_UTF8_SIZE), key_buf, word_data[num_word_data].text->phrase);
+    sscanf(buf, UTF8_FORMAT_STRING(16, 16), key_buf, word_data[num_word_data].text->phrase);
 
-    if (strlen(key_buf) > BOPOMOFO_SIZE) {
+    if (strlen(key_buf) > 16) {
         fprintf(stderr, "Error reading line %d, `%s'\n", line_num, line);
         exit(-1);
     }
     PhoneFromKey(phone_buf, key_buf, KB_DEFAULT, 1);
+    printf("phone_buf=%s, key_buf=%s\n", phone_buf, key_buf);
     word_data[num_word_data].text->phone[0] = UintFromPhone(phone_buf);
 
     word_data[num_word_data].index = num_word_data;
@@ -479,6 +481,13 @@ void read_phone_cin(const char *filename)
     }
 
     fclose(phone_cin);
+    printf("XXXXX\n");
+    {
+	    int i;
+	    for(i=0; i< num_word_data;i++) {
+		    printf("%s\n", word_data[i].text->phrase);
+	    }
+    }
 
     qsort(word_data, num_word_data, sizeof(word_data[0]), compare_word_no_duplicated);
 }
@@ -696,9 +705,12 @@ int main(int argc, char *argv[])
     }
 
     read_phone_cin(argv[1]);
-    read_tsi_src(argv[2]);
+//    read_tsi_src(argv[2]);
+    printf("------- %s, %d --------\n", __func__, __LINE__);
     write_phrase_data();
+    printf("------- %s, %d --------\n", __func__, __LINE__);
     construct_phrase_tree();
+    printf("------- %s, %d --------\n", __func__, __LINE__);
     write_index_tree();
     return 0;
 }
