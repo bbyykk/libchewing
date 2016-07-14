@@ -26,6 +26,7 @@
  * sake of portability, that avoid some buggy or faulty environment like
  * Microsoft VC9 to misinterpret the string.
  */
+#if 0
 const char *const zhuin_tab[] = {               /* number of bits */
     "\xE3\x84\x85\xE3\x84\x86\xE3\x84\x87\xE3\x84\x88\xE3\x84\x89"
     "\xE3\x84\x8A\xE3\x84\x8B\xE3\x84\x8C\xE3\x84\x8D\xE3\x84\x8E"
@@ -42,6 +43,13 @@ const char *const zhuin_tab[] = {               /* number of bits */
     "\xCB\x99\xCB\x8A\xCB\x87\xCB\x8B"        /* 3 */
     /* ˙ˊˇˋ */
 };
+#endif
+const char *const zhuin_tab[] = {               /* number of bits */
+    "abeghijklmnopstuc",
+    "123456789"
+};
+static const phone_num = 17;
+static const tone_num = 9;
 
 static const int zhuin_tab_num[] = { 22, 4, 14, 5 };
 static const int shift[] = { 9, 7, 3, 0 };
@@ -99,25 +107,40 @@ uint16_t UintFromPhone(const char *zhuin)
     int zhuin_index = 0;
 
     iter = zhuin;
+    memset(buf, 0x0, MAX_UTF8_SIZE);
 
     /* 0x20: space character */
     while (*iter && *iter != 0x20) {
-        len = ueStrNCpy(buf, iter, 1, STRNCPY_CLOSE);
+        buf[0] = iter[0];
 
-        for (; zhuin_index < BOPOMOFO_SIZE; ++zhuin_index) {
-            pos = strstr(zhuin_tab[zhuin_index], buf);
-            if (pos) {
-                break;
-            }
+        for (; zhuin_index < 2; ++zhuin_index) {
+		pos = strchr(zhuin_tab[ zhuin_index ], buf[0]);
+		if (pos) {
+	//		printf("Got %c\n", pos[0]);
+			break;
+		}
         }
 
-        if (zhuin_index >= BOPOMOFO_SIZE) {
+        if (zhuin_index >= 2) {
             return 0;
         }
+	if (zhuin_index == 0) {
+		int offset = (int) (pos - zhuin_tab[0]);
 
-        result |= (zhuin_tab_num[zhuin_index] - ueStrLen(pos)) << shift[zhuin_index];
-        ++zhuin_index;
-        iter += len;
+	//	printf("offset=%d\n", offset);
+		result = result * 17 + offset + 1;
+
+	} else if (zhuin_index == 1) {
+		int offset = (int) (pos - zhuin_tab[1]);
+	//	printf("offset=%d\n", offset);
+		result = result * 10 + offset + 1;
+	}
+        ++iter;
+	//printf("buf=%c, zhuin_index=%d, result=%d\n", buf[0], zhuin_index, result); 
+    }
+    /* fix for no tone, i.e 'ai' is equal to 'ai1', the offset is 0 */
+    if (zhuin_index != 1) {
+	result = result * 10 + 1;
     }
     printf("%d\t%s\n", result, zhuin);
     return result;
@@ -130,9 +153,11 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     int s;
     const char *pTarget;
 
-    printf("\t\t\t\t%s, inputkey=%s\n", __func__, inputkey);
+    //printf("\t\t\t\t%s, inputkey=%s\n", __func__, inputkey);
     len = strlen(inputkey);
-
+	
+    strncpy(pho, inputkey, 20);
+#if 0
     pho[0] = '\0';
     for (i = 0; i < len; i++) {
         char *findptr = NULL;
@@ -154,6 +179,7 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     pho = ueStrSeek(pho, len);
     pho[0] = '\0';
     printf("\t\t\t\t%s, get pho=%s\n", __func__, pho);
+#endif
     return 1;
 }
 
