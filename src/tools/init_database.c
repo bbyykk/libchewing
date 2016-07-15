@@ -244,7 +244,7 @@ void store_phrase(const char *line, int line_num)
     char *freq;
     char *endptr = NULL;
     char *bopomofo;
-    char bopomofo_buf[MAX_UTF8_SIZE * BOPOMOFO_SIZE + 1];
+    char bopomofo_buf[32];
     size_t phrase_len;
     WordData word;              /* For check. */
     WordData *found_word = NULL;
@@ -266,6 +266,7 @@ void store_phrase(const char *line, int line_num)
         fprintf(stderr, "Error reading line %d, `%s'\n", line_num, line);
         exit(-1);
     }
+    printf("phrase=%s\n", phrase);
     strncpy(phrase_data[num_phrase_data].phrase, phrase, sizeof(phrase_data[0].phrase) - 1);
 
     /* read frequency */
@@ -276,6 +277,7 @@ void store_phrase(const char *line, int line_num)
     }
 
     phrase_data[num_phrase_data].freq = strtoul(freq, &endptr, 0);
+    printf("freq=%d\n", phrase_data[num_phrase_data].freq);
     if ((*freq == '\0' || *endptr != '\0') ||
         (phrase_data[num_phrase_data].freq == UINT32_MAX && errno == ERANGE)) {
         fprintf(stderr, "Error reading frequency `%s' in line %d, `%s'\n", freq, line_num, line);
@@ -481,14 +483,6 @@ void read_phone_cin(const char *filename)
     }
 
     fclose(phone_cin);
-    printf("XXXXX\n");
-    {
-	    int i;
-	    for(i=0; i< num_word_data;i++) {
-		    printf("%s\n", word_data[i].text->phrase);
-	    }
-    }
-
     qsort(word_data, num_word_data, sizeof(word_data[0]), compare_word_no_duplicated);
 }
 
@@ -705,7 +699,8 @@ int main(int argc, char *argv[])
     }
 
     read_phone_cin(argv[1]);
-//    read_tsi_src(argv[2]);
+    printf("------- %s, %d --------\n", __func__, __LINE__);
+    read_tsi_src(argv[2]);
     printf("------- %s, %d --------\n", __func__, __LINE__);
     write_phrase_data();
     printf("------- %s, %d --------\n", __func__, __LINE__);

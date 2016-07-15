@@ -138,10 +138,6 @@ uint16_t UintFromPhone(const char *zhuin)
         ++iter;
 	//printf("buf=%c, zhuin_index=%d, result=%d\n", buf[0], zhuin_index, result); 
     }
-    /* fix for no tone, i.e 'ai' is equal to 'ai1', the offset is 0 */
-    if (zhuin_index != 1) {
-	result = result * 10 + 1;
-    }
     printf("%d\t%s\n", result, zhuin);
     return result;
 }
