@@ -155,21 +155,23 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     } else {
         pBopomofo->pho_inx[3] = 0;
     }
-
+   printf("%s, %d\n", __func__, __LINE__);
+#define TAIGI_TYPES 2
     /* decide if the key is a phone */
-    for (type = 0; type <= 3; type++) {
+    for (type = 0; type <= TAIGI_TYPES; type++) {
         inx = PhoneInxFromKey(key, type, pBopomofo->kbtype, 1);
         if (inx)
             break;
     }
 
     /* the key is NOT a phone */
-    if (type > 3) {
+    if (type > TAIGI_TYPES) {
         return BOPOMOFO_KEY_ERROR;
     }
 
     /* fill the key into the phone buffer */
     pBopomofo->pho_inx[type] = inx;
+   printf("%s, %d\n", __func__, __LINE__);
     return BOPOMOFO_ABSORB;
 }
 

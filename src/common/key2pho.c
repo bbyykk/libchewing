@@ -235,9 +235,11 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
     keyStr[0] = key;
     keyStr[1] = '\0';
     printf("\t\t\t%s, key=%d, type=%d\n", __func__, key, type);
+    printf("%s: %d\n", __func__, __LINE__);
     if (!PhoneFromKey(rtStr, keyStr, kbtype, searchTimes))
         return 0;
 
+    printf("%s: %d\n", __func__, __LINE__);
     p = strstr(zhuin_tab[type], rtStr);
     if (!p)
         return 0;
