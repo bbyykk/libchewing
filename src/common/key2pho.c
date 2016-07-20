@@ -44,9 +44,11 @@ const char *const zhuin_tab[] = {               /* number of bits */
     /* ˙ˊˇˋ */
 };
 #endif
+const char taigi_tone[] = "0123456789";
+const char taigi_pho[] =  "abeghijklmnopstuc";
 const char *const zhuin_tab[] = {               /* number of bits */
-    "abeghijklmnopstuc",
-    "123456789"
+    taigi_pho,
+    taigi_tone
 };
 static const phone_num = 17;
 static const tone_num = 9;
@@ -98,13 +100,14 @@ static const char *const key_str[KBTYPE_COUNT] = {
  *
  * return the number it means. 0 means error.
  */
-uint16_t UintFromPhone(const char *zhuin)
+uint32_t UintFromPhone(const char *zhuin)
 {
     const char *iter;
     char *pos;
     char buf[MAX_UTF8_SIZE + 1];
-    int len, result = 0;
+    uint32_t len, result = 0;
     int zhuin_index = 0;
+    int offset = 0;
 
     iter = zhuin;
     memset(buf, 0x0, MAX_UTF8_SIZE);
@@ -124,20 +127,18 @@ uint16_t UintFromPhone(const char *zhuin)
         if (zhuin_index >= 2) {
             return 0;
         }
-	if (zhuin_index == 0) {
-		int offset = (int) (pos - zhuin_tab[0]);
-
-	//	printf("offset=%d\n", offset);
-		result = result * 17 + offset + 1;
-
-	} else if (zhuin_index == 1) {
-		int offset = (int) (pos - zhuin_tab[1]);
-	//	printf("offset=%d\n", offset);
-		result = result * 10 + offset + 1;
+	offset = (int) (pos - zhuin_tab[zhuin_index]);
+	if (zhuin_index == 1) {
+	    break;
 	}
+	result = result * 17 + offset + 1;
+	printf("result=%d\n", result);
         ++iter;
 	//printf("buf=%c, zhuin_index=%d, result=%d\n", buf[0], zhuin_index, result); 
     }
+    result = result << 4;
+    printf("The !!!! phone=%d\n", offset);
+    result |= offset;
     printf("%d\t%s\n", result, zhuin);
     return result;
 }
@@ -179,26 +180,49 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     return 1;
 }
 
-int PhoneFromUint(char *phone, size_t phone_len, uint16_t phone_num)
+int PhoneFromUint(char *phone, size_t phone_len, uint32_t phone_num)
 {
     int i;
     int index;
     const char *pos;
-    char tmp[MAX_UTF8_SIZE + 1];
+    char tmp[16];
     char buffer[MAX_UTF8_SIZE * BOPOMOFO_SIZE + 1] = { 0 };
+    char tone;
 
-    for (i = 0; i < BOPOMOFO_SIZE; ++i) {
+    //printf("%s, phone_num=0x%x\n", __func__, phone_num);
+    tone = phone_num & 0xf;
+    //printf("tone=%d\n", tone);
+    phone_num = phone_num >> 4;
+
+    memset(tmp, 0x0, 16);
+
+    for (i = 0; i < BOPOMOFO_SIZE, phone_num > 0; ++i) {
         /* The first two characters in zhuin_tab are space, so we need
            to add 1 here. */
+#if 0
         index = ((phone_num >> shift[i]) & mask[i]);
         if (index >= 1) {
             pos = ueConstStrSeek(zhuin_tab[i], index - 1);
             ueStrNCpy(tmp, pos, 1, STRNCPY_CLOSE);
             strcat(buffer, tmp);
         }
+#endif
+	index = phone_num % 17 - 1;
+	tmp[i] = taigi_pho[index];
+	//printf("tmp[%d]=%c\n", i, tmp[i]);
+	phone_num /= 17;
     }
-    strncpy(phone, buffer, phone_len);
-    phone[phone_len - 1] = 0;
+    int len = strlen(tmp);
+
+    //printf("string len=%d\n", len);
+    memset(phone, 0x0, len + 2);
+    phone[len + 1] = tone;
+    for (i = 0; i < len; ++i) {
+	 phone[len - i - 1] = tmp[i]; 
+	// printf("phone[%d]=%c\n", len - i, phone[len - i]);
+    }
+    phone[i] = taigi_tone[tone];
+    //printf("phone=%s\n", phone);
     return 0;
 }
 

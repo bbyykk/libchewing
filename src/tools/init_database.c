@@ -60,7 +60,7 @@ const char USAGE[] =
 typedef struct {
     char phrase[MAX_PHRASE_BUF_LEN];
     uint32_t freq;
-    uint16_t phone[MAX_PHRASE_LEN + 1];
+    uint32_t phone[MAX_PHRASE_LEN + 1];
     long pos;
 } PhraseData;
 
@@ -178,11 +178,11 @@ int compare_word_no_duplicated(const void *x, const void *y)
 {
     int ret = compare_word_by_text(x, y);
 
-//    printf("a=%s, b=%s\n", ((const WordData*)x)->text->phrase, ((const WordData*)y)->text->phrase);
     if (!ret) {
         const WordData *a = (const WordData *) x;
+	const WordData *b = (const WordData *) y;
 
-        fprintf(stderr, "Duplicated word found (`%s', %d).\n", a->text->phrase, a->text->phone[0]);
+        fprintf(stderr, "Duplicated word found (`%s', %d).('%s', %d)\n", a->text->phrase, a->text->phone[0], b->text->phrase, b->text->phone[0]);
         exit(-1);
     }
 
@@ -418,9 +418,9 @@ void store_word(const char *line, const int line_num)
         exit(-1);
     }
     PhoneFromKey(phone_buf, key_buf, KB_DEFAULT, 1);
-    printf("phone_buf=%s, key_buf=%s\n", phone_buf, key_buf);
     word_data[num_word_data].text->phone[0] = UintFromPhone(phone_buf);
-
+	    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x\n", phone_buf, key_buf,
+			    word_data[num_word_data].text->phrase, word_data[num_word_data].text->phone[0]);
     word_data[num_word_data].index = num_word_data;
     ++num_word_data;
 }
@@ -494,9 +494,8 @@ NODE *new_node(uint32_t key)
         fprintf(stderr, "Memory allocation failed on constructing phrase tree.\n");
         exit(-1);
     }
-
     memset(&pnew->data, 0, sizeof(pnew->data));
-    PutUint16(key, pnew->data.key);
+    PutUint32(key, pnew->data.key);
     pnew->pFirstChild = NULL;
     pnew->pNextSibling = NULL;
     return pnew;
@@ -513,8 +512,8 @@ NODE *find_or_insert(NODE * parent, uint32_t key)
     NODE *p;
     NODE *pnew;
 
-    for (p = parent->pFirstChild; p && GetUint16(p->data.key) <= key; prev = p, p = p->pNextSibling)
-        if (GetUint16(p->data.key) == key)
+    for (p = parent->pFirstChild; p && GetUint32(p->data.key) <= key; prev = p, p = p->pNextSibling)
+        if (GetUint32(p->data.key) == key)
             return p;
 
     pnew = new_node(key);
@@ -533,13 +532,13 @@ void insert_leaf(NODE * parent, long phr_pos, uint32_t freq)
     NODE *p;
     NODE *pnew;
 
-    for (p = parent->pFirstChild; p && GetUint16(p->data.key) == 0; prev = p, p = p->pNextSibling)
-        if (GetUint16(p->data.phrase.freq) <= freq)
+    for (p = parent->pFirstChild; p && GetUint32(p->data.key) == 0; prev = p, p = p->pNextSibling)
+        if (GetUint32(p->data.phrase.freq) <= freq)
             break;
 
     pnew = new_node(0);
-    PutUint24((uint32_t) phr_pos, pnew->data.phrase.pos);
-    PutUint24(freq, pnew->data.phrase.freq);
+    PutUint32((uint32_t) phr_pos, pnew->data.phrase.pos);
+    PutUint32(freq, pnew->data.phrase.freq);
     if (prev == NULL)
         parent->pFirstChild = pnew;
     else
@@ -567,8 +566,8 @@ void construct_phrase_tree()
             root->pFirstChild = levelPtr;
         }
         levelPtr = new_node(0);
-        PutUint24((uint32_t) word_data[i].text->pos, levelPtr->data.phrase.pos);
-        PutUint24(word_data[i].text->freq, levelPtr->data.phrase.freq);
+        PutUint32((uint32_t) word_data[i].text->pos, levelPtr->data.phrase.pos);
+        PutUint32(word_data[i].text->freq, levelPtr->data.phrase.freq);
         levelPtr->pNextSibling = root->pFirstChild->pFirstChild;
         root->pFirstChild->pFirstChild = levelPtr;
     }
@@ -655,8 +654,8 @@ void write_index_tree()
         p = queue[tail++];
         if (tail >= q_len)
             tail = 0;
-        if (GetUint16(p->data.key) != 0) {
-            PutUint24(tree_size, p->data.child.begin);
+        if (GetUint32(p->data.key) != 0) {
+            PutUint32(tree_size, p->data.child.begin);
 
             /*
              * The latest inserted element must have a NULL
@@ -676,10 +675,10 @@ void write_index_tree()
                 tree_size++;
             }
 
-            PutUint24(tree_size, p->data.child.end);
+            PutUint32(tree_size, p->data.child.end);
         }
     }
-    PutUint16(tree_size, root->data.key);
+    PutUint32(tree_size, root->data.key);
 
     for (p = root; p; p = pNext) {
         fwrite(&p->data, sizeof(TreeType), 1, output);

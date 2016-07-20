@@ -46,7 +46,7 @@ typedef SSIZE_T ssize_t;
  * @param[in] phone UTF-8 encoded string of phonetic symbols.
  * @return an 16-bit unsigned integer or 0 if the phonetic symbols are illegal.
  */
-uint16_t UintFromPhone(const char *phone);
+uint32_t UintFromPhone(const char *phone);
 
 /**
  * @brief Get the unsigned 16-bit representation of phonetic symbols by index.
@@ -88,7 +88,7 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
  * @param[in] phone_num phonetic number.
  * @return 1 if succeed or 0 if failed.
  */
-int PhoneFromUint(char *phone, size_t phone_len, uint16_t phone_num);
+int PhoneFromUint(char *phone, size_t phone_len, uint32_t phone_num);
 
 /**
  * @brief Get the index of a phonetic symbols in its category.

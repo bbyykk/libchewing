@@ -46,16 +46,16 @@ const char USAGE[] =
  */
 void dump(uint32_t node_pos, uint32_t indent)
 {
-    uint16_t key = 0;
+    uint32_t key = 0;
     uint32_t i;
 
     for (i = 0; i < indent; i++)
         fputs("    ", stdout);
 
-    key = GetUint16(root[node_pos].key);
+    key = GetUint32(root[node_pos].key);
     if (key != 0) {
-        uint32_t beg = GetUint24(root[node_pos].child.begin);
-        uint32_t end = GetUint24(root[node_pos].child.end);
+        uint32_t beg = GetUint32(root[node_pos].child.begin);
+        uint32_t end = GetUint32(root[node_pos].child.end);
         assert (beg < end);
 
         if (indent == 0)
@@ -63,16 +63,16 @@ void dump(uint32_t node_pos, uint32_t indent)
         else {
             char buf[MAX_UTF8_SIZE * BOPOMOFO_SIZE + 1];
 
+//	    printf("%s, %d\n", __func__, __LINE__);
             PhoneFromUint(buf, sizeof(buf), key);
-            printf("key=%s,", buf);
         }
-        printf(" begin=%u, end=%u\n", beg, end);
+        printf("key=0x%x begin=%u, end=%u\n", key, beg, end);
 
         for (i = beg; i < end; i++)
             dump(i, indent + 1);
     } else {
-        uint32_t pos = GetUint24(root[node_pos].phrase.pos);
-        uint32_t freq = GetUint24(root[node_pos].phrase.freq);
+        uint32_t pos = GetUint32(root[node_pos].phrase.pos);
+        uint32_t freq = GetUint32(root[node_pos].phrase.freq);
 
         printf("phrase=%s, freq=%u\n", &dict[pos], freq);
     }
@@ -127,8 +127,10 @@ int main(int argc, char *argv[])
     dict = (const char *) read_input(argv[1], DICT_FILE, &dict_mmap);
     root = (const TreeType *) read_input(argv[1], PHONE_TREE_FILE, &tree_mmap);
 
+    printf("%s, %d\n", __func__, __LINE__);
     dump(0, 0);
 
+    printf("%s, %d\n", __func__, __LINE__);
     plat_mmap_close(&dict_mmap);
     plat_mmap_close(&tree_mmap);
 

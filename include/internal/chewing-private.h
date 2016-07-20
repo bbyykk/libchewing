@@ -38,8 +38,8 @@ typedef SSIZE_T ssize_t;
 #    include "chewing-sql.h"
 #endif
 
-#define MAX_UTF8_SIZE 4
-#define BOPOMOFO_SIZE 4
+#define MAX_UTF8_SIZE 16
+#define BOPOMOFO_SIZE 16
 #define PINYIN_SIZE 10
 #define MAX_PHRASE_LEN 16
 #define MAX_PHONE_SEQ_LEN 50
@@ -104,15 +104,15 @@ typedef enum KBTYPE {
  */
 
 typedef struct TreeType {
-    unsigned char key[2];
+    unsigned char key[4];
     union {
         struct {
-            unsigned char begin[3];
-            unsigned char end[3];
+            unsigned char begin[4];
+            unsigned char end[4];
         } child;
         struct {
-            unsigned char pos[3];
-            unsigned char freq[3];
+            unsigned char pos[4];
+            unsigned char freq[4];
         } phrase;
     };
 } TreeType;
