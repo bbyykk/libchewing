@@ -541,7 +541,8 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to)
     LOG_VERBOSE("Fill preeditBuf start %d, from = %d, to = %d", start, from, to);
 
     for (i = start; i < start - from + to; ++i) {
-        ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
+//        ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
+	  strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
 	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s", i, pgdata->preeditBuf[i].char_);
     }
 }
@@ -552,6 +553,7 @@ static void OutputRecordStr(ChewingData *pgdata, const TreeDataType *ptd)
     PhraseIntervalType inter;
     int i;
 
+    LOG_VERBOSE("%s, %d\n", __func__, __LINE__);
     for (i = 0; i < ptd->phList->nInter; i++) {
         inter = ptd->interval[ptd->phList->arrIndex[i]];
         FillPreeditBuf(pgdata, inter.p_phr->phrase, inter.from, inter.to);

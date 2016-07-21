@@ -83,7 +83,7 @@ static int IsDACHENCP26PhoEndKey(const int pho_inx[], int key)
 
 static int IsDefPhoEndKey(int key, int kbtype)
 {
-    if (PhoneInxFromKey(key, 3, kbtype, 1))
+    if (PhoneInxFromKey(key, 1, kbtype, 1))
         return 1;
 
     if (key == ' ')
@@ -94,10 +94,11 @@ static int IsDefPhoEndKey(int key, int kbtype)
 static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
 {
     BopomofoData *pBopomofo = &(pgdata->bopomofoData);
-    uint16_t u16Pho, u16PhoAlt;
+    uint32_t u32Pho, u32PhoAlt;
     Phrase tempword;
     int pho_inx;
 
+    printf("%s, %d\n", __func__, __LINE__);
     if (pBopomofo->pho_inx[0] == 0 && pBopomofo->pho_inx[1] == 0 && pBopomofo->pho_inx[2] == 0 && pBopomofo->pho_inx[3] == 0) {
         /*
          * Special handle for space key (Indeed very special one).
@@ -118,20 +119,20 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
         return BOPOMOFO_NO_WORD;
     }
 
-    u16Pho = UintFromPhoneInx(pBopomofo->pho_inx);
-    if (GetCharFirst(pgdata, &tempword, u16Pho) == 0) {
+    u32Pho = UintFromPhoneInx(pBopomofo->pho_inx);
+    if (GetCharFirst(pgdata, &tempword, u32Pho) == 0) {
         BopomofoRemoveAll(pBopomofo);
         return BOPOMOFO_NO_WORD;
     }
 
-    pBopomofo->phone = u16Pho;
+    pBopomofo->phone = u32Pho;
 
     if (pBopomofo->pho_inx_alt[0] == 0 && pBopomofo->pho_inx_alt[1] == 0 && pBopomofo->pho_inx_alt[2] == 0) {
         /* no alternative phone, copy from default as alt */
-        pBopomofo->phoneAlt = u16Pho;
+        pBopomofo->phoneAlt = u32Pho;
     } else {
-        u16PhoAlt = UintFromPhoneInx(pBopomofo->pho_inx_alt);
-        pBopomofo->phoneAlt = u16PhoAlt;
+        u32PhoAlt = UintFromPhoneInx(pBopomofo->pho_inx_alt);
+        pBopomofo->phoneAlt = u32PhoAlt;
     }
 
     memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));
@@ -155,17 +156,17 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     } else {
         pBopomofo->pho_inx[3] = 0;
     }
-   printf("%s, %d\n", __func__, __LINE__);
+   printf("<<<<< %s, %d >>>>>\n", __func__, __LINE__);
 #define TAIGI_TYPES 2
     /* decide if the key is a phone */
-    for (type = 0; type <= TAIGI_TYPES; type++) {
+    for (type = 0; type < TAIGI_TYPES; type++) {
         inx = PhoneInxFromKey(key, type, pBopomofo->kbtype, 1);
         if (inx)
             break;
     }
 
     /* the key is NOT a phone */
-    if (type > TAIGI_TYPES) {
+    if (type >= TAIGI_TYPES) {
         return BOPOMOFO_KEY_ERROR;
     }
 

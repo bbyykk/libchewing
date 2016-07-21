@@ -69,7 +69,7 @@ uint32_t UintFromPhone(const char *phone);
  * @param[in] ph_inx array of index of phonetic symbols.
  * @return an 16-bit unsigned integer or 0 if any index is illegal.
  */
-uint16_t UintFromPhoneInx(const int ph_inx[]);
+uint32_t UintFromPhoneInx(const int ph_inx[]);
 
 /**
  * @brief Get the phonetic symbols by the given keystroke.

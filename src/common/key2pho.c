@@ -150,10 +150,11 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
     int s;
     const char *pTarget;
 
-    //printf("\t\t\t\t%s, inputkey=%s\n", __func__, inputkey);
+    printf("\t\t\t\t%s, inputkey=%s\n", __func__, inputkey);
     len = strlen(inputkey);
 	
     strncpy(pho, inputkey, 20);
+    printf("\t\t\tpho=%s\n", pho);
 #if 0
     pho[0] = '\0';
     for (i = 0; i < len; i++) {
@@ -239,7 +240,7 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
     if (!PhoneFromKey(rtStr, keyStr, kbtype, searchTimes))
         return 0;
 
-    printf("%s: %d\n", __func__, __LINE__);
+    printf("%s: %d, type=%d, rtStr=%s\n", __func__, __LINE__, type, rtStr);
     p = strstr(zhuin_tab[type], rtStr);
     if (!p)
         return 0;
@@ -256,10 +257,12 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
 	    }
 	    printf("\n");
     }
-    return zhuin_tab_num[type] - ueStrLen(p);
+    printf("%s: %d\n", __func__, __LINE__);
+//    return zhuin_tab_num[type] - ueStrLen(p);
+    return p - zhuin_tab[type] +1;
 }
 
-uint16_t UintFromPhoneInx(const int ph_inx[])
+uint32_t UintFromPhoneInx(const int ph_inx[])
 {
     int i;
     uint16_t result = 0;
