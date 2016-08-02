@@ -99,6 +99,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     int pho_inx;
 
     printf("%s, %d\n", __func__, __LINE__);
+#if 0
     if (pBopomofo->pho_inx[0] == 0 && pBopomofo->pho_inx[1] == 0 && pBopomofo->pho_inx[2] == 0 && pBopomofo->pho_inx[3] == 0) {
         /*
          * Special handle for space key (Indeed very special one).
@@ -106,6 +107,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
          * hence the Candidate window doesn't show up, because
          * BOPOMOFO_NO_WORD is returned.
          */
+	    printf("%s, %d\n", __func__, __LINE__);
         return (key == ' ') ? BOPOMOFO_KEY_ERROR : BOPOMOFO_NO_WORD;
     }
 
@@ -137,6 +139,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
 
     memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));
     memset(pBopomofo->pho_inx_alt, 0, sizeof(pBopomofo->pho_inx_alt));
+#endif
     return BOPOMOFO_COMMIT;
 }
 
@@ -145,16 +148,20 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     BopomofoData *pBopomofo = &(pgdata->bopomofoData);
     int type = 0, inx = 0;
     int i;
+    static int index = 0;
 
     printf("\t\t%s, key=%d\n", __func__, key);
     if (IsDefPhoEndKey(key, pBopomofo->kbtype)) {
+	printf("This is END keyn\n");
         for (i = 0; i < BOPOMOFO_SIZE; ++i)
             if (pBopomofo->pho_inx[i] != 0)
                 break;
-        if (i < BOPOMOFO_SIZE)
+        if (i < BOPOMOFO_SIZE) {
+	    index = 0;
             return EndKeyProcess(pgdata, key, 1);
+	}
     } else {
-        pBopomofo->pho_inx[3] = 0;
+        pBopomofo->pho_inx[index] = 0;
     }
    printf("<<<<< %s, %d >>>>>\n", __func__, __LINE__);
 #define TAIGI_TYPES 2
@@ -171,8 +178,8 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     }
 
     /* fill the key into the phone buffer */
-    pBopomofo->pho_inx[type] = inx;
-   printf("%s, %d\n", __func__, __LINE__);
+    printf("%s, %d, pBopomofo->pho_inx[%d]=%d\n", __func__, __LINE__, index, inx);
+    pBopomofo->pho_inx[index++] = inx;
     return BOPOMOFO_ABSORB;
 }
 
@@ -180,7 +187,9 @@ static int HsuPhoInput(ChewingData *pgdata, int key)
 {
     BopomofoData *pBopomofo = &(pgdata->bopomofoData);
     int type = 0, searchTimes = 0, inx = 0;
-
+	
+    printf("%s, %d\n", __func__, __LINE__);
+#if 0
     /* Dvorak Hsu key has already converted to Hsu */
     if (IsHsuPhoEndKey(pBopomofo->pho_inx, key)) {
         if (pBopomofo->pho_inx[1] == 0 && pBopomofo->pho_inx[2] == 0) {
@@ -280,8 +289,8 @@ static int HsuPhoInput(ChewingData *pgdata, int key)
         }
         /* fill the key into the phone buffer */
         pBopomofo->pho_inx[type] = inx;
+#endif
         return BOPOMOFO_ABSORB;
-    }
 }
 
 /* copy the idea from hsu */

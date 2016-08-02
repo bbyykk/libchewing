@@ -53,8 +53,8 @@ const char *const zhuin_tab[] = {               /* number of bits */
 static const phone_num = 17;
 static const tone_num = 9;
 
-static const int zhuin_tab_num[] = { 22, 4, 14, 5 };
-static const int shift[] = { 9, 7, 3, 0 };
+//static const int zhuin_tab_num[] = { 22, 4, 14, 5 };
+//static const int shift[] = { 9, 7, 3, 0 };
 static const int mask[] = { 0x1F, 0x3, 0xF, 0x7 };
 
 static const char *const ph_str =
@@ -259,7 +259,8 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
     }
     printf("%s: %d\n", __func__, __LINE__);
 //    return zhuin_tab_num[type] - ueStrLen(p);
-    return p - zhuin_tab[type] +1;
+//    Return the key directly
+    return *p;
 }
 
 uint32_t UintFromPhoneInx(const int ph_inx[])
@@ -267,13 +268,12 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
     int i;
     uint16_t result = 0;
 
-    for (i = 0; i < BOPOMOFO_SIZE; i++) {
-        if (ph_inx[i] < 0 || ph_inx[i] >= zhuin_tab_num[i])
-            return 0;
-
-        result |= ph_inx[i] << shift[i];
+    for (i = 0; i < BOPOMOFO_SIZE - 1; i++) {
+	    if(ph_inx[ i + 1 ] == 0)
+		    break;
+	    result = result + ph_inx[i] * 17;
     }
-
+    result = result << 4 + ph_inx[i] + 1;
     return result;
 }
 
@@ -361,6 +361,7 @@ size_t GetPhoneLenFromUint(uint16_t phone_num)
     int i;
     size_t len = 0 ;
 
+#if 0
     for (i = 0; i < BOPOMOFO_SIZE; ++i) {
         /* The first two characters in zhuin_tab are space, so we need
            to add 1 here. */
@@ -370,5 +371,6 @@ size_t GetPhoneLenFromUint(uint16_t phone_num)
             len += ueStrNBytes(pos, 1) + 1;
         }
     }
+#endif
     return len;
 }

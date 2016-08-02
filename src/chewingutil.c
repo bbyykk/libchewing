@@ -868,16 +868,20 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
     if (pgdata->bopomofoData.kbtype >= KB_HANYU_PINYIN) {
         strcpy(pgo->bopomofoBuf, pgdata->bopomofoData.pinYinData.keySeq);
     } else {
-        for (i = 0; i < BOPOMOFO_SIZE; i++) {
-            inx = pgdata->bopomofoData.pho_inx[i];
-            if (inx != 0) {
-                ueStrNCpy(pgo->bopomofoBuf + strlen(pgo->bopomofoBuf),
-                          ueConstStrSeek(zhuin_tab[i], inx - 1),
-                          1, STRNCPY_CLOSE);
-            }
-        }
-    }
+	{
+	    int j;
+	    int s = strlen(pgo->bopomofoBuf);
 
+	    for(j=0;j<BOPOMOFO_SIZE;j++) {
+	    	printf("%c", pgdata->bopomofoData.pho_inx[j]); 
+		pgo->bopomofoBuf[j + s] = pgdata->bopomofoData.pho_inx[j];
+	    }
+	    printf("\n");
+	}
+//	strncpy(pgo->bopomofoBuf + strlen(pgo->bopomofoBuf),
+//	    pgdata->bopomofoData.pho_inx, BOPOMOFO_SIZE);
+    }
+    printf("%s, %d, pgo->bopomofoBuf=%s\n", __func__ , __LINE__ , pgo->bopomofoBuf);
     ShiftInterval(pgo, pgdata);
     memcpy(pgo->dispBrkpt, pgdata->bUserArrBrkpt, sizeof(pgo->dispBrkpt[0]) * (MAX_PHONE_SEQ_LEN + 1));
     pgo->pci = &(pgdata->choiceInfo);
