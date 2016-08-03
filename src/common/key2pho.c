@@ -266,14 +266,26 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
 uint32_t UintFromPhoneInx(const int ph_inx[])
 {
     int i;
-    uint16_t result = 0;
+    uint32_t result = 0;
+    char *pos;
+    uint32_t offset = 0;
 
     for (i = 0; i < BOPOMOFO_SIZE - 1; i++) {
 	    if(ph_inx[ i + 1 ] == 0)
 		    break;
-	    result = result + ph_inx[i] * 17;
+	    pos = strchr(zhuin_tab[0], ph_inx[i]);
+	    printf("%s, got=%c\n", __func__, *pos);
+	    result = result * 17 + (uint32_t) (pos - zhuin_tab[0]) + 1;
+	    printf("%s, %d\n", __func__, result);
     }
-    result = result << 4 + ph_inx[i] + 1;
+    pos = strchr(zhuin_tab[1], ph_inx[i]);
+    offset = (uint32_t) (pos - zhuin_tab[1]);
+    if (pos) {
+	    result = (result << 4) + offset;
+    } else {
+	    printf("No tone\n");
+	    return result;
+    }
     return result;
 }
 

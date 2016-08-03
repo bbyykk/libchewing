@@ -238,7 +238,7 @@ static int CheckChoose(ChewingData *pgdata,
 
 static int CompTreeType(const void *a, const void *b)
 {
-    return GetUint16(((TreeType *) a)->key) - GetUint16(((TreeType *) b)->key);
+    return GetUint32(((TreeType *) a)->key) - GetUint32(((TreeType *) b)->key);
 }
 
 /** @brief search for the phrases have the same pronunciation.*/
@@ -252,10 +252,11 @@ const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const ui
     uint32_t range[2];
     int i;
 
+    printf("%s, %d\n", __func__, __LINE__);
     for (i = begin; i <= end; i++) {
-        PutUint16(phoneSeq[i], target.key);
-        range[0] = GetUint24(tree_p->child.begin);
-        range[1] = GetUint24(tree_p->child.end);
+        PutUint32(phoneSeq[i], target.key);
+        range[0] = GetUint32(tree_p->child.begin);
+        range[1] = GetUint32(tree_p->child.end);
         assert(range[1] >= range[0]);
         tree_p = (const TreeType *) bsearch(&target, pgdata->static_data.tree + range[0],
                                             range[1] - range[0], sizeof(TreeType), CompTreeType);
@@ -264,10 +265,11 @@ const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const ui
         if (!tree_p)
             return NULL;
     }
-
+    printf("%s, %d\n", __func__, __LINE__);
     /* If its child has no key value of 0, then it is only a "half" phrase. */
-    if (GetUint16(pgdata->static_data.tree[GetUint24(tree_p->child.begin)].key) != 0)
+    if (GetUint32(pgdata->static_data.tree[GetUint32(tree_p->child.begin)].key) != 0)
         return NULL;
+    printf("%s, %d\n", __func__, __LINE__);
     return tree_p;
 }
 

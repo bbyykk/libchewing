@@ -99,6 +99,28 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     int pho_inx;
 
     printf("%s, %d\n", __func__, __LINE__);
+    /* Only for the tone 1~8 */
+    pho_inx = PhoneInxFromKey(key, 1, pBopomofo->kbtype, searchTimes);
+
+    int len = 0;
+    while(pBopomofo->pho_inx[len] != 0) {
+	    printf("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
+	    ++len;
+    };
+    pBopomofo->pho_inx[len] = pho_inx;
+    printf("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
+
+    u32Pho = UintFromPhoneInx(pBopomofo->pho_inx);
+    printf("%s, got pBopomofo->phone=%d\n", __func__ , u32Pho);
+    if (GetCharFirst(pgdata, &tempword, u32Pho) == 0) {
+	printf("%s, %d\n", __func__, __LINE__);
+        BopomofoRemoveAll(pBopomofo);
+        return BOPOMOFO_NO_WORD;
+    }
+
+    pBopomofo->phone = u32Pho;
+    pBopomofo->phoneAlt = u32Pho;
+    memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));
 #if 0
     if (pBopomofo->pho_inx[0] == 0 && pBopomofo->pho_inx[1] == 0 && pBopomofo->pho_inx[2] == 0 && pBopomofo->pho_inx[3] == 0) {
         /*
