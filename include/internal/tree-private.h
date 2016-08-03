@@ -22,7 +22,7 @@ void TerminateTree(ChewingData *pgdata);
 int Phrasing(ChewingData *pgdata, int all_phrasing);
 int IsIntersect(IntervalType in1, IntervalType in2);
 
-const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const uint16_t *phoneSeq);
+const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const uint32_t *phoneSeq);
 void TreeChildRange(ChewingData *pgdata, const TreeType *parent);
 
 /* *INDENT-OFF* */

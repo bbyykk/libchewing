@@ -20,7 +20,7 @@
 #include "private.h"
 #include "key2pho-private.h"
 
-static int UserBindPhone(ChewingData *pgdata, int index, const uint16_t phoneSeq[], int len)
+static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq[], int len)
 {
     int i;
     int ret;
@@ -60,7 +60,7 @@ static int UserBindPhone(ChewingData *pgdata, int index, const uint16_t phoneSeq
 
 
 /* load the original frequency from the static dict */
-static int LoadOriginalFreq(ChewingData *pgdata, const uint16_t phoneSeq[], const char wordSeq[], int len)
+static int LoadOriginalFreq(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[], int len)
 {
     const TreeType *tree_pos;
     int retval;
@@ -84,7 +84,7 @@ static int LoadOriginalFreq(ChewingData *pgdata, const uint16_t phoneSeq[], cons
 }
 
 /* find the maximum frequency of the same phrase */
-static int LoadMaxFreq(ChewingData *pgdata, const uint16_t phoneSeq[], int len)
+static int LoadMaxFreq(ChewingData *pgdata, const uint32_t phoneSeq[], int len)
 {
     const TreeType *tree_pos;
     Phrase *phrase = ALC(Phrase, 1);
@@ -162,7 +162,7 @@ static int GetCurrentLifeTime(ChewingData *pgdata)
 }
 
 static void LogUserPhrase(ChewingData *pgdata,
-                          const uint16_t phoneSeq[],
+                          const uint32_t phoneSeq[],
                           const char wordSeq[], int orig_freq, int max_freq, int user_freq, int recent_time)
 {
     /* Size of each phone is len("0x1234 ") = 7 */
@@ -184,7 +184,7 @@ void UserUpdatePhraseBegin(ChewingData *pgdata)
     sqlite3_exec(pgdata->static_data.db, "BEGIN", 0, 0, 0);
 }
 
-int UserUpdatePhrase(ChewingData *pgdata, const uint16_t phoneSeq[], const char wordSeq[])
+int UserUpdatePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[])
 {
     int ret;
     int action;
@@ -335,7 +335,7 @@ void UserUpdatePhraseEnd(ChewingData *pgdata)
     sqlite3_exec(pgdata->static_data.db, "END", 0, 0, 0);
 }
 
-int UserRemovePhrase(ChewingData *pgdata, const uint16_t phoneSeq[], const char wordSeq[])
+int UserRemovePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[])
 {
     int ret;
     int len;
@@ -379,7 +379,7 @@ int UserRemovePhrase(ChewingData *pgdata, const uint16_t phoneSeq[], const char 
 }
 
 
-UserPhraseData *UserGetPhraseFirst(ChewingData *pgdata, const uint16_t phoneSeq[])
+UserPhraseData *UserGetPhraseFirst(ChewingData *pgdata, const uint32_t phoneSeq[])
 {
     int ret;
     int len;
@@ -404,7 +404,7 @@ UserPhraseData *UserGetPhraseFirst(ChewingData *pgdata, const uint16_t phoneSeq[
     return UserGetPhraseNext(pgdata, phoneSeq);
 }
 
-UserPhraseData *UserGetPhraseNext(ChewingData *pgdata, const uint16_t phoneSeq[])
+UserPhraseData *UserGetPhraseNext(ChewingData *pgdata, const uint32_t phoneSeq[])
 {
     int ret;
 
@@ -420,7 +420,7 @@ UserPhraseData *UserGetPhraseNext(ChewingData *pgdata, const uint16_t phoneSeq[]
         (char *) sqlite3_column_text(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE],
                                      SQL_STMT_USERPHRASE[STMT_USERPHRASE_SELECT_BY_PHONE].column
                                      [COLUMN_USERPHRASE_PHRASE]);
-    pgdata->userphrase_data.phoneSeq = (uint16_t *) phoneSeq;
+    pgdata->userphrase_data.phoneSeq = (uint32_t *) phoneSeq;
 
     pgdata->userphrase_data.recentTime =
         sqlite3_column_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE],
@@ -441,7 +441,7 @@ UserPhraseData *UserGetPhraseNext(ChewingData *pgdata, const uint16_t phoneSeq[]
     return &pgdata->userphrase_data;
 }
 
-void UserGetPhraseEnd(ChewingData *pgdata UNUSED, const uint16_t phoneSeq[] UNUSED)
+void UserGetPhraseEnd(ChewingData *pgdata UNUSED, const uint32_t phoneSeq[] UNUSED)
 {
     /* FIXME: Remove this */
 }

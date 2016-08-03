@@ -111,13 +111,13 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     printf("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
 
     u32Pho = UintFromPhoneInx(pBopomofo->pho_inx);
-    printf("%s, got pBopomofo->phone=%d\n", __func__ , u32Pho);
     if (GetCharFirst(pgdata, &tempword, u32Pho) == 0) {
-	printf("%s, %d\n", __func__, __LINE__);
+	printf("%s, %d, u32Pho=%d\n", __func__, __LINE__, u32Pho);
         BopomofoRemoveAll(pBopomofo);
         return BOPOMOFO_NO_WORD;
     }
 
+    printf("%s, %d, get tempword: phrase=%s, freq=%d\n", __func__ , __LINE__, tempword.phrase, tempword.freq);
     pBopomofo->phone = u32Pho;
     pBopomofo->phoneAlt = u32Pho;
     memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));

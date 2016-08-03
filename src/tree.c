@@ -118,7 +118,7 @@ static int CheckBreakpoint(int from, int to, int bArrBrkpt[])
 }
 
 static int CheckUserChoose(ChewingData *pgdata,
-                           uint16_t *new_phoneSeq, int from, int to,
+                           uint32_t *new_phoneSeq, int from, int to,
                            Phrase **pp_phr,
                            char selectStr[][MAX_PHONE_SEQ_LEN * MAX_UTF8_SIZE + 1],
                            IntervalType selectInterval[], int nSelect)
@@ -245,14 +245,13 @@ static int CompTreeType(const void *a, const void *b)
 /* if phoneSeq[begin] ~ phoneSeq[end] is a phrase, then add an interval
  * from (begin) to (end+1)
  */
-const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const uint16_t *phoneSeq)
+const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const uint32_t *phoneSeq)
 {
     TreeType target;
     const TreeType *tree_p = pgdata->static_data.tree;
     uint32_t range[2];
     int i;
 
-    printf("%s, %d\n", __func__, __LINE__);
     for (i = begin; i <= end; i++) {
         PutUint32(phoneSeq[i], target.key);
         range[0] = GetUint32(tree_p->child.begin);
@@ -265,11 +264,9 @@ const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const ui
         if (!tree_p)
             return NULL;
     }
-    printf("%s, %d\n", __func__, __LINE__);
     /* If its child has no key value of 0, then it is only a "half" phrase. */
     if (GetUint32(pgdata->static_data.tree[GetUint32(tree_p->child.begin)].key) != 0)
         return NULL;
-    printf("%s, %d\n", __func__, __LINE__);
     return tree_p;
 }
 
@@ -325,7 +322,7 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
     const TreeType *phrase_parent;
     Phrase *p_phrase, *puserphrase, *pdictphrase;
     UsedPhraseMode i_used_phrase;
-    uint16_t new_phoneSeq[MAX_PHONE_SEQ_LEN];
+    uint32_t new_phoneSeq[MAX_PHONE_SEQ_LEN];
     UserPhraseData *userphrase;
 
     for (begin = 0; begin < pgdata->nPhoneSeq; begin++) {
@@ -334,7 +331,7 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
                 break;
 
             /* set new_phoneSeq */
-            memcpy(new_phoneSeq, &pgdata->phoneSeq[begin], sizeof(uint16_t) * (end - begin + 1));
+            memcpy(new_phoneSeq, &pgdata->phoneSeq[begin], sizeof(uint32_t) * (end - begin + 1));
             new_phoneSeq[end - begin + 1] = 0;
             puserphrase = pdictphrase = NULL;
             i_used_phrase = USED_PHRASE_NONE;

@@ -44,7 +44,7 @@
 struct ChewingData;
 
 typedef struct UserPhraseData {
-    uint16_t *phoneSeq;
+    uint32_t *phoneSeq;
     char *wordSeq;
     int userfreq;
     int recentTime;
@@ -65,10 +65,10 @@ void UserUpdatePhraseBegin(struct ChewingData *pgdata);
  * @retval USER_UPDATE_INSERT Sequence is new, add new entry.
  * @retval USER_UPDATE_MODIFY Sequence is existing, update it's data.
  */
-int UserUpdatePhrase(struct ChewingData *pgdata, const uint16_t phoneSeq[], const char wordSeq[]);
+int UserUpdatePhrase(struct ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[]);
 
 void UserUpdatePhraseEnd(struct ChewingData *pgdata);
-int UserRemovePhrase(struct ChewingData *pgdata, const uint16_t phoneSeq[], const char wordSeq[]);
+int UserRemovePhrase(struct ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[]);
 
 /**
  * @brief Read the first phrase of the phone in user phrase database.
@@ -77,7 +77,7 @@ int UserRemovePhrase(struct ChewingData *pgdata, const uint16_t phoneSeq[], cons
  *
  * @return UserPhraseData, if it's not existing then return NULL.
  */
-UserPhraseData *UserGetPhraseFirst(struct ChewingData *pgdata, const uint16_t phoneSeq[]);
+UserPhraseData *UserGetPhraseFirst(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
 
 /**
  * @brief Read the next phrase of the phone in user phrase database.
@@ -86,9 +86,9 @@ UserPhraseData *UserGetPhraseFirst(struct ChewingData *pgdata, const uint16_t ph
  *
  * @return UserPhraseData, if it's not existing then return NULL.
  */
-UserPhraseData *UserGetPhraseNext(struct ChewingData *pgdata, const uint16_t phoneSeq[]);
+UserPhraseData *UserGetPhraseNext(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
 
-void UserGetPhraseEnd(struct ChewingData *pgdata, const uint16_t phoneSeq[]);
+void UserGetPhraseEnd(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
 
 void IncreaseLifeTime(struct ChewingData *pgdata);
 
