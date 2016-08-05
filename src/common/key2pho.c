@@ -1,6 +1,6 @@
 /**
  * @file key2pho.c
- * @brief Map bopomofos to uint16_t type according to different keyboard type.
+ * @brief Map bopomofos to uint32_t type according to different keyboard type.
  *
  * Copyright (c) 1999, 2000, 2001
  *	Lu-chuan Kung and Kang-pen Chen.
@@ -289,7 +289,7 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
     return result;
 }
 
-size_t GetPhoneLen(const uint16_t *phoneSeq)
+size_t GetPhoneLen(const uint32_t *phoneSeq)
 {
     size_t len = 0;
 
@@ -314,7 +314,7 @@ static size_t GetBopomofoCount(const char *bopomofo_buf)
     return count;
 }
 
-size_t BopomofoFromUintArray(char *const bopomofo_buf, const size_t bopomofo_len, const uint16_t *phoneSeq)
+size_t BopomofoFromUintArray(char *const bopomofo_buf, const size_t bopomofo_len, const uint32_t *phoneSeq)
 {
     size_t i;
     size_t len;
@@ -338,7 +338,7 @@ size_t BopomofoFromUintArray(char *const bopomofo_buf, const size_t bopomofo_len
     return buf_len;
 }
 
-ssize_t UintArrayFromBopomofo(uint16_t *phone_seq, const size_t phone_len, const char *bopomofo_buf)
+ssize_t UintArrayFromBopomofo(uint32_t *phone_seq, const size_t phone_len, const char *bopomofo_buf)
 {
     size_t i;
     size_t len;
@@ -368,7 +368,7 @@ size_t GetBopomofoBufLen(size_t len)
     return (MAX_UTF8_SIZE * BOPOMOFO_SIZE + 1) * len;
 }
 
-size_t GetPhoneLenFromUint(uint16_t phone_num)
+size_t GetPhoneLenFromUint(uint32_t phone_num)
 {
     int i;
     size_t len = 0 ;

@@ -571,7 +571,7 @@ static int ChewingIsBreakPoint(int cursor, ChewingData *pgdata)
 
 void AutoLearnPhrase(ChewingData *pgdata)
 {
-    uint16_t bufPhoneSeq[MAX_PHONE_SEQ_LEN + 1];
+    uint32_t bufPhoneSeq[MAX_PHONE_SEQ_LEN + 1];
     char bufWordSeq[MAX_PHONE_SEQ_LEN * MAX_UTF8_SIZE + 1] = { 0 };
     char *pos;
     int i;
@@ -613,8 +613,8 @@ void AutoLearnPhrase(ChewingData *pgdata)
              * point. We store it and try to connect to other length
              * one phrase if possible.
              */
-            memcpy(bufPhoneSeq + prev_pos, &pgdata->phoneSeq[from], sizeof(uint16_t) * len);
-            bufPhoneSeq[prev_pos + len] = (uint16_t) 0;
+            memcpy(bufPhoneSeq + prev_pos, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
+            bufPhoneSeq[prev_pos + len] = (uint32_t) 0;
 
             pos = ueStrSeek(bufWordSeq, prev_pos);
             copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, pos, bufWordSeq + sizeof(bufWordSeq) - pos);
@@ -631,8 +631,8 @@ void AutoLearnPhrase(ChewingData *pgdata)
                 prev_pos = 0;
                 pending_pos = 0;
             }
-            memcpy(bufPhoneSeq, &pgdata->phoneSeq[from], sizeof(uint16_t) * len);
-            bufPhoneSeq[len] = (uint16_t) 0;
+            memcpy(bufPhoneSeq, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
+            bufPhoneSeq[len] = (uint32_t) 0;
             copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, bufWordSeq, sizeof(bufWordSeq));
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq);
         }
@@ -645,7 +645,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
     UserUpdatePhraseEnd(pgdata);
 }
 
-int AddChi(uint16_t phone, uint16_t phoneAlt, ChewingData *pgdata)
+int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
 {
     int i;
     int cursor = PhoneSeqCursor(pgdata);
@@ -668,10 +668,10 @@ int AddChi(uint16_t phone, uint16_t phoneAlt, ChewingData *pgdata)
 
     /* add to phoneSeq */
     memmove(&(pgdata->phoneSeq[cursor + 1]),
-            &(pgdata->phoneSeq[cursor]), sizeof(uint16_t) * (pgdata->nPhoneSeq - cursor));
+            &(pgdata->phoneSeq[cursor]), sizeof(uint32_t) * (pgdata->nPhoneSeq - cursor));
     pgdata->phoneSeq[cursor] = phone;
     memmove(&(pgdata->phoneSeqAlt[cursor + 1]),
-            &(pgdata->phoneSeqAlt[cursor]), sizeof(uint16_t) * (pgdata->nPhoneSeq - cursor));
+            &(pgdata->phoneSeqAlt[cursor]), sizeof(uint32_t) * (pgdata->nPhoneSeq - cursor));
     pgdata->phoneSeqAlt[cursor] = phoneAlt;
     pgdata->nPhoneSeq++;
     LOG_VERBOSE("\t\tXXXXXXXXXXXXXXXXXXXXXXXxxx %s, phone=%d, pgdata->nPhoneSeq=%d, cursor=%d\n", __func__, phone, pgdata->nPhoneSeq, cursor);
@@ -1021,7 +1021,7 @@ int ChewingKillChar(ChewingData *pgdata, int chiSymbolCursorToKill, int minus)
         KillCharInSelectIntervalAndBrkpt(pgdata, cursorToKill);
         assert(pgdata->nPhoneSeq - cursorToKill - 1 >= 0);
         memmove(&(pgdata->phoneSeq[cursorToKill]),
-                &(pgdata->phoneSeq[cursorToKill + 1]), (pgdata->nPhoneSeq - cursorToKill - 1) * sizeof(uint16_t));
+                &(pgdata->phoneSeq[cursorToKill + 1]), (pgdata->nPhoneSeq - cursorToKill - 1) * sizeof(uint32_t));
         pgdata->nPhoneSeq--;
     }
     pgdata->symbolKeyBuf[chiSymbolCursorToKill] = 0;

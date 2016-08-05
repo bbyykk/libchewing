@@ -106,7 +106,7 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes);
  * @param[in]
  * @return
  */
-size_t BopomofoFromUintArray(char *const bopomofo_buf, const size_t bopomofo_len, const uint16_t *phoneSeq);
+size_t BopomofoFromUintArray(char *const bopomofo_buf, const size_t bopomofo_len, const uint32_t *phoneSeq);
 
 /**
  * @brief
@@ -115,7 +115,7 @@ size_t BopomofoFromUintArray(char *const bopomofo_buf, const size_t bopomofo_len
  * @param[in]
  * @return
  */
-ssize_t UintArrayFromBopomofo(uint16_t *phone_seq, const size_t phone_len, const char *bopomofo_buf);
+ssize_t UintArrayFromBopomofo(uint32_t *phone_seq, const size_t phone_len, const char *bopomofo_buf);
 
 /**
  * @brief Get the length of the array of phones.
@@ -126,7 +126,7 @@ ssize_t UintArrayFromBopomofo(uint16_t *phone_seq, const size_t phone_len, const
  * @param[in] phoneSeq pointer to the array.
  * @return the length of the array of phones.
  */
-size_t GetPhoneLen(const uint16_t *phoneSeq);
+size_t GetPhoneLen(const uint32_t *phoneSeq);
 
 /**
  * @brief Get the length of bopomofo buffer needed in bytes by the given number
@@ -143,7 +143,7 @@ size_t GetBopomofoBufLen(size_t len);
  * @param[in] phone_num phonetic number.
  * @return the length of phone.
  */
-size_t GetPhoneLenFromUint(uint16_t phone_num);
+size_t GetPhoneLenFromUint(uint32_t phone_num);
 
 /* *INDENT-OFF* */
 #endif

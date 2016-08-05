@@ -334,7 +334,7 @@ static void MigrateOldFormat(ChewingData *pgdata, const char *path)
     char *old_uhash;
     FILE *fd = NULL;
     char buf[HASH_FIELD_SIZE];
-    uint16_t phoneSeq[MAX_PHRASE_LEN + 1];
+    uint32_t phoneSeq[MAX_PHRASE_LEN + 1];
     char *pos;
     int len;
     int i;
@@ -371,7 +371,7 @@ static void MigrateOldFormat(ChewingData *pgdata, const char *path)
      * 8 ~ 11               max frequency, platform endianness
      * 12 ~ 15              original frequency, platform endianness
      * 16                   phone length
-     * 17 ~ 17 + 2 * n      phone sequence, uint16_t, platform endianness
+     * 17 ~ 17 + 2 * n      phone sequence, uint32_t, platform endianness
      * 17 + 2 * n + 1       phrase length in bytes
      * 17 + 2 * n + 2 ~ y   phrase in UTF-8
      *

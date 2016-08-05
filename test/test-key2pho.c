@@ -25,8 +25,8 @@ void test_uint_and_phone()
 {
     char *u8phone;
     char rt[MAX_UTF8_SIZE * BOPOMOFO_SIZE + 1];
-    uint16_t phone;
-    uint16_t expect;
+    uint32_t phone;
+    uint32_t expect;
 
     start_testcase(NULL, fd);
 
@@ -61,8 +61,8 @@ void test_uint_and_phone_error()
 {
     char *u8phone;
     char rt[MAX_UTF8_SIZE * BOPOMOFO_SIZE + 1];
-    uint16_t phone;
-    uint16_t expect;
+    uint32_t phone;
+    uint32_t expect;
 
     start_testcase(NULL, fd);
 

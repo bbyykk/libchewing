@@ -1649,7 +1649,7 @@ CHEWING_API int chewing_handle_CtrlNum(ChewingContext *ctx, int key)
     int keystrokeRtn = KEYSTROKE_ABSORB;
     int newPhraseLen;
     int i;
-    uint16_t addPhoneSeq[MAX_PHONE_SEQ_LEN];
+    uint32_t addPhoneSeq[MAX_PHONE_SEQ_LEN];
     char addWordSeq[MAX_PHONE_SEQ_LEN * MAX_UTF8_SIZE + 1];
     int phraseState;
     int cursor;
@@ -1685,7 +1685,7 @@ CHEWING_API int chewing_handle_CtrlNum(ChewingContext *ctx, int key)
         if (newPhraseLen >= 1 && cursor + newPhraseLen - 1 <= pgdata->nPhoneSeq) {
             if (NoSymbolBetween(pgdata, cursor, cursor + newPhraseLen)) {
                 /* Manually add phrase to the user phrase database. */
-                memcpy(addPhoneSeq, &pgdata->phoneSeq[cursor], sizeof(uint16_t) * newPhraseLen);
+                memcpy(addPhoneSeq, &pgdata->phoneSeq[cursor], sizeof(uint32_t) * newPhraseLen);
                 addPhoneSeq[newPhraseLen] = 0;
 
                 copyStringFromPreeditBuf(pgdata, cursor, newPhraseLen, addWordSeq, sizeof(addWordSeq));
@@ -1702,7 +1702,7 @@ CHEWING_API int chewing_handle_CtrlNum(ChewingContext *ctx, int key)
         if (newPhraseLen >= 1 && cursor - newPhraseLen >= 0) {
             if (NoSymbolBetween(pgdata, cursor - newPhraseLen, cursor)) {
                 /* Manually add phrase to the user phrase database. */
-                memcpy(addPhoneSeq, &pgdata->phoneSeq[cursor - newPhraseLen], sizeof(uint16_t) * newPhraseLen);
+                memcpy(addPhoneSeq, &pgdata->phoneSeq[cursor - newPhraseLen], sizeof(uint32_t) * newPhraseLen);
                 addPhoneSeq[newPhraseLen] = 0;
 
                 copyStringFromPreeditBuf(pgdata, cursor - newPhraseLen, newPhraseLen, addWordSeq, sizeof(addWordSeq));
@@ -1807,7 +1807,7 @@ CHEWING_API int chewing_handle_Numlock(ChewingContext *ctx, int key)
 CHEWING_API unsigned short *chewing_get_phoneSeq(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
-    uint16_t *seq;
+    uint32_t *seq;
 
     if (!ctx) {
         return NULL;
@@ -1816,9 +1816,9 @@ CHEWING_API unsigned short *chewing_get_phoneSeq(const ChewingContext *ctx)
 
     LOG_API("");
 
-    seq = ALC(uint16_t, ctx->data->nPhoneSeq);
+    seq = ALC(uint32_t, ctx->data->nPhoneSeq);
     if (seq)
-        memcpy(seq, ctx->data->phoneSeq, sizeof(uint16_t) * ctx->data->nPhoneSeq);
+        memcpy(seq, ctx->data->phoneSeq, sizeof(uint32_t) * ctx->data->nPhoneSeq);
     return seq;
 }
 
@@ -1939,7 +1939,7 @@ CHEWING_API int chewing_userphrase_get(ChewingContext *ctx,
     const char *phrase;
     int length;
     int i;
-    uint16_t phone_array[MAX_PHRASE_LEN + 1] = { 0 };
+    uint32_t phone_array[MAX_PHRASE_LEN + 1] = { 0 };
 #endif
 
     if (!ctx || !phrase_buf || !phrase_len || !bopomofo_buf || !bopomofo_len) {
@@ -1999,7 +1999,7 @@ CHEWING_API int chewing_userphrase_add(ChewingContext *ctx, const char *phrase_b
     ChewingData *pgdata;
     ssize_t phrase_len;
     ssize_t phone_len;
-    uint16_t *phone_buf = 0;
+    uint32_t *phone_buf = 0;
     int ret;
 
     if (!ctx || !phrase_buf || !bopomofo_buf) {
@@ -2016,7 +2016,7 @@ CHEWING_API int chewing_userphrase_add(ChewingContext *ctx, const char *phrase_b
         return 0;
     }
 
-    phone_buf = ALC(uint16_t, phone_len + 1);
+    phone_buf = ALC(uint32_t, phone_len + 1);
     if (!phone_buf)
         return -1;
     ret = UintArrayFromBopomofo(phone_buf, phone_len + 1, bopomofo_buf);
@@ -2039,7 +2039,7 @@ CHEWING_API int chewing_userphrase_remove(ChewingContext *ctx, const char *phras
 {
     ChewingData *pgdata;
     ssize_t phone_len;
-    uint16_t *phone_buf = 0;
+    uint32_t *phone_buf = 0;
     int ret;
 
     if (!ctx || !phrase_buf || !bopomofo_buf) {
@@ -2050,7 +2050,7 @@ CHEWING_API int chewing_userphrase_remove(ChewingContext *ctx, const char *phras
     LOG_API("");
 
     phone_len = UintArrayFromBopomofo(NULL, 0, bopomofo_buf);
-    phone_buf = ALC(uint16_t, phone_len + 1);
+    phone_buf = ALC(uint32_t, phone_len + 1);
     if (!phone_buf)
         return 0;
     ret = UintArrayFromBopomofo(phone_buf, phone_len + 1, bopomofo_buf);
@@ -2068,7 +2068,7 @@ CHEWING_API int chewing_userphrase_lookup(ChewingContext *ctx, const char *phras
 {
     ChewingData *pgdata;
     ssize_t phone_len;
-    uint16_t *phone_buf = 0;
+    uint32_t *phone_buf = 0;
     int ret;
     UserPhraseData *user_phrase_data;
 
@@ -2080,7 +2080,7 @@ CHEWING_API int chewing_userphrase_lookup(ChewingContext *ctx, const char *phras
     LOG_API("");
 
     phone_len = UintArrayFromBopomofo(NULL, 0, bopomofo_buf);
-    phone_buf = ALC(uint16_t, phone_len + 1);
+    phone_buf = ALC(uint32_t, phone_len + 1);
     if (!phone_buf)
         return 0;
     ret = UintArrayFromBopomofo(phone_buf, phone_len + 1, bopomofo_buf);

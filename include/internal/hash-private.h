@@ -32,11 +32,11 @@ typedef struct HASH_ITEM {
     struct HASH_ITEM *next;
 } HASH_ITEM;
 
-HASH_ITEM *HashFindPhone(const uint16_t phoneSeq[]);
-HASH_ITEM **HashFindHead(struct ChewingData *pgdata, const uint16_t phoneSeq[]);
-HASH_ITEM *HashFindEntry(struct ChewingData *pgdata, const uint16_t phoneSeq[], const char wordSeq[]);
+HASH_ITEM *HashFindPhone(const uint32_t phoneSeq[]);
+HASH_ITEM **HashFindHead(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
+HASH_ITEM *HashFindEntry(struct ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[]);
 HASH_ITEM *HashInsert(struct ChewingData *pgdata, UserPhraseData *pData);
-HASH_ITEM *HashFindPhonePhrase(struct ChewingData *pgdata, const uint16_t phoneSeq[], HASH_ITEM *pHashLast);
+HASH_ITEM *HashFindPhonePhrase(struct ChewingData *pgdata, const uint32_t phoneSeq[], HASH_ITEM *pHashLast);
 HASH_ITEM *FindNextHash(const struct ChewingData *pgdata, HASH_ITEM *curr);
 void HashModify(struct ChewingData *pgdata, HASH_ITEM *pItem);
 void FreeHashItem(HASH_ITEM *pItem);

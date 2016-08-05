@@ -1696,8 +1696,8 @@ void test_chewing_phone_to_bopomofo()
     char *u8phone;
     char *rt;
     int  len;
-    uint16_t phone;
-    uint16_t expect;
+    uint32_t phone;
+    uint32_t expect;
     /*
      *  the libchewing divides a completed bopomofo into 4 parts,
      *      1st part: ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙ

@@ -27,16 +27,16 @@
 #    define inline __inline
 #endif
 
-static inline uint16_t GetUint16(const void *ptr)
+static inline uint32_t GetUint16(const void *ptr)
 {
-    uint16_t val;
+    uint32_t val;
     const unsigned char *uptr = ptr;
 
     val = (uptr[0] << 0) | (uptr[1] << 8);
     return val;
 }
 
-static inline void PutUint16(uint16_t val, void *ptr)
+static inline void PutUint16(uint32_t val, void *ptr)
 {
     unsigned char *uptr = (unsigned char *) ptr;
 
@@ -44,9 +44,9 @@ static inline void PutUint16(uint16_t val, void *ptr)
     uptr[1] = (val >> 8) & 0xff;
 }
 
-static inline uint16_t GetUint16PreservedEndian(const void *ptr)
+static inline uint32_t GetUint16PreservedEndian(const void *ptr)
 {
-    uint16_t val;
+    uint32_t val;
     const unsigned char *uptr = ptr;
 
 #if WORDS_BIGENDIAN
@@ -57,7 +57,7 @@ static inline uint16_t GetUint16PreservedEndian(const void *ptr)
     return val;
 }
 
-static inline void PutUint16PreservedEndian(uint16_t val, void *ptr)
+static inline void PutUint16PreservedEndian(uint32_t val, void *ptr)
 {
     unsigned char *uptr = (unsigned char *) ptr;
 
