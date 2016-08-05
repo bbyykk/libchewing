@@ -275,12 +275,14 @@ const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const ui
  */
 void TreeChildRange(ChewingData *pgdata, const TreeType *parent)
 {
-    pgdata->static_data.tree_cur_pos = pgdata->static_data.tree + GetUint24(parent->child.begin);
-    pgdata->static_data.tree_end_pos = pgdata->static_data.tree + GetUint24(parent->child.end);
+    printf("%s, %d\n", __func__, __LINE__);
+    pgdata->static_data.tree_cur_pos = pgdata->static_data.tree + GetUint32(parent->child.begin);
+    pgdata->static_data.tree_end_pos = pgdata->static_data.tree + GetUint32(parent->child.end);
 }
 
 static void AddInterval(TreeDataType *ptd, int begin, int end, Phrase *p_phrase, int dict_or_user)
 {
+    printf("%s, %d\n", __func__, __LINE__);
     ptd->interval[ptd->nInterval].from = begin;
     ptd->interval[ptd->nInterval].to = end + 1;
     ptd->interval[ptd->nInterval].p_phr = p_phrase;
@@ -325,10 +327,13 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
     uint32_t new_phoneSeq[MAX_PHONE_SEQ_LEN];
     UserPhraseData *userphrase;
 
+    printf("====== %s, %d START, pgdata->nPhoneSeq=%d\n", __func__,__LINE__, pgdata->nPhoneSeq);
     for (begin = 0; begin < pgdata->nPhoneSeq; begin++) {
         for (end = begin; end < min(pgdata->nPhoneSeq, begin + MAX_PHRASE_LEN); end++) {
-            if (!CheckBreakpoint(begin, end + 1, pgdata->bArrBrkpt))
+            if (!CheckBreakpoint(begin, end + 1, pgdata->bArrBrkpt)) {
+		printf("%s, %d, Break!!\n", __func__, __LINE__);
                 break;
+	    }
 
             /* set new_phoneSeq */
             memcpy(new_phoneSeq, &pgdata->phoneSeq[begin], sizeof(uint32_t) * (end - begin + 1));
@@ -346,11 +351,15 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
 
             /* check dict phrase */
             phrase_parent = TreeFindPhrase(pgdata, begin, end, pgdata->phoneSeq);
+	    if (phrase_parent) {
+		    printf("!!! got phrase_parent !!!\n");
+	    }
             if (phrase_parent &&
                 CheckChoose(pgdata,
                             phrase_parent, begin, end + 1,
                             &p_phrase, pgdata->selectStr, pgdata->selectInterval, pgdata->nSelect)) {
                 pdictphrase = p_phrase;
+	    	printf("!!! Use pdictphrase !!!\n");
             }
 
             /* add only one interval, which has the largest freqency
@@ -358,30 +367,38 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
              * static dict
              */
             if (puserphrase != NULL && pdictphrase == NULL) {
+		printf("%s, %d\n", __func__,__LINE__);
                 i_used_phrase = USED_PHRASE_USER;
             } else if (puserphrase == NULL && pdictphrase != NULL) {
+		printf("%s, %d\n", __func__,__LINE__);
                 i_used_phrase = USED_PHRASE_DICT;
             } else if (puserphrase != NULL && pdictphrase != NULL) {
                 /* the same phrase, userphrase overrides */
                 if (!strcmp(puserphrase->phrase, pdictphrase->phrase)) {
+			printf("%s, %d\n", __func__,__LINE__);
                     i_used_phrase = USED_PHRASE_USER;
                 } else {
                     if (puserphrase->freq > pdictphrase->freq) {
+			printf("%s, %d\n", __func__,__LINE__);
                         i_used_phrase = USED_PHRASE_USER;
                     } else {
+			printf("%s, %d\n", __func__,__LINE__);
                         i_used_phrase = USED_PHRASE_DICT;
                     }
                 }
             }
             switch (i_used_phrase) {
             case USED_PHRASE_USER:
+		printf("%s, %d\n", __func__,__LINE__);
                 AddInterval(ptd, begin, end, puserphrase, IS_USER_PHRASE);
                 break;
             case USED_PHRASE_DICT:
+		printf("%s, %d\n", __func__,__LINE__);
                 AddInterval(ptd, begin, end, pdictphrase, IS_DICT_PHRASE);
                 break;
             case USED_PHRASE_NONE:
             default:
+	        printf("%s, %d\n", __func__,__LINE__);
                 break;
             }
             internal_release_Phrase(i_used_phrase, puserphrase, pdictphrase);
@@ -552,13 +569,14 @@ static void OutputRecordStr(ChewingData *pgdata, const TreeDataType *ptd)
     PhraseIntervalType inter;
     int i;
 
-    LOG_VERBOSE("%s, %d\n", __func__, __LINE__);
+    LOG_VERBOSE("%s, %d, ptd->phList->nInter=%d\n", __func__, __LINE__, ptd->phList->nInter);
     for (i = 0; i < ptd->phList->nInter; i++) {
         inter = ptd->interval[ptd->phList->arrIndex[i]];
         FillPreeditBuf(pgdata, inter.p_phr->phrase, inter.from, inter.to);
     }
 
     for (i = 0; i < pgdata->nSelect; i++) {
+	LOG_VERBOSE("%s, %d\n", __func__, __LINE__);
         FillPreeditBuf(pgdata, pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to);
     }
 }
@@ -677,6 +695,7 @@ static void SaveRecord(const int *record, int nInter, TreeDataType *ptd)
 {
     RecordNode *now, *p, *pre;
 
+    printf("<<<< %s, %d, %nInter=%d >>>>\n", __func__, __LINE__, nInter);
     pre = NULL;
     for (p = ptd->phList; p;) {
         /* if  'p' contains 'record', then discard 'record'. */
@@ -862,6 +881,8 @@ static RecordNode *DuplicateRecordAndInsertInterval(const RecordNode *record, Tr
     assert(record);
     assert(pdt);
 
+
+    printf("<<<< %s, %d, interval_id=%d >>>>\n", __func__, __LINE__, interval_id);
     ret = ALC(RecordNode, 1);
 
     if (!ret)
@@ -888,6 +909,7 @@ static RecordNode *CreateSingleIntervalRecord(TreeDataType *pdt, const int inter
 
     assert(pdt);
 
+    printf("<<<< %s, %d >>>>\n", __func__, __LINE__);
     ret = ALC(RecordNode, 1);
 
     if (!ret)
@@ -912,6 +934,7 @@ static RecordNode *CreateNullIntervalRecord()
     RecordNode *ret = NULL;
     ret = ALC(RecordNode, 1);
 
+    printf("<<<< %s, %d >>>>\n", __func__, __LINE__);
     if (!ret)
         return NULL;
 
@@ -992,6 +1015,7 @@ static void DoDpPhrasing(ChewingData *pgdata, TreeDataType *pdt)
     }
 
     if (pgdata->nPhoneSeq - 1 < 0 || highest_score[pgdata->nPhoneSeq - 1] == NULL) {
+	printf("-->>-->> %s, %d, pgdata->nPhoneSeq=%d\n", __func__, __LINE__, pgdata->nPhoneSeq);
         pdt->phList = CreateNullIntervalRecord();
     } else {
         pdt->phList = highest_score[pgdata->nPhoneSeq - 1];
@@ -1007,6 +1031,7 @@ int Phrasing(ChewingData *pgdata, int all_phrasing)
     TreeDataType treeData;
 
     DEBUG_OUT("\n");
+    printf("^^^^^ %s, %d, all_pharseing=%d\n", __func__, __LINE__, all_phrasing);
     InitPhrasing(&treeData);
 
     FindInterval(pgdata, &treeData);

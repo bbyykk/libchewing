@@ -132,8 +132,8 @@ typedef struct BopomofoData {
     int kbtype;
     int pho_inx[BOPOMOFO_SIZE];
     int pho_inx_alt[BOPOMOFO_SIZE];
-    uint16_t phone;
-    uint16_t phoneAlt;
+    uint32_t phone;
+    uint32_t phoneAlt;
     PinYinData pinYinData;
 } BopomofoData;
 
@@ -256,8 +256,8 @@ typedef struct ChewingData {
     char showMsg[MAX_UTF8_SIZE * (MAX_PHRASE_LEN + AUX_PREFIX_LEN) + 1];
     int showMsgLen;
 
-    uint16_t phoneSeq[MAX_PHONE_SEQ_LEN];
-    uint16_t phoneSeqAlt[MAX_PHONE_SEQ_LEN];
+    uint32_t phoneSeq[MAX_PHONE_SEQ_LEN];
+    uint32_t phoneSeqAlt[MAX_PHONE_SEQ_LEN];
     int nPhoneSeq;
     char selectStr[MAX_PHONE_SEQ_LEN][MAX_PHONE_SEQ_LEN * MAX_UTF8_SIZE + 1];
     IntervalType selectInterval[MAX_PHONE_SEQ_LEN];

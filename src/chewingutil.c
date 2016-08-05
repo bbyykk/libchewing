@@ -487,6 +487,7 @@ static void KillFromLeft(ChewingData *pgdata, int nKill)
 void CleanAllBuf(ChewingData *pgdata)
 {
     /* 1 */
+    printf("XXXXXXXXXXX %s, %d, set nPHoneSeq to 0 XXXXXXXXXXXXXXXXXXXXXXXXxx\n", __func__, __LINE__);
     pgdata->nPhoneSeq = 0;
     memset(pgdata->phoneSeq, 0, sizeof(pgdata->phoneSeq));
     /* 2 */
@@ -649,7 +650,7 @@ int AddChi(uint16_t phone, uint16_t phoneAlt, ChewingData *pgdata)
     int i;
     int cursor = PhoneSeqCursor(pgdata);
 
-    LOG_VERBOSE("\t\t%s, phone=%d, phoneAlt=%d, cursor=%d\n", __func__, phone, phoneAlt, cursor);
+    LOG_VERBOSE("\t\tXXXXXXXXXXXXXXXXXXXXXXXxxx %s, phone=%d, pgdata->nPhoneSeq=%d, cursor=%d\n", __func__, phone, pgdata->nPhoneSeq, cursor);
     /* shift the selectInterval */
     for (i = 0; i < pgdata->nSelect; i++) {
         if (pgdata->selectInterval[i].from >= cursor) {
@@ -673,6 +674,7 @@ int AddChi(uint16_t phone, uint16_t phoneAlt, ChewingData *pgdata)
             &(pgdata->phoneSeqAlt[cursor]), sizeof(uint16_t) * (pgdata->nPhoneSeq - cursor));
     pgdata->phoneSeqAlt[cursor] = phoneAlt;
     pgdata->nPhoneSeq++;
+    LOG_VERBOSE("\t\tXXXXXXXXXXXXXXXXXXXXXXXxxx %s, phone=%d, pgdata->nPhoneSeq=%d, cursor=%d\n", __func__, phone, pgdata->nPhoneSeq, cursor);
 
     /* add to chiSymbolBuf */
     assert(pgdata->chiSymbolBufLen >= pgdata->chiSymbolCursor);
@@ -845,7 +847,7 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
     int inx;
     char *pos;
 
-    DEBUG_OUT("\n");
+    DEBUG_OUT("XXXXX %s XXXXX\n", __func__);
     /* fill zero to chiSymbolBuf first */
     pgo->preeditBuf[0] = 0;
     pgo->bopomofoBuf[0] = 0;
@@ -893,7 +895,7 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
 
 int MakeOutputWithRtn(ChewingOutput *pgo, ChewingData *pgdata, int keystrokeRtn)
 {  
-    DEBUG_OUT("keystrokeRtn=%d\n", keystrokeRtn);
+    DEBUG_OUT("------- %s, %d, keystrokeRtn=%d\n", __func__, __LINE__, keystrokeRtn);
     pgo->keystrokeRtn = keystrokeRtn;
     return MakeOutput(pgo, pgdata);
 }
@@ -1010,6 +1012,7 @@ int ChewingKillChar(ChewingData *pgdata, int chiSymbolCursorToKill, int minus)
 {
     int tmp, cursorToKill;
 
+    printf("%s, %d\n", __func__, __LINE__);
     tmp = pgdata->chiSymbolCursor;
     pgdata->chiSymbolCursor = chiSymbolCursorToKill;
     cursorToKill = PhoneSeqCursor(pgdata);

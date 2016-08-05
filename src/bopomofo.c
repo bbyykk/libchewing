@@ -98,7 +98,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     Phrase tempword;
     int pho_inx;
 
-    printf("%s, %d\n", __func__, __LINE__);
+    printf("##### %s, %d\n", __func__, __LINE__);
     /* Only for the tone 1~8 */
     pho_inx = PhoneInxFromKey(key, 1, pBopomofo->kbtype, searchTimes);
 
@@ -162,6 +162,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));
     memset(pBopomofo->pho_inx_alt, 0, sizeof(pBopomofo->pho_inx_alt));
 #endif
+    printf("##### %s, %d, END #####\n", __func__, __LINE__);
     return BOPOMOFO_COMMIT;
 }
 

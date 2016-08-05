@@ -302,7 +302,7 @@ CHEWING_API int chewing_Reset(ChewingContext *ctx)
     }
     pgdata = ctx->data;
 
-    LOG_API("");
+    LOG_API("===================");
 
     /* Backup old config and restore it after clearing pgdata structure. */
     old_config = pgdata->config;
@@ -1608,13 +1608,16 @@ CHEWING_API int chewing_handle_Default(ChewingContext *ctx, int key)
 
   End_keyproc:
     if (!bQuickCommit) {
+	printf("XXXX %s, %d\n", __func__, __LINE__);
         CallPhrasing(pgdata, 0);
-        if (ReleaseChiSymbolBuf(pgdata, pgo) != 0)
+        if (ReleaseChiSymbolBuf(pgdata, pgo) != 0) {
+	    printf("XXXX %s, %d\n", __func__, __LINE__);
             keystrokeRtn = KEYSTROKE_COMMIT;
+	}
     }
     /* Quick commit */
     else {
-        DEBUG_OUT("\t\tQuick commit buf[0]=%c\n", pgdata->preeditBuf[0].char_);
+        DEBUG_OUT("\t\tXXXX Quick commit buf[0]=%c\n", pgdata->preeditBuf[0].char_);
         WriteChiSymbolToCommitBuf(pgdata, pgo, 1);
         pgdata->chiSymbolBufLen = 0;
         pgdata->chiSymbolCursor = 0;
@@ -1624,6 +1627,7 @@ CHEWING_API int chewing_handle_Default(ChewingContext *ctx, int key)
     if (pgdata->phrOut.nNumCut > 0) {
         int i;
 
+	printf("XXXX %s, %d\n", __func__, __LINE__);
         for (i = 0; i < pgdata->phrOut.nDispInterval; i++) {
             pgdata->bUserArrBrkpt[pgdata->phrOut.dispInterval[i].from] = 1;
             pgdata->bUserArrBrkpt[pgdata->phrOut.dispInterval[i].to] = 1;
