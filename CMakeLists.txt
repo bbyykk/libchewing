@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.8)
-project(libchewing)
+project(libtaigi)
 
 # Update configure.ac if LIBCHEWING_VERSION is changed.
 set(LIBCHEWING_VERSION 0.5.1)
@@ -121,8 +121,8 @@ set(TEST_BIN_DIR ${PROJECT_BINARY_DIR}/test)
 
 include(GNUInstallDirs)
 
-set(INFO_SRC ${PROJECT_SOURCE_DIR}/doc/libchewing.texi)
-set(INFO_BIN ${PROJECT_BINARY_DIR}/doc/libchewing.info)
+set(INFO_SRC ${PROJECT_SOURCE_DIR}/doc/libtaigi.texi)
+set(INFO_BIN ${PROJECT_BINARY_DIR}/doc/libtaigi.info)
 
 configure_file(
     ${PROJECT_SOURCE_DIR}/cmake/config.h.in
@@ -161,9 +161,9 @@ set(ALL_DATA
 )
 
 set(ALL_INC
-    ${INC_DIR}/chewing.h
-    ${INC_DIR}/chewing-compat.h
-    ${INC_DIR}/chewingio.h
+    ${INC_DIR}/taigi.h
+    ${INC_DIR}/taigi-compat.h
+    ${INC_DIR}/taigiio.h
     ${INC_DIR}/global.h
     ${INC_DIR}/mod_aux.h
 )
@@ -266,7 +266,7 @@ set(ALL_TESTTOOLS
     randkeystroke
     simulate
     stress
-    testchewing
+    testtaigi
 )
 
 if(${CURSES_FOUND})
@@ -298,7 +298,7 @@ endforeach()
 
 add_library(testhelper STATIC
     ${TEST_SRC_DIR}/testhelper.c
-    $<TARGET_OBJECTS:chewing>
+    $<TARGET_OBJECTS:taigi>
     $<TARGET_OBJECTS:common>
 )
 target_link_libraries(testhelper userphrase)
@@ -328,10 +328,10 @@ endif()
 add_custom_target(data ALL DEPENDS ${ALL_DATA})
 
 # library
-add_library(chewing OBJECT
+add_library(taigi OBJECT
     ${ALL_INC}
-    ${INC_DIR}/internal/chewing-private.h
-    ${INC_DIR}/internal/chewingutil.h
+    ${INC_DIR}/internal/taigi-private.h
+    ${INC_DIR}/internal/taigiutil.h
     ${INC_DIR}/internal/choice-private.h
     ${INC_DIR}/internal/dict-private.h
     ${INC_DIR}/internal/global-private.h
@@ -341,8 +341,8 @@ add_library(chewing OBJECT
     ${INC_DIR}/internal/bopomofo-private.h
 
     ${SRC_DIR}/compat.c
-    ${SRC_DIR}/chewingio.c
-    ${SRC_DIR}/chewingutil.c
+    ${SRC_DIR}/taigiio.c
+    ${SRC_DIR}/taigiutil.c
     ${SRC_DIR}/choice.c
     ${SRC_DIR}/dict.c
     ${SRC_DIR}/mod_aux.c
@@ -361,15 +361,15 @@ add_library(chewing OBJECT
     ${SRC_DIR}/userphrase.c
     ${SRC_DIR}/bopomofo.c
 )
-set_target_properties(chewing PROPERTIES
-    COMPILE_DEFINITIONS "CHEWING_DATADIR=\"${CMAKE_INSTALL_FULL_DATADIR}/libchewing\""
+set_target_properties(taigi PROPERTIES
+    COMPILE_DEFINITIONS "CHEWING_DATADIR=\"${CMAKE_INSTALL_FULL_DATADIR}/libtaigi\""
 )
 
 if (WITH_SQLITE3)
     add_library(userphrase STATIC
-        ${INC_DIR}/internal/chewing-sql.h
+        ${INC_DIR}/internal/taigi-sql.h
 
-        ${SRC_DIR}/chewing-sql.c
+        ${SRC_DIR}/taigi-sql.c
         ${SRC_DIR}/userphrase-sql.c
     )
 
@@ -409,21 +409,21 @@ if (BUILD_DLL OR NOT MSVC)
     if (MSVC)
         add_definitions(-DCHEWINGDLL_EXPORTS)
     endif()
-    add_library(chewing_shared SHARED
-        $<TARGET_OBJECTS:chewing>
+    add_library(taigi_shared SHARED
+        $<TARGET_OBJECTS:taigi>
         $<TARGET_OBJECTS:common>
     )
-    list(APPEND LIBS chewing_shared)
-    add_dependencies(check chewing_shared)
+    list(APPEND LIBS taigi_shared)
+    add_dependencies(check taigi_shared)
 endif()
 
 if (NOT BUILD_DLL)
-    add_library(chewing_static STATIC
-        $<TARGET_OBJECTS:chewing>
+    add_library(taigi_static STATIC
+        $<TARGET_OBJECTS:taigi>
         $<TARGET_OBJECTS:common>
     )
-    list(APPEND LIBS chewing_static)
-    add_dependencies(check chewing_static)
+    list(APPEND LIBS taigi_static)
+    add_dependencies(check taigi_static)
 endif()
 
 foreach(lib ${LIBS})
@@ -434,7 +434,7 @@ foreach(lib ${LIBS})
 endforeach()
 
 set_target_properties(${LIBS} PROPERTIES
-    OUTPUT_NAME chewing
+    OUTPUT_NAME taigi
     # Update configure.ac if one of SOVERSION/VERSION is updated.
     # See configure.ac for more information.
     SOVERSION 3
@@ -442,19 +442,19 @@ set_target_properties(${LIBS} PROPERTIES
 )
 
 add_library(common OBJECT
-    ${INC_DIR}/internal/chewing-utf8-util.h
+    ${INC_DIR}/internal/taigi-utf8-util.h
     ${INC_DIR}/internal/key2pho-private.h
     ${INC_DIR}/internal/memory-private.h
 
-    ${SRC_DIR}/common/chewing-utf8-util.c
+    ${SRC_DIR}/common/taigi-utf8-util.c
     ${SRC_DIR}/common/key2pho.c
 )
 
 
 # install
-install(FILES ${ALL_DATA} DESTINATION ${CMAKE_INSTALL_DATADIR}/libchewing)
-install(FILES ${ALL_STATIC_DATA} DESTINATION ${CMAKE_INSTALL_DATADIR}/libchewing)
-install(FILES ${ALL_INC} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/chewing)
-install(FILES ${PROJECT_BINARY_DIR}/chewing.pc
+install(FILES ${ALL_DATA} DESTINATION ${CMAKE_INSTALL_DATADIR}/libtaigi)
+install(FILES ${ALL_STATIC_DATA} DESTINATION ${CMAKE_INSTALL_DATADIR}/libtaigi)
+install(FILES ${ALL_INC} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/taigi)
+install(FILES ${PROJECT_BINARY_DIR}/taigi.pc
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 install(TARGETS ${LIBS} DESTINATION ${CMAKE_INSTALL_LIBDIR})
