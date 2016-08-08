@@ -3,14 +3,14 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 datarootdir=@datarootdir@
-datadir=@datadir@/libchewing
+datadir=@datadir@/libtaigi
 sysconfdir=@sysconfdir@
 
-chewing_binary_version=@LIBCHEWING_BINARY_VERSION@
+taigi_binary_version=@LIBCHEWING_BINARY_VERSION@
 
-Name: Chewing
+Name: Taigi
 Description: Intelligent Chinese phonetic input method library
 Version: @PACKAGE_VERSION@
 Requires:
-Libs: -L${libdir} -lchewing
-Cflags: -I${includedir}/chewing
+Libs: -L${libdir} -ltaigi
+Cflags: -I${includedir}/taigi
