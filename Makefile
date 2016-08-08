@@ -71,10 +71,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/libchewing
-pkgincludedir = $(includedir)/libchewing
-pkglibdir = $(libdir)/libchewing
-pkglibexecdir = $(libexecdir)/libchewing
+pkgdatadir = $(datadir)/libtaigi
+pkgincludedir = $(includedir)/libtaigi
+pkglibdir = $(libdir)/libtaigi
+pkglibexecdir = $(libexecdir)/libtaigi
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -407,7 +407,7 @@ EXTRA_DIST = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = chewing.pc
-chewing_includedir = $(includedir)/chewing
+chewing_includedir = $(includedir)/taigi
 chewing_include_HEADERS = \
 	include/chewingio.h \
 	include/mod_aux.h \

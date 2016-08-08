@@ -336,7 +336,7 @@ OBJEXT = o
 OTOOL = 
 OTOOL64 = 
 PACKAGE = libtaigi
-PACKAGE_BUGREPORT = chewing-devel@googlegroups.com
+PACKAGE_BUGREPORT = taigi-devel@googlegroups.com
 PACKAGE_NAME = libtaigi
 PACKAGE_STRING = libtaigi 0.5.1
 PACKAGE_TARNAME = libtaigi
@@ -411,7 +411,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/include/internal \
 	-I$(top_srcdir)/src/porting_layer/include \
-	-DCHEWING_DATADIR=\"$(datadir)/libchewing\" \
+	-DCHEWING_DATADIR=\"$(datadir)/libtaigi\" \
 	$(USERPHRASE_CPPFLAGS) \
 	$(DEFAULT_CPPFLAGS) \
 	$(NULL)
@@ -432,7 +432,7 @@ libchewing_la_LDFLAGS = \
 	-rpath $(libdir) \
 	-no-undefined \
 	$(NO_UNDEFINED_LDFLAGS) \
-	-export-symbols-regex "^(chewing)_" \
+	-export-symbols-regex "^(taigi)_" \
 	$(NULL)
 
 all: all-recursive

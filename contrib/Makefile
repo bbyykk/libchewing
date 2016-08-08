@@ -1,7 +1,7 @@
 TARGET = simple-select
 
 # FIXME: static build and cross-platform support
-LIBCHEWING = $(shell dirname $(shell find .. -name libchewing.so))
+LIBCHEWING = $(shell dirname $(shell find .. -name libtaigi.so))
 CHEWING_LDFLAGS = \
 	-L $(LIBCHEWING) -lchewing \
 	-Wl,-rpath=$(LIBCHEWING)
