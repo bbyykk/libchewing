@@ -142,8 +142,8 @@ set(datarootdir "\${prefix}/share")
 set(datadir "\${datarootdir}")
 set(sysconfdir "\${prefix}/etc")
 configure_file(
-    ${PROJECT_SOURCE_DIR}/chewing.pc.in
-    ${PROJECT_BINARY_DIR}/chewing.pc
+    ${PROJECT_SOURCE_DIR}/taigi.pc.in
+    ${PROJECT_BINARY_DIR}/taigi.pc
     @ONLY
 )
 

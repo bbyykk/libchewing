@@ -196,7 +196,7 @@ CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = src/tools data src test doc \
 	thirdparty/sqlite-amalgamation
-am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/chewing.pc.in \
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/taigi.pc.in \
 	$(srcdir)/libchewing.spec.in $(top_srcdir)/build-aux/compile \
 	$(top_srcdir)/build-aux/config.guess \
 	$(top_srcdir)/build-aux/config.sub \
@@ -406,7 +406,7 @@ EXTRA_DIST = \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = chewing.pc
+pkgconfig_DATA = taigi.pc
 chewing_includedir = $(includedir)/taigi
 chewing_include_HEADERS = \
 	include/chewingio.h \
@@ -490,7 +490,7 @@ $(top_srcdir)/include/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f include/config.h include/stamp-h1
-chewing.pc: $(top_builddir)/config.status $(srcdir)/chewing.pc.in
+taigi.pc: $(top_builddir)/config.status $(srcdir)/taigi.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 libchewing.spec: $(top_builddir)/config.status $(srcdir)/libchewing.spec.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
