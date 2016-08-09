@@ -98,7 +98,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     Phrase tempword;
     int pho_inx;
 
-    printf("##### %s, %d\n", __func__, __LINE__);
+    printf("##### %s, %d Start\n", __func__, __LINE__);
     /* Only for the tone 1~8 */
     pho_inx = PhoneInxFromKey(key, 1, pBopomofo->kbtype, searchTimes);
 

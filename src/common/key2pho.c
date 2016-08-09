@@ -276,7 +276,6 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
 	    pos = strchr(zhuin_tab[0], ph_inx[i]);
 	    printf("%s, got=%c\n", __func__, *pos);
 	    result = result * 17 + (uint32_t) (pos - zhuin_tab[0]) + 1;
-	    printf("%s, %d\n", __func__, result);
     }
     pos = strchr(zhuin_tab[1], ph_inx[i]);
     offset = (uint32_t) (pos - zhuin_tab[1]);
@@ -286,6 +285,7 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
 	    printf("No tone\n");
 	    return result;
     }
+    printf("%s END result=%d\n", __func__, result);
     return result;
 }
 

@@ -30,20 +30,20 @@ int get_search_path(char *path, size_t path_len)
     char *taigi_path;
     char *home;
 
-    taigi_path = getenv("CHEWING_PATH");
+    taigi_path = getenv("TAIGI_PATH");
     if (taigi_path) {
         strncpy(path, taigi_path, path_len);
     } else {
         home = getenv("HOME");
         if (home) {
             snprintf(path, path_len,
-                     "%s/.chewing" SEARCH_PATH_SEP CHEWING_DATADIR, home);
+                     "%s/.taigi" SEARCH_PATH_SEP TAIGI_DATADIR, home);
         } else {
             /* No HOME ? */
-            strncpy(path, SEARCH_PATH_SEP CHEWING_DATADIR, path_len);
+            strncpy(path, SEARCH_PATH_SEP TAIGI_DATADIR, path_len);
         }
     }
-
+    printf("Get the path=%s\n", path);
     return 0;
 }
 
@@ -58,7 +58,7 @@ int get_search_path(char *path, size_t path_len)
     size_t len;
     HRESULT result;
 
-    taigi_path = getenv("CHEWING_PATH");
+    taigi_path = getenv("TAIGI_PATH");
     if (taigi_path) {
         /* FIXME: Check for truncated. */
         strncpy(path, taigi_path, path_len);
