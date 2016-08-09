@@ -43,8 +43,8 @@ void commit_string(ChewingContext *ctx)
 {
     char *s;
 
-    if (chewing_commit_Check(ctx)) {
-        s = chewing_commit_String(ctx);
+    if (taigi_commit_Check(ctx)) {
+        s = taigi_commit_String(ctx);
 #ifdef USED_IN_SIMULATION
         strcat(commit_string_buf, s);
 #else
@@ -81,7 +81,7 @@ void compare_per_run()
 }
 
 /* entry point for simulation */
-int chewing_test_Main()
+int taigi_test_Main()
 #else
 int main()
 #endif
@@ -95,16 +95,16 @@ int main()
     putenv("CHEWING_USER_PATH=" TEST_HASH_DIR);
 
     /* Request handle to ChewingContext */
-    ctx = chewing_new();
+    ctx = taigi_new();
 
     /* Set keyboard type */
-    chewing_set_KBType(ctx, chewing_KBStr2Num("KB_DEFAULT"));
+    taigi_set_KBType(ctx, taigi_KBStr2Num("KB_DEFAULT"));
 
-    chewing_set_candPerPage(ctx, 9);
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_addPhraseDirection(ctx, 1);
-    chewing_set_selKey(ctx, selKey_define, 10);
-    chewing_set_spaceAsSelection(ctx, 1);
+    taigi_set_candPerPage(ctx, 9);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_addPhraseDirection(ctx, 1);
+    taigi_set_selKey(ctx, selKey_define, 10);
+    taigi_set_spaceAsSelection(ctx, 1);
 
     while (1) {
         i = get_keystroke(get_char, NULL);
@@ -119,7 +119,7 @@ int main()
     }
   end:
     /* Free Chewing IM handle */
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 
 #ifndef USED_IN_SIMULATION
     printf("\n");

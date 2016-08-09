@@ -26,19 +26,19 @@ void test_reset_shall_not_clean_static_data()
     const TestData DATA = { "hk4g4<E>", "\xE6\xB8\xAC\xE8\xA9\xA6" /* 測試 */  };
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_KBType(ctx, chewing_KBStr2Num("KB_DEFAULT"));
+    taigi_set_KBType(ctx, taigi_KBStr2Num("KB_DEFAULT"));
 
-    chewing_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_maxChiSymbolLen(ctx, 16);
 
-    chewing_Reset(ctx);
+    taigi_Reset(ctx);
 
     type_keystroke_by_string(ctx, DATA.token);
     ok_commit_buffer(ctx, DATA.expected);
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int main(int argc, char *argv[])

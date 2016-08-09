@@ -209,8 +209,8 @@ void HashModify(ChewingData *pgdata, HASH_ITEM *pItem)
 
     /* update "lifetime" */
     fseek(outfile, strlen(BIN_HASH_SIG), SEEK_SET);
-    fwrite(&pgdata->static_data.chewing_lifetime, 1, 4, outfile);
-    sprintf(str, "%d", pgdata->static_data.chewing_lifetime);
+    fwrite(&pgdata->static_data.taigi_lifetime, 1, 4, outfile);
+    sprintf(str, "%d", pgdata->static_data.taigi_lifetime);
     DEBUG_OUT("HashModify-1: '%-75s'\n", str);
 
     /* update record */
@@ -427,7 +427,7 @@ static int migrate_hash_to_bin(ChewingData *pgdata)
         fclose(txtfile);
         return 0;
     }
-    ret = fscanf(txtfile, "%d", &pgdata->static_data.chewing_lifetime);
+    ret = fscanf(txtfile, "%d", &pgdata->static_data.taigi_lifetime);
     if (ret != 1) {
         free(dump);
         return 0;
@@ -437,8 +437,8 @@ static int migrate_hash_to_bin(ChewingData *pgdata)
     seekdump = dump;
     memcpy(seekdump, BIN_HASH_SIG, strlen(BIN_HASH_SIG));
     memcpy(seekdump + strlen(BIN_HASH_SIG),
-           &pgdata->static_data.chewing_lifetime, sizeof(pgdata->static_data.chewing_lifetime));
-    seekdump += strlen(BIN_HASH_SIG) + sizeof(pgdata->static_data.chewing_lifetime);
+           &pgdata->static_data.taigi_lifetime, sizeof(pgdata->static_data.taigi_lifetime));
+    seekdump += strlen(BIN_HASH_SIG) + sizeof(pgdata->static_data.taigi_lifetime);
 
     /* migrate */
     item_index = 0;
@@ -508,7 +508,7 @@ int InitUserphrase(struct ChewingData *pgdata, const char *path)
 
   open_hash_file:
     dump = _load_hash_file(pgdata->static_data.hashfilename, &fsize);
-    hdrlen = strlen(BIN_HASH_SIG) + sizeof(pgdata->static_data.chewing_lifetime);
+    hdrlen = strlen(BIN_HASH_SIG) + sizeof(pgdata->static_data.taigi_lifetime);
     item_index = 0;
     if (dump == NULL || fsize < hdrlen) {
         FILE *outfile;
@@ -520,9 +520,9 @@ int InitUserphrase(struct ChewingData *pgdata, const char *path)
             }
             return -1;
         }
-        pgdata->static_data.chewing_lifetime = 0;
+        pgdata->static_data.taigi_lifetime = 0;
         fwrite(BIN_HASH_SIG, 1, strlen(BIN_HASH_SIG), outfile);
-        fwrite(&pgdata->static_data.chewing_lifetime, 1, sizeof(pgdata->static_data.chewing_lifetime), outfile);
+        fwrite(&pgdata->static_data.taigi_lifetime, 1, sizeof(pgdata->static_data.taigi_lifetime), outfile);
         fclose(outfile);
     } else {
         if (memcmp(dump, BIN_HASH_SIG, strlen(BIN_HASH_SIG)) != 0) {
@@ -534,7 +534,7 @@ int InitUserphrase(struct ChewingData *pgdata, const char *path)
             goto open_hash_file;
         }
 
-        pgdata->static_data.chewing_lifetime = *(int *) (dump + strlen(BIN_HASH_SIG));
+        pgdata->static_data.taigi_lifetime = *(int *) (dump + strlen(BIN_HASH_SIG));
         seekdump = dump + hdrlen;
         fsize -= hdrlen;
 
@@ -573,7 +573,7 @@ int InitUserphrase(struct ChewingData *pgdata, const char *path)
             pgdata->static_data.hashtable[hashvalue] = pItem;
             pItem->data.recentTime -= oldest;
         }
-        pgdata->static_data.chewing_lifetime -= oldest;
+        pgdata->static_data.taigi_lifetime -= oldest;
     }
     return 0;
 }

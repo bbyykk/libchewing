@@ -82,13 +82,13 @@ void show_edit_buffer(int x, int y, ChewingContext *ctx)
 
     move(x, y);
     addstr(FILL_BLANK);
-    if (!chewing_buffer_Check(ctx)) {
+    if (!taigi_buffer_Check(ctx)) {
         move(x, y);
         return;
     }
-    buffer_string = chewing_buffer_String_static(ctx);
+    buffer_string = taigi_buffer_String_static(ctx);
     mvaddstr(x, y, buffer_string);
-    cursor = chewing_cursor_Current(ctx);
+    cursor = taigi_cursor_Current(ctx);
     p = buffer_string;
     count = 0;
     for (i = 0; i < cursor; i++) {
@@ -113,12 +113,12 @@ void show_interval_buffer(int x, int y, ChewingContext *ctx)
     move(x, y);
 
     /* Check if buffer is available. */
-    if (!chewing_buffer_Check(ctx)) {
+    if (!taigi_buffer_Check(ctx)) {
         return;
     }
 
-    buf = chewing_buffer_String_static(ctx);
-    buf_len = chewing_buffer_Len(ctx);
+    buf = taigi_buffer_String_static(ctx);
+    buf_len = taigi_buffer_Len(ctx);
 
     p = buf;
     count = 0;
@@ -132,9 +132,9 @@ void show_interval_buffer(int x, int y, ChewingContext *ctx)
     memset(out_buf, ' ', count * (sizeof(char)));
     out_buf[count] = '\0';
 
-    chewing_interval_Enumerate(ctx);
-    while (chewing_interval_hasNext(ctx)) {
-        chewing_interval_Get(ctx, &it);
+    taigi_interval_Enumerate(ctx);
+    while (taigi_interval_hasNext(ctx)) {
+        taigi_interval_Get(ctx, &it);
         out_buf[arrPos[it.from]] = '[';
         out_buf[arrPos[it.to] - 1] = ']';
         memset(&out_buf[arrPos[it.from] + 1], '-', arrPos[it.to] - arrPos[it.from] - 2);
@@ -144,12 +144,12 @@ void show_interval_buffer(int x, int y, ChewingContext *ctx)
 
 void showBopomofo(ChewingContext *ctx)
 {
-    if (chewing_get_ChiEngMode(ctx))
+    if (taigi_get_ChiEngMode(ctx))
         addstr("[中]");
     else
         addstr("[英]");
     addstr("        ");
-    addstr(chewing_bopomofo_String_static(ctx));
+    addstr(taigi_bopomofo_String_static(ctx));
 }
 
 void show_bopomofo_buffer(int x, int y, ChewingContext *ctx)
@@ -170,7 +170,7 @@ void show_full_shape(int x, int y, ChewingContext *ctx)
     addstr("[");
     if (hasColor)
         attron(COLOR_PAIR(2));
-    if (chewing_get_ShapeMode(ctx) == FULLSHAPE_MODE)
+    if (taigi_get_ShapeMode(ctx) == FULLSHAPE_MODE)
         addstr("全形");
     else
         addstr("半形");
@@ -183,7 +183,7 @@ void show_userphrase(int x, int y, ChewingContext *ctx)
 {
     const char *aux_string;
 
-    if (chewing_aux_Length(ctx) == 0)
+    if (taigi_aux_Length(ctx) == 0)
         return;
 
     move(x, y);
@@ -191,7 +191,7 @@ void show_userphrase(int x, int y, ChewingContext *ctx)
     move(x, y);
     if (hasColor)
         attron(COLOR_PAIR(2));
-    aux_string = chewing_aux_String_static(ctx);
+    aux_string = taigi_aux_String_static(ctx);
     addstr(aux_string);
     if (hasColor)
         attroff(COLOR_PAIR(2));
@@ -208,12 +208,12 @@ void show_choose_buffer(int x, int y, ChewingContext *ctx)
     addstr(FILL_BLANK);
     move(x, y);
 
-    if (chewing_cand_TotalPage(ctx) == 0)
+    if (taigi_cand_TotalPage(ctx) == 0)
         return;
 
-    chewing_cand_Enumerate(ctx);
-    while (chewing_cand_hasNext(ctx)) {
-        if (i > chewing_cand_ChoicePerPage(ctx))
+    taigi_cand_Enumerate(ctx);
+    while (taigi_cand_hasNext(ctx)) {
+        if (i > taigi_cand_ChoicePerPage(ctx))
             break;
         snprintf(str, sizeof(str), "%d.", i);
         if (hasColor)
@@ -221,15 +221,15 @@ void show_choose_buffer(int x, int y, ChewingContext *ctx)
         addstr(str);
         if (hasColor)
             attroff(COLOR_PAIR(3));
-        cand_string = chewing_cand_String_static(ctx);
+        cand_string = taigi_cand_String_static(ctx);
         addstr(cand_string);
         i++;
     }
-    currentPageNo = chewing_cand_CurrentPage(ctx);
-    if (chewing_cand_TotalPage(ctx) != 1) {
+    currentPageNo = taigi_cand_CurrentPage(ctx);
+    if (taigi_cand_TotalPage(ctx) != 1) {
         if (currentPageNo == 0)
             addstr("  >");
-        else if (currentPageNo == (chewing_cand_TotalPage(ctx) - 1))
+        else if (currentPageNo == (taigi_cand_TotalPage(ctx) - 1))
             addstr("<  ");
         else
             addstr("< >");
@@ -249,8 +249,8 @@ void show_commit_string(int x, int y, ChewingContext *ctx)
         }
     }
 #endif
-    if (chewing_commit_Check(ctx)) {
-        commit_string = chewing_commit_String_static(ctx);
+    if (taigi_commit_Check(ctx)) {
+        commit_string = taigi_commit_String_static(ctx);
         mvaddstr(x, y, FILL_BLANK);
         mvaddstr(x, y, commit_string);
     }
@@ -314,19 +314,19 @@ int main(int argc, char *argv[])
     putenv("CHEWING_USER_PATH=" TEST_HASH_DIR);
 
     /* Request handle to ChewingContext */
-    ctx = chewing_new2(NULL, NULL, logger, log);
+    ctx = taigi_new2(NULL, NULL, logger, log);
 
     /* Set keyboard type */
-    chewing_set_KBType(ctx, chewing_KBStr2Num("KB_DEFAULT"));
+    taigi_set_KBType(ctx, taigi_KBStr2Num("KB_DEFAULT"));
 
     /* Fill configuration values */
-    chewing_set_candPerPage(ctx, 9);
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_addPhraseDirection(ctx, 1);
-    chewing_set_selKey(ctx, selKey_define, 10);
-    chewing_set_spaceAsSelection(ctx, 1);
-    chewing_set_autoShiftCur(ctx, 1);
-    chewing_set_phraseChoiceRearward(ctx, 1);
+    taigi_set_candPerPage(ctx, 9);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_addPhraseDirection(ctx, 1);
+    taigi_set_selKey(ctx, selKey_define, 10);
+    taigi_set_spaceAsSelection(ctx, 1);
+    taigi_set_autoShiftCur(ctx, 1);
+    taigi_set_phraseChoiceRearward(ctx, 1);
 
     clear();
     mvaddstr(0, 0, "Any key to start testing...");
@@ -335,59 +335,59 @@ int main(int argc, char *argv[])
         ch = getch();
         switch (ch) {
         case KEY_LEFT:
-            chewing_handle_Left(ctx);
+            taigi_handle_Left(ctx);
             fprintf(fout, "<L>");
             break;
         case KEY_SLEFT:
-            chewing_handle_ShiftLeft(ctx);
+            taigi_handle_ShiftLeft(ctx);
             fprintf(fout, "<SL>");
             break;
         case KEY_RIGHT:
-            chewing_handle_Right(ctx);
+            taigi_handle_Right(ctx);
             fprintf(fout, "<R>");
             break;
         case KEY_SRIGHT:
-            chewing_handle_ShiftRight(ctx);
+            taigi_handle_ShiftRight(ctx);
             fprintf(fout, "<SR>");
             break;
         case KEY_UP:
-            chewing_handle_Up(ctx);
+            taigi_handle_Up(ctx);
             fprintf(fout, "<U>");
             break;
         case KEY_DOWN:
-            chewing_handle_Down(ctx);
+            taigi_handle_Down(ctx);
             fprintf(fout, "<D>");
             break;
         case KEY_SPACE:
-            chewing_handle_Space(ctx);
+            taigi_handle_Space(ctx);
             fprintf(fout, " ");
             break;
         case KEY_ENTER:
-            chewing_handle_Enter(ctx);
+            taigi_handle_Enter(ctx);
             fprintf(fout, "<E>");
             break;
         case KEY_BACKSPACE:
-            chewing_handle_Backspace(ctx);
+            taigi_handle_Backspace(ctx);
             fprintf(fout, "<B>");
             break;
         case KEY_ESC:
-            chewing_handle_Esc(ctx);
+            taigi_handle_Esc(ctx);
             fprintf(fout, "<EE>");
             break;
         case KEY_DC:
-            chewing_handle_Del(ctx);
+            taigi_handle_Del(ctx);
             fprintf(fout, "<DC>");
             break;
         case KEY_HOME:
-            chewing_handle_Home(ctx);
+            taigi_handle_Home(ctx);
             fprintf(fout, "<H>");
             break;
         case KEY_END:
-            chewing_handle_End(ctx);
+            taigi_handle_End(ctx);
             fprintf(fout, "<EN>");
             break;
         case KEY_TAB:
-            chewing_handle_Tab(ctx);
+            taigi_handle_Tab(ctx);
             fprintf(fout, "<T>");
             break;
         case CTRL_0:
@@ -401,31 +401,31 @@ int main(int argc, char *argv[])
         case CTRL_8:
         case CTRL_9:
             add_phrase_length = (ch - CTRL_0 + '0');
-            chewing_handle_CtrlNum(ctx, add_phrase_length);
+            taigi_handle_CtrlNum(ctx, add_phrase_length);
             fprintf(fout, "<C%c>", add_phrase_length);
             break;
         case KEY_CTRL_('B'):   /* emulate CapsLock */
-            chewing_handle_Capslock(ctx);
+            taigi_handle_Capslock(ctx);
             fprintf(fout, "<CB>");
             break;
         case KEY_CTRL_('D'):
             goto end;
         case KEY_CTRL_('H'):   /* emulate Shift */
-            if (chewing_get_ShapeMode(ctx) == FULLSHAPE_MODE)
-                chewing_set_ShapeMode(ctx, HALFSHAPE_MODE);
+            if (taigi_get_ShapeMode(ctx) == FULLSHAPE_MODE)
+                taigi_set_ShapeMode(ctx, HALFSHAPE_MODE);
             else
-                chewing_set_ShapeMode(ctx, FULLSHAPE_MODE);
+                taigi_set_ShapeMode(ctx, FULLSHAPE_MODE);
             break;
         case KEY_NPAGE:
-            chewing_handle_PageDown(ctx);
+            taigi_handle_PageDown(ctx);
             fprintf(fout, "<PD>");
             break;
         case KEY_PPAGE:
-            chewing_handle_PageUp(ctx);
+            taigi_handle_PageUp(ctx);
             fprintf(fout, "<PU>");
             break;
         default:
-            chewing_handle_Default(ctx, (char) ch);
+            taigi_handle_Default(ctx, (char) ch);
             if (ch != '<' && ch != '>')
                 fprintf(fout, "%c", (char) ch);
             else
@@ -453,7 +453,7 @@ int main(int argc, char *argv[])
     endwin();
 
     /* Release Chewing context */
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 
     /* Termate Chewing services */
 

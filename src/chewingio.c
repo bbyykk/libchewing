@@ -86,7 +86,7 @@ const char *const PINYIN_FILES[] = {
     NULL,
 };
 
-CHEWING_API int chewing_KBStr2Num(const char str[])
+CHEWING_API int taigi_KBStr2Num(const char str[])
 {
     int i;
 
@@ -159,7 +159,7 @@ static ChewingData *allocate_ChewingData(void (*logger) (void *data, int level, 
     return data;
 }
 
-CHEWING_API ChewingContext *chewing_new2(const char *syspath,
+CHEWING_API ChewingContext *taigi_new2(const char *syspath,
                                          const char *userpath,
                                          void (*logger) (void *data, int level, const char *fmt, ...), void *loggerdata)
 {
@@ -190,7 +190,7 @@ CHEWING_API ChewingContext *chewing_new2(const char *syspath,
 
     LOG_API("syspath = %d, userpath = %d", syspath, userpath);
 
-    chewing_Reset(ctx);
+    taigi_Reset(ctx);
 
     if (syspath) {
         strncpy(search_path, syspath, sizeof(search_path) - 1);
@@ -280,16 +280,16 @@ CHEWING_API ChewingContext *chewing_new2(const char *syspath,
 
     return ctx;
   error:
-    chewing_delete(ctx);
+    taigi_delete(ctx);
     return NULL;
 }
 
-CHEWING_API ChewingContext *chewing_new()
+CHEWING_API ChewingContext *taigi_new()
 {
-    return chewing_new2(NULL, NULL, NULL, NULL);
+    return taigi_new2(NULL, NULL, NULL, NULL);
 }
 
-CHEWING_API int chewing_Reset(ChewingContext *ctx)
+CHEWING_API int taigi_Reset(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingStaticData static_data;
@@ -336,7 +336,7 @@ CHEWING_API int chewing_Reset(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_set_KBType(ChewingContext *ctx, int kbtype)
+CHEWING_API int taigi_set_KBType(ChewingContext *ctx, int kbtype)
 {
     ChewingData *pgdata;
 
@@ -356,7 +356,7 @@ CHEWING_API int chewing_set_KBType(ChewingContext *ctx, int kbtype)
     }
 }
 
-CHEWING_API int chewing_get_KBType(const ChewingContext *ctx)
+CHEWING_API int taigi_get_KBType(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -370,7 +370,7 @@ CHEWING_API int chewing_get_KBType(const ChewingContext *ctx)
     return ctx->data->bopomofoData.kbtype;
 }
 
-CHEWING_API char *chewing_get_KBString(const ChewingContext *ctx)
+CHEWING_API char *taigi_get_KBString(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -384,7 +384,7 @@ CHEWING_API char *chewing_get_KBString(const ChewingContext *ctx)
     return strdup(kb_type_str[ctx->data->bopomofoData.kbtype]);
 }
 
-CHEWING_API void chewing_delete(ChewingContext *ctx)
+CHEWING_API void taigi_delete(ChewingContext *ctx)
 {
     if (ctx) {
         if (ctx->data) {
@@ -404,12 +404,12 @@ CHEWING_API void chewing_delete(ChewingContext *ctx)
     return;
 }
 
-CHEWING_API void chewing_free(void *p)
+CHEWING_API void taigi_free(void *p)
 {
     free(p);
 }
 
-CHEWING_API void chewing_set_candPerPage(ChewingContext *ctx, int n)
+CHEWING_API void taigi_set_candPerPage(ChewingContext *ctx, int n)
 {
     ChewingData *pgdata;
 
@@ -424,7 +424,7 @@ CHEWING_API void chewing_set_candPerPage(ChewingContext *ctx, int n)
         ctx->data->config.candPerPage = n;
 }
 
-CHEWING_API int chewing_get_candPerPage(const ChewingContext *ctx)
+CHEWING_API int taigi_get_candPerPage(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -438,7 +438,7 @@ CHEWING_API int chewing_get_candPerPage(const ChewingContext *ctx)
     return ctx->data->config.candPerPage;
 }
 
-CHEWING_API void chewing_set_maxChiSymbolLen(ChewingContext *ctx, int n)
+CHEWING_API void taigi_set_maxChiSymbolLen(ChewingContext *ctx, int n)
 {
     ChewingData *pgdata;
 
@@ -453,7 +453,7 @@ CHEWING_API void chewing_set_maxChiSymbolLen(ChewingContext *ctx, int n)
         ctx->data->config.maxChiSymbolLen = n;
 }
 
-CHEWING_API int chewing_get_maxChiSymbolLen(const ChewingContext *ctx)
+CHEWING_API int taigi_get_maxChiSymbolLen(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -467,7 +467,7 @@ CHEWING_API int chewing_get_maxChiSymbolLen(const ChewingContext *ctx)
     return ctx->data->config.maxChiSymbolLen;
 }
 
-CHEWING_API void chewing_set_selKey(ChewingContext *ctx, const int *selkeys, int len)
+CHEWING_API void taigi_set_selKey(ChewingContext *ctx, const int *selkeys, int len)
 {
     ChewingData *pgdata;
 
@@ -488,7 +488,7 @@ CHEWING_API void chewing_set_selKey(ChewingContext *ctx, const int *selkeys, int
     }
 }
 
-CHEWING_API int *chewing_get_selKey(const ChewingContext *ctx)
+CHEWING_API int *taigi_get_selKey(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
     int *selkeys;
@@ -507,7 +507,7 @@ CHEWING_API int *chewing_get_selKey(const ChewingContext *ctx)
     return selkeys;
 }
 
-CHEWING_API void chewing_set_addPhraseDirection(ChewingContext *ctx, int direction)
+CHEWING_API void taigi_set_addPhraseDirection(ChewingContext *ctx, int direction)
 {
     ChewingData *pgdata;
 
@@ -522,7 +522,7 @@ CHEWING_API void chewing_set_addPhraseDirection(ChewingContext *ctx, int directi
         ctx->data->config.bAddPhraseForward = direction;
 }
 
-CHEWING_API int chewing_get_addPhraseDirection(const ChewingContext *ctx)
+CHEWING_API int taigi_get_addPhraseDirection(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -536,7 +536,7 @@ CHEWING_API int chewing_get_addPhraseDirection(const ChewingContext *ctx)
     return ctx->data->config.bAddPhraseForward;
 }
 
-CHEWING_API void chewing_set_spaceAsSelection(ChewingContext *ctx, int mode)
+CHEWING_API void taigi_set_spaceAsSelection(ChewingContext *ctx, int mode)
 {
     ChewingData *pgdata;
 
@@ -551,7 +551,7 @@ CHEWING_API void chewing_set_spaceAsSelection(ChewingContext *ctx, int mode)
         ctx->data->config.bSpaceAsSelection = mode;
 }
 
-CHEWING_API int chewing_get_spaceAsSelection(const ChewingContext *ctx)
+CHEWING_API int taigi_get_spaceAsSelection(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -565,7 +565,7 @@ CHEWING_API int chewing_get_spaceAsSelection(const ChewingContext *ctx)
     return ctx->data->config.bSpaceAsSelection;
 }
 
-CHEWING_API void chewing_set_escCleanAllBuf(ChewingContext *ctx, int mode)
+CHEWING_API void taigi_set_escCleanAllBuf(ChewingContext *ctx, int mode)
 {
     ChewingData *pgdata;
 
@@ -580,7 +580,7 @@ CHEWING_API void chewing_set_escCleanAllBuf(ChewingContext *ctx, int mode)
         ctx->data->config.bEscCleanAllBuf = mode;
 }
 
-CHEWING_API int chewing_get_escCleanAllBuf(const ChewingContext *ctx)
+CHEWING_API int taigi_get_escCleanAllBuf(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -594,7 +594,7 @@ CHEWING_API int chewing_get_escCleanAllBuf(const ChewingContext *ctx)
     return ctx->data->config.bEscCleanAllBuf;
 }
 
-CHEWING_API void chewing_set_autoShiftCur(ChewingContext *ctx, int mode)
+CHEWING_API void taigi_set_autoShiftCur(ChewingContext *ctx, int mode)
 {
     ChewingData *pgdata;
 
@@ -609,7 +609,7 @@ CHEWING_API void chewing_set_autoShiftCur(ChewingContext *ctx, int mode)
         ctx->data->config.bAutoShiftCur = mode;
 }
 
-CHEWING_API int chewing_get_autoShiftCur(const ChewingContext *ctx)
+CHEWING_API int taigi_get_autoShiftCur(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -623,7 +623,7 @@ CHEWING_API int chewing_get_autoShiftCur(const ChewingContext *ctx)
     return ctx->data->config.bAutoShiftCur;
 }
 
-CHEWING_API void chewing_set_easySymbolInput(ChewingContext *ctx, int mode)
+CHEWING_API void taigi_set_easySymbolInput(ChewingContext *ctx, int mode)
 {
     ChewingData *pgdata;
 
@@ -638,7 +638,7 @@ CHEWING_API void chewing_set_easySymbolInput(ChewingContext *ctx, int mode)
         ctx->data->config.bEasySymbolInput = mode;
 }
 
-CHEWING_API int chewing_get_easySymbolInput(const ChewingContext *ctx)
+CHEWING_API int taigi_get_easySymbolInput(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -652,7 +652,7 @@ CHEWING_API int chewing_get_easySymbolInput(const ChewingContext *ctx)
     return ctx->data->config.bEasySymbolInput;
 }
 
-CHEWING_API void chewing_set_phraseChoiceRearward(ChewingContext *ctx, int mode)
+CHEWING_API void taigi_set_phraseChoiceRearward(ChewingContext *ctx, int mode)
 {
     ChewingData *pgdata;
 
@@ -667,7 +667,7 @@ CHEWING_API void chewing_set_phraseChoiceRearward(ChewingContext *ctx, int mode)
         ctx->data->config.bPhraseChoiceRearward = mode;
 }
 
-CHEWING_API int chewing_get_phraseChoiceRearward(const ChewingContext *ctx)
+CHEWING_API int taigi_get_phraseChoiceRearward(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -681,7 +681,7 @@ CHEWING_API int chewing_get_phraseChoiceRearward(const ChewingContext *ctx)
     return ctx->data->config.bPhraseChoiceRearward;
 }
 
-CHEWING_API void chewing_set_ChiEngMode(ChewingContext *ctx, int mode)
+CHEWING_API void taigi_set_ChiEngMode(ChewingContext *ctx, int mode)
 {
     ChewingData *pgdata;
 
@@ -700,7 +700,7 @@ CHEWING_API void chewing_set_ChiEngMode(ChewingContext *ctx, int mode)
     }
 }
 
-CHEWING_API int chewing_get_ChiEngMode(const ChewingContext *ctx)
+CHEWING_API int taigi_get_ChiEngMode(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -714,7 +714,7 @@ CHEWING_API int chewing_get_ChiEngMode(const ChewingContext *ctx)
     return ctx->data->bChiSym;
 }
 
-CHEWING_API void chewing_set_ShapeMode(ChewingContext *ctx, int mode)
+CHEWING_API void taigi_set_ShapeMode(ChewingContext *ctx, int mode)
 {
     ChewingData *pgdata;
 
@@ -729,7 +729,7 @@ CHEWING_API void chewing_set_ShapeMode(ChewingContext *ctx, int mode)
         ctx->data->bFullShape = mode;
 }
 
-CHEWING_API int chewing_get_ShapeMode(const ChewingContext *ctx)
+CHEWING_API int taigi_get_ShapeMode(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -790,7 +790,7 @@ static void DoSelect(ChewingData *pgdata, int num)
     }
 }
 
-CHEWING_API int chewing_handle_Space(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Space(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -802,13 +802,13 @@ CHEWING_API int chewing_handle_Space(ChewingContext *ctx)
     LOG_API("");
 
     /*
-     * Use chewing_handle_Default( ctx, ' ' ) to handle space when:
+     * Use taigi_handle_Default( ctx, ' ' ) to handle space when:
      * - "space as selection" mode is disable
      * - mode is not CHINESE_MODE
      * - has incompleted bopomofo (space is needed to complete it)
      */
     if (!pgdata->config.bSpaceAsSelection || pgdata->bChiSym != CHINESE_MODE || BopomofoIsEntering(&ctx->data->bopomofoData)) {
-        return chewing_handle_Default(ctx, ' ');
+        return taigi_handle_Default(ctx, ' ');
     }
 
     CheckAndResetRange(pgdata);
@@ -821,14 +821,14 @@ CHEWING_API int chewing_handle_Space(ChewingContext *ctx)
      * Otherwise, space = down
      */
     if (pgdata->bSelect && ctx->output->pci->pageNo < ctx->output->pci->nPage - 1) {
-        return chewing_handle_Right(ctx);
+        return taigi_handle_Right(ctx);
     } else {
-        return chewing_handle_Down(ctx);
+        return taigi_handle_Down(ctx);
     }
     return 0;
 }
 
-CHEWING_API int chewing_handle_Esc(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Esc(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -859,7 +859,7 @@ CHEWING_API int chewing_handle_Esc(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_Enter(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Enter(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -896,13 +896,13 @@ CHEWING_API int chewing_handle_Enter(ChewingContext *ctx)
                 key = '0' + pgdata->PointEnd;
             }
 
-            chewing_handle_CtrlNum(ctx, key);
+            taigi_handle_CtrlNum(ctx, key);
             pgdata->chiSymbolCursor = buf;
         } else if (pgdata->PointEnd < 1) {
             if (pgdata->config.bAddPhraseForward)
                 pgdata->chiSymbolCursor = buf - pgdata->PointEnd;
             key = '0' - pgdata->PointEnd;
-            chewing_handle_CtrlNum(ctx, key);
+            taigi_handle_CtrlNum(ctx, key);
             pgdata->chiSymbolCursor = buf;
         }
         pgdata->PointStart = -1;
@@ -923,7 +923,7 @@ CHEWING_API int chewing_handle_Enter(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_Del(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Del(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -953,7 +953,7 @@ CHEWING_API int chewing_handle_Del(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_Backspace(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Backspace(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -981,14 +981,14 @@ CHEWING_API int chewing_handle_Backspace(ChewingContext *ctx)
         }
         CallPhrasing(pgdata, 0);
     } else if (pgdata->bSelect) {
-        chewing_cand_close(ctx);
+        taigi_cand_close(ctx);
     }
 
     MakeOutputWithRtn(pgo, pgdata, keystrokeRtn);
     return 0;
 }
 
-CHEWING_API int chewing_handle_Up(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Up(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1023,7 +1023,7 @@ CHEWING_API int chewing_handle_Up(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_Down(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Down(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1060,7 +1060,7 @@ CHEWING_API int chewing_handle_Down(ChewingContext *ctx)
 }
 
 /* Add phrase in Hanin Style */
-CHEWING_API int chewing_handle_ShiftLeft(ChewingContext *ctx)
+CHEWING_API int taigi_handle_ShiftLeft(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1095,7 +1095,7 @@ CHEWING_API int chewing_handle_ShiftLeft(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_Left(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Left(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1130,7 +1130,7 @@ CHEWING_API int chewing_handle_Left(ChewingContext *ctx)
 }
 
 /* Add phrase in Hanin Style */
-CHEWING_API int chewing_handle_ShiftRight(ChewingContext *ctx)
+CHEWING_API int taigi_handle_ShiftRight(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1167,7 +1167,7 @@ CHEWING_API int chewing_handle_ShiftRight(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_Right(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Right(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1201,7 +1201,7 @@ CHEWING_API int chewing_handle_Right(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_Tab(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Tab(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1244,7 +1244,7 @@ CHEWING_API int chewing_handle_Tab(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_DblTab(ChewingContext *ctx)
+CHEWING_API int taigi_handle_DblTab(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1277,7 +1277,7 @@ CHEWING_API int chewing_handle_DblTab(ChewingContext *ctx)
 }
 
 
-CHEWING_API int chewing_handle_Capslock(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Capslock(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1290,12 +1290,12 @@ CHEWING_API int chewing_handle_Capslock(ChewingContext *ctx)
 
     LOG_API("");
 
-    chewing_set_ChiEngMode(ctx, 1 - chewing_get_ChiEngMode(ctx));
+    taigi_set_ChiEngMode(ctx, 1 - taigi_get_ChiEngMode(ctx));
     MakeOutputWithRtn(pgo, pgdata, KEYSTROKE_ABSORB);
     return 0;
 }
 
-CHEWING_API int chewing_handle_Home(ChewingContext *ctx)
+CHEWING_API int taigi_handle_Home(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1320,7 +1320,7 @@ CHEWING_API int chewing_handle_Home(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_End(ChewingContext *ctx)
+CHEWING_API int taigi_handle_End(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1345,7 +1345,7 @@ CHEWING_API int chewing_handle_End(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_PageUp(ChewingContext *ctx)
+CHEWING_API int taigi_handle_PageUp(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1376,7 +1376,7 @@ CHEWING_API int chewing_handle_PageUp(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_handle_PageDown(ChewingContext *ctx)
+CHEWING_API int taigi_handle_PageDown(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1438,7 +1438,7 @@ static int dvorak_convert(int key)
     return key;
 }
 
-CHEWING_API int chewing_handle_Default(ChewingContext *ctx, int key)
+CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1481,7 +1481,7 @@ CHEWING_API int chewing_handle_Default(ChewingContext *ctx, int key)
     /* selecting */
     if (pgdata->bSelect) {
         if (key == ' ')
-            return chewing_handle_Right(ctx);
+            return taigi_handle_Right(ctx);
         /* num starts from 0 */
         num = CountSelKeyNum(key, pgdata);
         if (num >= 0) {
@@ -1642,7 +1642,7 @@ CHEWING_API int chewing_handle_Default(ChewingContext *ctx, int key)
     return 0;
 }
 
-CHEWING_API int chewing_handle_CtrlNum(ChewingContext *ctx, int key)
+CHEWING_API int taigi_handle_CtrlNum(ChewingContext *ctx, int key)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1722,7 +1722,7 @@ CHEWING_API int chewing_handle_CtrlNum(ChewingContext *ctx, int key)
     return 0;
 }
 
-CHEWING_API int chewing_handle_ShiftSpace(ChewingContext *ctx)
+CHEWING_API int taigi_handle_ShiftSpace(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1740,14 +1740,14 @@ CHEWING_API int chewing_handle_ShiftSpace(ChewingContext *ctx)
         CheckAndResetRange(pgdata);
     }
 
-    chewing_set_ShapeMode(ctx, 1 - chewing_get_ShapeMode(ctx));
+    taigi_set_ShapeMode(ctx, 1 - taigi_get_ShapeMode(ctx));
 
     CallPhrasing(pgdata, 0);
     MakeOutputWithRtn(pgo, pgdata, keystrokeRtn);
     return 0;
 }
 
-CHEWING_API int chewing_handle_Numlock(ChewingContext *ctx, int key)
+CHEWING_API int taigi_handle_Numlock(ChewingContext *ctx, int key)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -1771,7 +1771,7 @@ CHEWING_API int chewing_handle_Numlock(ChewingContext *ctx, int key)
             QuickCommit = 1;
         }
         rtn = SymbolInput(key, pgdata);
-        /* copied from chewing_handle_Default */
+        /* copied from taigi_handle_Default */
         if (rtn == SYMBOL_KEY_ERROR) {
             keystrokeRtn = KEYSTROKE_IGNORE;
         } else if (QuickCommit) {
@@ -1804,7 +1804,7 @@ CHEWING_API int chewing_handle_Numlock(ChewingContext *ctx, int key)
     return 0;
 }
 
-CHEWING_API unsigned short *chewing_get_phoneSeq(const ChewingContext *ctx)
+CHEWING_API unsigned short *taigi_get_phoneSeq(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
     uint32_t *seq;
@@ -1822,7 +1822,7 @@ CHEWING_API unsigned short *chewing_get_phoneSeq(const ChewingContext *ctx)
     return seq;
 }
 
-CHEWING_API int chewing_get_phoneSeqLen(const ChewingContext *ctx)
+CHEWING_API int taigi_get_phoneSeqLen(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
 
@@ -1836,7 +1836,7 @@ CHEWING_API int chewing_get_phoneSeqLen(const ChewingContext *ctx)
     return ctx->data->nPhoneSeq;
 }
 
-CHEWING_API void chewing_set_logger(ChewingContext *ctx,
+CHEWING_API void taigi_set_logger(ChewingContext *ctx,
                                     void (*logger) (void *data, int level, const char *fmt, ...), void *data)
 {
     ChewingData *pgdata;
@@ -1856,7 +1856,7 @@ CHEWING_API void chewing_set_logger(ChewingContext *ctx,
     ctx->data->loggerData = data;
 }
 
-CHEWING_API int chewing_userphrase_enumerate(ChewingContext *ctx)
+CHEWING_API int taigi_userphrase_enumerate(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -1885,7 +1885,7 @@ CHEWING_API int chewing_userphrase_enumerate(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_userphrase_has_next(ChewingContext *ctx, unsigned int *phrase_len, unsigned int *bopomofo_len)
+CHEWING_API int taigi_userphrase_has_next(ChewingContext *ctx, unsigned int *phrase_len, unsigned int *bopomofo_len)
 {
     ChewingData *pgdata;
 
@@ -1929,7 +1929,7 @@ CHEWING_API int chewing_userphrase_has_next(ChewingContext *ctx, unsigned int *p
 #endif
 }
 
-CHEWING_API int chewing_userphrase_get(ChewingContext *ctx,
+CHEWING_API int taigi_userphrase_get(ChewingContext *ctx,
                                        char *phrase_buf, unsigned int phrase_len,
                                        char *bopomofo_buf, unsigned int bopomofo_len)
 {
@@ -1994,7 +1994,7 @@ CHEWING_API int chewing_userphrase_get(ChewingContext *ctx,
 #endif
 }
 
-CHEWING_API int chewing_userphrase_add(ChewingContext *ctx, const char *phrase_buf, const char *bopomofo_buf)
+CHEWING_API int taigi_userphrase_add(ChewingContext *ctx, const char *phrase_buf, const char *bopomofo_buf)
 {
     ChewingData *pgdata;
     ssize_t phrase_len;
@@ -2035,7 +2035,7 @@ CHEWING_API int chewing_userphrase_add(ChewingContext *ctx, const char *phrase_b
     return 1;
 }
 
-CHEWING_API int chewing_userphrase_remove(ChewingContext *ctx, const char *phrase_buf, const char *bopomofo_buf)
+CHEWING_API int taigi_userphrase_remove(ChewingContext *ctx, const char *phrase_buf, const char *bopomofo_buf)
 {
     ChewingData *pgdata;
     ssize_t phone_len;
@@ -2064,7 +2064,7 @@ CHEWING_API int chewing_userphrase_remove(ChewingContext *ctx, const char *phras
     return ret;
 }
 
-CHEWING_API int chewing_userphrase_lookup(ChewingContext *ctx, const char *phrase_buf, const char *bopomofo_buf)
+CHEWING_API int taigi_userphrase_lookup(ChewingContext *ctx, const char *phrase_buf, const char *bopomofo_buf)
 {
     ChewingData *pgdata;
     ssize_t phone_len;
@@ -2100,7 +2100,7 @@ CHEWING_API int chewing_userphrase_lookup(ChewingContext *ctx, const char *phras
     return user_phrase_data == NULL ? 0 : 1;
 }
 
-CHEWING_API const char *chewing_cand_string_by_index_static(ChewingContext *ctx, int index)
+CHEWING_API const char *taigi_cand_string_by_index_static(ChewingContext *ctx, int index)
 {
     ChewingData *pgdata;
     const char *s;
@@ -2120,7 +2120,7 @@ CHEWING_API const char *chewing_cand_string_by_index_static(ChewingContext *ctx,
     return s;
 }
 
-CHEWING_API int chewing_cand_choose_by_index(ChewingContext *ctx, int index)
+CHEWING_API int taigi_cand_choose_by_index(ChewingContext *ctx, int index)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -2146,7 +2146,7 @@ CHEWING_API int chewing_cand_choose_by_index(ChewingContext *ctx, int index)
     return ret;
 }
 
-CHEWING_API int chewing_cand_open(ChewingContext *ctx)
+CHEWING_API int taigi_cand_open(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     int pos;
@@ -2172,7 +2172,7 @@ CHEWING_API int chewing_cand_open(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_cand_close(ChewingContext *ctx)
+CHEWING_API int taigi_cand_close(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -2191,7 +2191,7 @@ CHEWING_API int chewing_cand_close(ChewingContext *ctx)
 
 }
 
-CHEWING_API int chewing_cand_list_first(ChewingContext *ctx)
+CHEWING_API int taigi_cand_list_first(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -2208,7 +2208,7 @@ CHEWING_API int chewing_cand_list_first(ChewingContext *ctx)
     return ChoiceFirstAvail(pgdata);
 }
 
-CHEWING_API int chewing_cand_list_last(ChewingContext *ctx)
+CHEWING_API int taigi_cand_list_last(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -2225,7 +2225,7 @@ CHEWING_API int chewing_cand_list_last(ChewingContext *ctx)
     return ChoiceLastAvail(pgdata);
 }
 
-CHEWING_API int chewing_cand_list_has_next(ChewingContext *ctx)
+CHEWING_API int taigi_cand_list_has_next(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -2242,7 +2242,7 @@ CHEWING_API int chewing_cand_list_has_next(ChewingContext *ctx)
     return ChoiceHasNextAvail(pgdata);
 }
 
-CHEWING_API int chewing_cand_list_has_prev(ChewingContext *ctx)
+CHEWING_API int taigi_cand_list_has_prev(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -2259,7 +2259,7 @@ CHEWING_API int chewing_cand_list_has_prev(ChewingContext *ctx)
     return ChoiceHasPrevAvail(pgdata);
 }
 
-CHEWING_API int chewing_cand_list_next(ChewingContext *ctx)
+CHEWING_API int taigi_cand_list_next(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -2276,7 +2276,7 @@ CHEWING_API int chewing_cand_list_next(ChewingContext *ctx)
     return ChoiceNextAvail(pgdata);
 }
 
-CHEWING_API int chewing_cand_list_prev(ChewingContext *ctx)
+CHEWING_API int taigi_cand_list_prev(ChewingContext *ctx)
 {
     ChewingData *pgdata;
 
@@ -2293,7 +2293,7 @@ CHEWING_API int chewing_cand_list_prev(ChewingContext *ctx)
     return ChoicePrevAvail(pgdata);
 }
 
-CHEWING_API int chewing_commit_preedit_buf(ChewingContext *ctx)
+CHEWING_API int taigi_commit_preedit_buf(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -2324,7 +2324,7 @@ CHEWING_API int chewing_commit_preedit_buf(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_clean_preedit_buf(ChewingContext *ctx)
+CHEWING_API int taigi_clean_preedit_buf(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -2346,7 +2346,7 @@ CHEWING_API int chewing_clean_preedit_buf(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_clean_bopomofo_buf(ChewingContext *ctx)
+CHEWING_API int taigi_clean_bopomofo_buf(ChewingContext *ctx)
 {
     ChewingData *pgdata;
     ChewingOutput *pgo;
@@ -2367,7 +2367,7 @@ CHEWING_API int chewing_clean_bopomofo_buf(ChewingContext *ctx)
     return 0;
 }
 
-CHEWING_API int chewing_phone_to_bopomofo(unsigned short phone, char *buf, unsigned short len)
+CHEWING_API int taigi_phone_to_bopomofo(unsigned short phone, char *buf, unsigned short len)
 {
     if(!buf && !len)
         return GetPhoneLenFromUint(phone);

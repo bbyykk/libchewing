@@ -65,7 +65,7 @@
 #define ok_keystroke_rtn(ctx, rtn) \
     internal_ok_keystroke_rtn(__FILE__, __LINE__, ctx, rtn)
 #define has_userphrase(ctx, bopomofo, phrase) \
-    chewing_userphrase_lookup(ctx, phrase, bopomofo)
+    taigi_userphrase_lookup(ctx, phrase, bopomofo)
 #define start_testcase(ctx, file) \
     internal_start_testcase(__func__, ctx, file)
 

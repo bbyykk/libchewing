@@ -340,11 +340,11 @@ void test_type_symbol()
     ChewingContext *ctx;
     size_t i;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_candPerPage(ctx, 10);
-    chewing_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_candPerPage(ctx, 10);
+    taigi_set_maxChiSymbolLen(ctx, 16);
 
     for (i = 0; i < ARRAY_SIZE(SYMBOL); ++i) {
         type_keystroke_by_string(ctx, SYMBOL[i].token);
@@ -352,26 +352,26 @@ void test_type_symbol()
         ok_commit_buffer(ctx, SYMBOL[i].expected);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 void test_symbol_cand_page()
 {
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_candPerPage(ctx, 10);
-    chewing_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_candPerPage(ctx, 10);
+    taigi_set_maxChiSymbolLen(ctx, 16);
 
-    chewing_handle_Default(ctx, '`');
-    ok(chewing_cand_CurrentPage(ctx) == 0, "current page shall be 0");
-    ok(chewing_cand_TotalPage(ctx) == 2, "total page shall be 2");
+    taigi_handle_Default(ctx, '`');
+    ok(taigi_cand_CurrentPage(ctx) == 0, "current page shall be 0");
+    ok(taigi_cand_TotalPage(ctx) == 2, "total page shall be 2");
 
     ok_candidate(ctx, CAND, ARRAY_SIZE(CAND));
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 void test_symbol_count()
@@ -379,14 +379,14 @@ void test_symbol_count()
     ChewingContext *ctx;
     int total;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
     type_keystroke_by_string(ctx, "`3");
-    total = chewing_cand_TotalChoice(ctx);
+    total = taigi_cand_TotalChoice(ctx);
     ok(total == 30, "total candidate for `3 is %d, shall be %d", total, 30);
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 void test_symbol()
@@ -399,11 +399,11 @@ void test_nocand_symbol()
 {
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_candPerPage(ctx, 10);
-    chewing_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_candPerPage(ctx, 10);
+    taigi_set_maxChiSymbolLen(ctx, 16);
 
     type_keystroke_by_string(ctx, "`<R>20");
     ok_preedit_buffer(ctx, "\xE2\x96\x88"); /* █ */
@@ -414,7 +414,7 @@ void test_nocand_symbol()
     type_keystroke_by_string(ctx, "1<E>"); /* select … */
     ok_commit_buffer(ctx, "\xE2\x80\xA6");
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int main(int argc, char *argv[])

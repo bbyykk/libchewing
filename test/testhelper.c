@@ -28,44 +28,44 @@ static unsigned int test_ok;
 /* We cannot use designated initializer here due to Visual Studio */
 BufferType COMMIT_BUFFER = {
     "commit buffer",
-    chewing_commit_Check,
+    taigi_commit_Check,
     0,
     0,
-    chewing_commit_String,
+    taigi_commit_String,
     0,
-    chewing_commit_String_static
+    taigi_commit_String_static
 };
 
 BufferType PREEDIT_BUFFER = {
     "preedit buffer",
-    chewing_buffer_Check,
+    taigi_buffer_Check,
     0,
-    chewing_buffer_Len,
-    chewing_buffer_String,
+    taigi_buffer_Len,
+    taigi_buffer_String,
     0,
-    chewing_buffer_String_static
+    taigi_buffer_String_static
 };
 
 BEGIN_IGNORE_DEPRECATIONS
 
 BufferType BOPOMOFO_BUFFER = {
     "bopomofo buffer",
-    chewing_bopomofo_Check,
-    chewing_zuin_Check,
+    taigi_bopomofo_Check,
+    taigi_zuin_Check,
     0,
     0,
-    chewing_zuin_String,
-    chewing_bopomofo_String_static
+    taigi_zuin_String,
+    taigi_bopomofo_String_static
 };
 
 END_IGNORE_DEPRECATIONS
 
 BufferType AUX_BUFFER = {
     "aux buffer",
-    chewing_aux_Check,
+    taigi_aux_Check,
     0,
-    chewing_aux_Length,
-    chewing_aux_String,
+    taigi_aux_Length,
+    taigi_aux_String,
     0,
     0,
 };
@@ -166,69 +166,69 @@ void type_single_keystroke(ChewingContext *ctx, int ch)
 {
     switch (ch) {
     case KEY_LEFT:
-        chewing_handle_Left(ctx);
+        taigi_handle_Left(ctx);
         break;
     case KEY_SLEFT:
-        chewing_handle_ShiftLeft(ctx);
+        taigi_handle_ShiftLeft(ctx);
         break;
     case KEY_RIGHT:
-        chewing_handle_Right(ctx);
+        taigi_handle_Right(ctx);
         break;
     case KEY_SRIGHT:
-        chewing_handle_ShiftRight(ctx);
+        taigi_handle_ShiftRight(ctx);
         break;
     case KEY_UP:
-        chewing_handle_Up(ctx);
+        taigi_handle_Up(ctx);
         break;
     case KEY_DOWN:
-        chewing_handle_Down(ctx);
+        taigi_handle_Down(ctx);
         break;
     case KEY_SPACE:
-        chewing_handle_Space(ctx);
+        taigi_handle_Space(ctx);
         break;
     case KEY_ENTER:
-        chewing_handle_Enter(ctx);
+        taigi_handle_Enter(ctx);
         break;
     case KEY_BACKSPACE:
-        chewing_handle_Backspace(ctx);
+        taigi_handle_Backspace(ctx);
         break;
     case KEY_ESC:
-        chewing_handle_Esc(ctx);
+        taigi_handle_Esc(ctx);
         break;
     case KEY_DELETE:
-        chewing_handle_Del(ctx);
+        taigi_handle_Del(ctx);
         break;
     case KEY_HOME:
-        chewing_handle_Home(ctx);
+        taigi_handle_Home(ctx);
         break;
     case KEY_END:
-        chewing_handle_End(ctx);
+        taigi_handle_End(ctx);
         break;
     case KEY_TAB:
-        chewing_handle_Tab(ctx);
+        taigi_handle_Tab(ctx);
         break;
     case KEY_CAPSLOCK:
-        chewing_handle_Capslock(ctx);
+        taigi_handle_Capslock(ctx);
         break;
     case KEY_NPAGE:
-        chewing_handle_PageDown(ctx);
+        taigi_handle_PageDown(ctx);
         break;
     case KEY_PPAGE:
-        chewing_handle_PageUp(ctx);
+        taigi_handle_PageUp(ctx);
         break;
     case KEY_SSPACE:
-        chewing_handle_ShiftSpace(ctx);
+        taigi_handle_ShiftSpace(ctx);
         break;
     case KEY_DBLTAB:
-        chewing_handle_DblTab(ctx);
+        taigi_handle_DblTab(ctx);
         break;
     default:
         if (KEY_CTRL_BASE <= ch && ch < KEY_NUMPAD_BASE)
-            chewing_handle_CtrlNum(ctx, ch - KEY_CTRL_BASE);
+            taigi_handle_CtrlNum(ctx, ch - KEY_CTRL_BASE);
         else if (KEY_NUMPAD_BASE <= ch)
-            chewing_handle_Numlock(ctx, ch - KEY_NUMPAD_BASE);
+            taigi_handle_Numlock(ctx, ch - KEY_NUMPAD_BASE);
         else
-            chewing_handle_Default(ctx, (char) ch);
+            taigi_handle_Default(ctx, (char) ch);
         break;
     }
 }
@@ -329,7 +329,7 @@ void internal_ok_buffer(const char *file, int line, ChewingContext *ctx, const c
         buf = buffer->get_string(ctx);
         internal_ok(file, line, !strcmp(buf, expected), "!strcmp( buf, expected )",
                     "%s string function returned `%s' shall be `%s'", buffer->name, buf, expected);
-        chewing_free(buf);
+        taigi_free(buf);
     }
 
     if (buffer->get_string_alt) {
@@ -340,7 +340,7 @@ void internal_ok_buffer(const char *file, int line, ChewingContext *ctx, const c
                     "%s string function returned parameter `%d' shall be `%d'", buffer->name, actual_ret, expected_ret);
         internal_ok(file, line, !strcmp(buf, expected), "!strcmp( buf, expected )",
                     "%s string function returned `%s' shall be `%s'", buffer->name, buf, expected);
-        chewing_free(buf);
+        taigi_free(buf);
     }
 
     if (buffer->get_string_static) {
@@ -358,28 +358,28 @@ void internal_ok_candidate(const char *file, int line, ChewingContext *ctx, cons
 
     assert(ctx);
 
-    chewing_cand_Enumerate(ctx);
+    taigi_cand_Enumerate(ctx);
     for (i = 0; i < cand_len; ++i) {
-        internal_ok(file, line, chewing_cand_hasNext(ctx), __func__, "shall has next candidate");
+        internal_ok(file, line, taigi_cand_hasNext(ctx), __func__, "shall has next candidate");
 
-        buf = chewing_cand_String(ctx);
+        buf = taigi_cand_String(ctx);
         internal_ok(file, line, strcmp(buf, cand[i]) == 0, __func__, "candidate `%s' shall be `%s'", buf, cand[i]);
-        chewing_free(buf);
+        taigi_free(buf);
 
-        const_buf = chewing_cand_string_by_index_static(ctx, i);
+        const_buf = taigi_cand_string_by_index_static(ctx, i);
         internal_ok(file, line, strcmp(const_buf, cand[i]) == 0, __func__,
                     "candndate `%s' shall be `%s'", const_buf, cand[i]);
     }
 
-    internal_ok(file, line, !chewing_cand_hasNext(ctx), __func__, "shall not have next candidate");
-    buf = chewing_cand_String(ctx);
+    internal_ok(file, line, !taigi_cand_hasNext(ctx), __func__, "shall not have next candidate");
+    buf = taigi_cand_String(ctx);
 
     internal_ok(file, line, strcmp(buf, "") == 0, __func__, "candndate `%s' shall be `%s'", buf, "");
 
-    const_buf = chewing_cand_string_by_index_static(ctx, i);
+    const_buf = taigi_cand_string_by_index_static(ctx, i);
     internal_ok(file, line, strcmp(const_buf, "") == 0, __func__, "candndate `%s' shall be `%s'", const_buf, "");
 
-    chewing_free(buf);
+    taigi_free(buf);
 }
 
 void internal_ok_candidate_len(const char *file, int line, ChewingContext *ctx, size_t expected_len)
@@ -389,7 +389,7 @@ void internal_ok_candidate_len(const char *file, int line, ChewingContext *ctx, 
 
     assert(ctx);
 
-    buf = chewing_cand_string_by_index_static(ctx, 0);
+    buf = taigi_cand_string_by_index_static(ctx, 0);
     actual_len = ueStrLen(buf);
     internal_ok(file, line, actual_len == expected_len, __func__,
                 "candidate length `%d' shall be `%d'", actual_len, expected_len);
@@ -401,10 +401,10 @@ void internal_ok_keystroke_rtn(const char *file, int line, ChewingContext *ctx, 
         int rtn;
         int (*func) (const ChewingContext *ctx);
     } TABLE[] = {
-        {KEYSTROKE_IGNORE, chewing_keystroke_CheckIgnore},
-        {KEYSTROKE_COMMIT, chewing_commit_Check},
+        {KEYSTROKE_IGNORE, taigi_keystroke_CheckIgnore},
+        {KEYSTROKE_COMMIT, taigi_commit_Check},
         // No function to check KEYSTROKE_BELL
-        {KEYSTROKE_ABSORB, chewing_keystroke_CheckAbsorb},
+        {KEYSTROKE_ABSORB, taigi_keystroke_CheckAbsorb},
     };
     size_t i;
     int actual;
@@ -436,7 +436,7 @@ void internal_start_testcase(const char *func, ChewingContext *ctx, FILE * file)
 
     printf("#\n# %s\n#\n", func);
     fprintf(file, "#\n# %s\n#\n", func);
-    chewing_set_logger(ctx, logger, file);
+    taigi_set_logger(ctx, logger, file);
 }
 
 int exit_status()

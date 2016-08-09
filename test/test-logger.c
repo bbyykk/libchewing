@@ -26,13 +26,13 @@ void test_set_null_logger()
 {
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_logger(ctx, NULL, 0);
+    taigi_set_logger(ctx, NULL, 0);
     type_keystroke_by_string(ctx, "hk4g4");
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int main(int argc, char *argv[])

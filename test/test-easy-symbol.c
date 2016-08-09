@@ -57,11 +57,11 @@ void test_type_easy_symbol()
     ChewingContext *ctx;
     size_t i;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_easySymbolInput(ctx, 1);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_easySymbolInput(ctx, 1);
 
     for (i = 0; i < ARRAY_SIZE(EASY_SYMBOL); ++i) {
         type_keystroke_by_string(ctx, EASY_SYMBOL[i].token);
@@ -70,31 +70,31 @@ void test_type_easy_symbol()
         ok_commit_buffer(ctx, EASY_SYMBOL[i].expected);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 void test_mode_change()
 {
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_maxChiSymbolLen(ctx, 16);
 
     type_keystroke_by_string(ctx, CHINESE.token);
     ok_commit_buffer(ctx, CHINESE.expected);
 
-    chewing_set_easySymbolInput(ctx, 1);
+    taigi_set_easySymbolInput(ctx, 1);
     type_keystroke_by_string(ctx, EASY_SYMBOL[0].token);
     type_keystroke_by_string(ctx, "<E>");
     ok_commit_buffer(ctx, EASY_SYMBOL[0].expected);
 
-    chewing_set_easySymbolInput(ctx, 0);
+    taigi_set_easySymbolInput(ctx, 0);
     type_keystroke_by_string(ctx, CHINESE.token);
     ok_commit_buffer(ctx, CHINESE.expected);
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int main(int argc, char *argv[])

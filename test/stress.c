@@ -90,8 +90,8 @@ void commit_string(ChewingContext *ctx)
 {
     char *s;
 
-    if (chewing_commit_Check(ctx)) {
-        s = chewing_commit_String(ctx);
+    if (taigi_commit_Check(ctx)) {
+        s = taigi_commit_String(ctx);
         free(s);
     }
 }
@@ -139,27 +139,27 @@ int main(int argc, char *argv[])
     putenv("CHEWING_USER_PATH=" TEST_HASH_DIR);
 
     for (i = 0; i != flag_loop; i++) {
-	ChewingContext *ctx = chewing_new();
+	ChewingContext *ctx = taigi_new();
 
 	/* typical configuration */
-	chewing_set_KBType(ctx, chewing_KBStr2Num("KB_DEFAULT"));
-	chewing_set_candPerPage(ctx, 9);
-	chewing_set_maxChiSymbolLen(ctx, 16);
-	chewing_set_addPhraseDirection(ctx, 1);
-	chewing_set_selKey(ctx, selKey_define, 10);
-	chewing_set_spaceAsSelection(ctx, 1);
+	taigi_set_KBType(ctx, taigi_KBStr2Num("KB_DEFAULT"));
+	taigi_set_candPerPage(ctx, 9);
+	taigi_set_maxChiSymbolLen(ctx, 16);
+	taigi_set_addPhraseDirection(ctx, 1);
+	taigi_set_selKey(ctx, selKey_define, 10);
+	taigi_set_spaceAsSelection(ctx, 1);
 
 	if (flag_random_init) {
-	    chewing_set_KBType(ctx, get_input());
-	    chewing_set_candPerPage(ctx, get_input());
-	    chewing_set_maxChiSymbolLen(ctx, get_input());
-	    chewing_set_addPhraseDirection(ctx, get_input());
-	    chewing_set_selKey(ctx, selKey_define, get_input() % 11);
-	    chewing_set_spaceAsSelection(ctx, get_input());
-	    chewing_set_escCleanAllBuf(ctx, get_input());
-	    chewing_set_autoShiftCur(ctx, get_input());
-	    chewing_set_easySymbolInput(ctx, get_input());
-	    chewing_set_phraseChoiceRearward(ctx, get_input());
+	    taigi_set_KBType(ctx, get_input());
+	    taigi_set_candPerPage(ctx, get_input());
+	    taigi_set_maxChiSymbolLen(ctx, get_input());
+	    taigi_set_addPhraseDirection(ctx, get_input());
+	    taigi_set_selKey(ctx, selKey_define, get_input() % 11);
+	    taigi_set_spaceAsSelection(ctx, get_input());
+	    taigi_set_escCleanAllBuf(ctx, get_input());
+	    taigi_set_autoShiftCur(ctx, get_input());
+	    taigi_set_easySymbolInput(ctx, get_input());
+	    taigi_set_phraseChoiceRearward(ctx, get_input());
 	}
 
 	while (1) {
@@ -180,42 +180,42 @@ int main(int argc, char *argv[])
 		    switch (v) {
 			/* typical configurations may be changed during input */
 			case 0:
-			    chewing_set_ChiEngMode(ctx, get_input());
+			    taigi_set_ChiEngMode(ctx, get_input());
 			    break;
 			case 1:
-			    chewing_set_ShapeMode(ctx, get_input());
+			    taigi_set_ShapeMode(ctx, get_input());
 			    break;
 
 			/* usually not changed during input */
 			case 2:
-			    chewing_set_KBType(ctx, get_input());
+			    taigi_set_KBType(ctx, get_input());
 			    break;
 			case 3:
-			    chewing_set_candPerPage(ctx, get_input());
+			    taigi_set_candPerPage(ctx, get_input());
 			    break;
 			case 4:
-			    chewing_set_maxChiSymbolLen(ctx, get_input());
+			    taigi_set_maxChiSymbolLen(ctx, get_input());
 			    break;
 			case 5:
-			    chewing_set_addPhraseDirection(ctx, get_input());
+			    taigi_set_addPhraseDirection(ctx, get_input());
 			    break;
 			case 6:
-			    chewing_set_selKey(ctx, selKey_define, get_input() % 11);
+			    taigi_set_selKey(ctx, selKey_define, get_input() % 11);
 			    break;
 			case 7:
-			    chewing_set_spaceAsSelection(ctx, get_input());
+			    taigi_set_spaceAsSelection(ctx, get_input());
 			    break;
 			case 8:
-			    chewing_set_escCleanAllBuf(ctx, get_input());
+			    taigi_set_escCleanAllBuf(ctx, get_input());
 			    break;
 			case 9:
-			    chewing_set_autoShiftCur(ctx, get_input());
+			    taigi_set_autoShiftCur(ctx, get_input());
 			    break;
 			case 10:
-			    chewing_set_easySymbolInput(ctx, get_input());
+			    taigi_set_easySymbolInput(ctx, get_input());
 			    break;
 			case 11:
-			    chewing_set_phraseChoiceRearward(ctx, get_input());
+			    taigi_set_phraseChoiceRearward(ctx, get_input());
 			    break;
 			default:
 			    handled = 0;
@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
 	    }
 	    commit_string(ctx);
 	}
-	chewing_delete(ctx);
+	taigi_delete(ctx);
 
 	if (i % 10000 == 0)
 	    printf("%d\n", i);

@@ -209,7 +209,7 @@ typedef struct ChewingStaticData {
     unsigned int original_lifetime;
     unsigned int new_lifetime;
 #else
-    int chewing_lifetime;
+    int taigi_lifetime;
 
     char hashfilename[200];
     struct HASH_ITEM *hashtable[HASH_TABLE_SIZE];

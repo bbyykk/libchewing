@@ -77,10 +77,10 @@ void test_in_chinese_mode()
     ChewingContext *ctx;
     size_t i;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_maxChiSymbolLen(ctx, 16);
 
     for (i = 0; i < ARRAY_SIZE(SPECIAL_SYMBOL_TABLE); ++i) {
         // If bopomofo symbol is collided with special symbol, use
@@ -94,7 +94,7 @@ void test_in_chinese_mode()
         ok_commit_buffer(ctx, SPECIAL_SYMBOL_TABLE[i].expected);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 void test_in_easy_symbol_mode()
@@ -102,11 +102,11 @@ void test_in_easy_symbol_mode()
     ChewingContext *ctx;
     size_t i;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_easySymbolInput(ctx, 1);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_easySymbolInput(ctx, 1);
 
     for (i = 0; i < ARRAY_SIZE(SPECIAL_SYMBOL_TABLE); ++i) {
         type_keystroke_by_string(ctx, SPECIAL_SYMBOL_TABLE[i].token);
@@ -115,7 +115,7 @@ void test_in_easy_symbol_mode()
         ok_commit_buffer(ctx, SPECIAL_SYMBOL_TABLE[i].expected);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int is_fullshape_collision_key(const char *key)
@@ -149,12 +149,12 @@ void test_in_fullshape_mode()
     ChewingContext *ctx;
     size_t i;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_ChiEngMode(ctx, SYMBOL_MODE);
-    chewing_set_ShapeMode(ctx, FULLSHAPE_MODE);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_ChiEngMode(ctx, SYMBOL_MODE);
+    taigi_set_ShapeMode(ctx, FULLSHAPE_MODE);
 
     for (i = 0; i < ARRAY_SIZE(SPECIAL_SYMBOL_TABLE); ++i) {
         // If fullshape symbol is collided with special symbol, use
@@ -167,7 +167,7 @@ void test_in_fullshape_mode()
         ok_commit_buffer(ctx, SPECIAL_SYMBOL_TABLE[i].expected);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int main(int argc, char *argv[])

@@ -103,11 +103,11 @@ void test_fullshape_input()
     ChewingContext *ctx;
     size_t i;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    chewing_set_ChiEngMode(ctx, SYMBOL_MODE);
-    chewing_set_ShapeMode(ctx, FULLSHAPE_MODE);
+    taigi_set_ChiEngMode(ctx, SYMBOL_MODE);
+    taigi_set_ShapeMode(ctx, FULLSHAPE_MODE);
 
     for (i = 0; i < ARRAY_SIZE(FULLSHAPE_DATA); ++i) {
         type_keystroke_by_string(ctx, FULLSHAPE_DATA[i].token);
@@ -116,32 +116,32 @@ void test_fullshape_input()
         ok_commit_buffer(ctx, FULLSHAPE_DATA[i].expected);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 void test_set_fullshape()
 {
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
-    ok(chewing_get_ShapeMode(ctx) == HALFSHAPE_MODE, "default is HALFSHAPE_MODE");
+    ok(taigi_get_ShapeMode(ctx) == HALFSHAPE_MODE, "default is HALFSHAPE_MODE");
 
-    chewing_set_ShapeMode(ctx, FULLSHAPE_MODE);
-    ok(chewing_get_ShapeMode(ctx) == FULLSHAPE_MODE, "mode shall change to FULLSHAPE_MODE");
+    taigi_set_ShapeMode(ctx, FULLSHAPE_MODE);
+    ok(taigi_get_ShapeMode(ctx) == FULLSHAPE_MODE, "mode shall change to FULLSHAPE_MODE");
 
-    chewing_set_ShapeMode(ctx, -1);
-    ok(chewing_get_ShapeMode(ctx) == FULLSHAPE_MODE, "mode shall not change when parameter is invalid");
+    taigi_set_ShapeMode(ctx, -1);
+    ok(taigi_get_ShapeMode(ctx) == FULLSHAPE_MODE, "mode shall not change when parameter is invalid");
 
-    chewing_set_ShapeMode(ctx, HALFSHAPE_MODE);
-    ok(chewing_get_ShapeMode(ctx) == HALFSHAPE_MODE, "mode shall change to HALFSHAPE_MODE");
+    taigi_set_ShapeMode(ctx, HALFSHAPE_MODE);
+    ok(taigi_get_ShapeMode(ctx) == HALFSHAPE_MODE, "mode shall change to HALFSHAPE_MODE");
 
-    chewing_set_ShapeMode(ctx, -1);
-    ok(chewing_get_ShapeMode(ctx) == HALFSHAPE_MODE, "mode shall not change when parameter is invalid");
+    taigi_set_ShapeMode(ctx, -1);
+    ok(taigi_get_ShapeMode(ctx) == HALFSHAPE_MODE, "mode shall not change when parameter is invalid");
 
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int main(int argc, char *argv[])

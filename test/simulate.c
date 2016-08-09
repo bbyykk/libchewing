@@ -75,7 +75,7 @@ int main()
     if (!init_sim())
         return 1;
 
-    chewing_test_Main();
+    taigi_test_Main();
 
     {
         printf("_________________________________________________________________________\n" "[ Report ]\n");

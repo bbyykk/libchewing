@@ -27,12 +27,12 @@
 #    define SEARCH_PATH_SEP ":"
 int get_search_path(char *path, size_t path_len)
 {
-    char *chewing_path;
+    char *taigi_path;
     char *home;
 
-    chewing_path = getenv("CHEWING_PATH");
-    if (chewing_path) {
-        strncpy(path, chewing_path, path_len);
+    taigi_path = getenv("CHEWING_PATH");
+    if (taigi_path) {
+        strncpy(path, taigi_path, path_len);
     } else {
         home = getenv("HOME");
         if (home) {
@@ -54,14 +54,14 @@ int get_search_path(char *path, size_t path_len)
 
 int get_search_path(char *path, size_t path_len)
 {
-    char *chewing_path;
+    char *taigi_path;
     size_t len;
     HRESULT result;
 
-    chewing_path = getenv("CHEWING_PATH");
-    if (chewing_path) {
+    taigi_path = getenv("CHEWING_PATH");
+    if (taigi_path) {
         /* FIXME: Check for truncated. */
-        strncpy(path, chewing_path, path_len);
+        strncpy(path, taigi_path, path_len);
     } else {
 
         /*

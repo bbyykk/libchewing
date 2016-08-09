@@ -107,7 +107,7 @@
 #define CHEWING_LOG_ERROR   5
 
 /**
- * @deprecated Use chewing_set_ series of functions to set parameters instead.
+ * @deprecated Use taigi_set_ series of functions to set parameters instead.
  */
 typedef struct ChewingConfigData {
     int candPerPage;

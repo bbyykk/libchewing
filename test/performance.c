@@ -22,12 +22,12 @@ int main()
     /* for the sake of testing, we should not change existing hash data */
     putenv("CHEWING_USER_PATH=" TEST_HASH_DIR);
 
-    ctx = chewing_new();
+    ctx = taigi_new();
 
     while ((ch = getchar()) != EOF) {
-        chewing_handle_Default(ctx, ch);
+        taigi_handle_Default(ctx, ch);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
     return 0;
 }

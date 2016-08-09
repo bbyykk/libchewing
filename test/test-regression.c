@@ -22,7 +22,7 @@
 
 FILE *fd;
 
-void test_libchewing_googlecode_issue_472()
+void test_libtaigi_googlecode_issue_472()
 {
     static const char *const INPUT[] = {
         "<T>|&Wt<H>mrJY)G<C2>OqJ<H><H>Yl<R>p0<EE>QE[^<C1>k",
@@ -34,20 +34,20 @@ void test_libchewing_googlecode_issue_472()
     size_t i;
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_autoShiftCur(ctx, 1);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_autoShiftCur(ctx, 1);
 
     for (i = 0; i < ARRAY_SIZE(INPUT); ++i) {
-        chewing_Reset(ctx);
+        taigi_Reset(ctx);
         type_keystroke_by_string(ctx, INPUT[i]);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
-void test_libchewing_googlecode_issue_473()
+void test_libtaigi_googlecode_issue_473()
 {
     static const char *const INPUT[] = {
         "t<N->_ M1<N+>H[Ls3<L><N1>PL+Z]4<C1>&(^H*H<TT>Sc<N->P]!|<CB>-<C6>S<H><N1><C0>U<B>d}P!f<EN><N.><C7>V!U!w|4-=S<C1>b<N2>Q",
@@ -56,71 +56,71 @@ void test_libchewing_googlecode_issue_473()
     size_t i;
     ChewingContext *ctx;
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_autoShiftCur(ctx, 1);
-    chewing_set_candPerPage(ctx, 9);
-    chewing_set_addPhraseDirection(ctx, 1);
-    chewing_set_spaceAsSelection(ctx, 1);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_autoShiftCur(ctx, 1);
+    taigi_set_candPerPage(ctx, 9);
+    taigi_set_addPhraseDirection(ctx, 1);
+    taigi_set_spaceAsSelection(ctx, 1);
 
     for (i = 0; i < ARRAY_SIZE(INPUT); ++i) {
-        chewing_Reset(ctx);
+        taigi_Reset(ctx);
         type_keystroke_by_string(ctx, INPUT[i]);
     }
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
-void test_libchewing_issue_30()
+void test_libtaigi_issue_30()
 {
     ChewingContext *ctx;
     int cursor;
 
     clean_userphrase();
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
-    chewing_set_maxChiSymbolLen(ctx, 16);
-    chewing_set_autoShiftCur(ctx, 1);
-    chewing_set_spaceAsSelection(ctx, 1);
-    chewing_set_phraseChoiceRearward(ctx, 1);
+    taigi_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_autoShiftCur(ctx, 1);
+    taigi_set_spaceAsSelection(ctx, 1);
+    taigi_set_phraseChoiceRearward(ctx, 1);
 
     type_keystroke_by_string(ctx, "hk4g4<H> 3 1");
-    cursor = chewing_cursor_Current(ctx);
+    cursor = taigi_cursor_Current(ctx);
     ok(cursor == 2, "cursor position `%d' shall be `2'", cursor);
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
-void test_libchewing_issue_108()
+void test_libtaigi_issue_108()
 {
     ChewingContext *ctx;
 
     clean_userphrase();
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
 
     type_keystroke_by_string(ctx, "yjo4cl3183<E>");
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
-void test_libchewing_data_issue_1()
+void test_libtaigi_data_issue_1()
 {
     const TestData DATA = { "e03y.3", "\xE8\xB6\x95\xE8\xB5\xB0" /* 趕走 */  };
     ChewingContext *ctx;
 
     clean_userphrase();
 
-    ctx = chewing_new();
+    ctx = taigi_new();
     start_testcase(ctx, fd);
-    chewing_set_maxChiSymbolLen(ctx, 16);
+    taigi_set_maxChiSymbolLen(ctx, 16);
     type_keystroke_by_string(ctx, DATA.token);
     ok_preedit_buffer(ctx, DATA.expected);
 
-    chewing_delete(ctx);
+    taigi_delete(ctx);
 }
 
 int main(int argc, char *argv[])
@@ -139,11 +139,11 @@ int main(int argc, char *argv[])
     free(logname);
 
 
-    test_libchewing_data_issue_1();
-    test_libchewing_issue_30();
-    test_libchewing_issue_108();
-    test_libchewing_googlecode_issue_472();
-    test_libchewing_googlecode_issue_473();
+    test_libtaigi_data_issue_1();
+    test_libtaigi_issue_30();
+    test_libtaigi_issue_108();
+    test_libtaigi_googlecode_issue_472();
+    test_libtaigi_googlecode_issue_473();
 
     fclose(fd);
 
