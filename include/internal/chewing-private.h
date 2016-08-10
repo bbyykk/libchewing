@@ -130,6 +130,7 @@ typedef struct PinYinData {
 
 typedef struct BopomofoData {
     int kbtype;
+    int pho_inx_n;
     int pho_inx[BOPOMOFO_SIZE];
     int pho_inx_alt[BOPOMOFO_SIZE];
     uint32_t phone;

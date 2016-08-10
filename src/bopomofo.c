@@ -171,7 +171,6 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     BopomofoData *pBopomofo = &(pgdata->bopomofoData);
     int type = 0, inx = 0;
     int i;
-    static int index = 0;
 
     printf("\t\t%s, key=%d\n", __func__, key);
     if (IsDefPhoEndKey(key, pBopomofo->kbtype)) {
@@ -180,11 +179,11 @@ static int DefPhoInput(ChewingData *pgdata, int key)
             if (pBopomofo->pho_inx[i] != 0)
                 break;
         if (i < BOPOMOFO_SIZE) {
-	    index = 0;
+	    pBopomofo->pho_inx_n = 0;
             return EndKeyProcess(pgdata, key, 1);
 	}
     } else {
-        pBopomofo->pho_inx[index] = 0;
+        pBopomofo->pho_inx[pBopomofo->pho_inx_n] = 0;
     }
    printf("<<<<< %s, %d >>>>>\n", __func__, __LINE__);
 #define TAIGI_TYPES 2
@@ -201,8 +200,8 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     }
 
     /* fill the key into the phone buffer */
-    printf("%s, %d, pBopomofo->pho_inx[%d]=%d\n", __func__, __LINE__, index, inx);
-    pBopomofo->pho_inx[index++] = inx;
+    printf("%s, %d, pBopomofo->pho_inx[%d]=%d\n", __func__, __LINE__, pBopomofo->pho_inx_n, inx);
+    pBopomofo->pho_inx[pBopomofo->pho_inx_n++] = inx;
     return BOPOMOFO_ABSORB;
 }
 
@@ -693,9 +692,11 @@ int BopomofoRemoveLast(BopomofoData *pBopomofo)
         i = strlen(pBopomofo->pinYinData.keySeq);
         pBopomofo->pinYinData.keySeq[i - 1] = '\0';
     } else {
-        for (i = 3; i >= 0; i--) {
+        for (i = BOPOMOFO_SIZE; i >= 0; i--) {
             if (pBopomofo->pho_inx[i]) {
                 pBopomofo->pho_inx[i] = 0;
+		if (pBopomofo->pho_inx_n)
+			pBopomofo->pho_inx_n--;
                 return 0;
             }
         }
