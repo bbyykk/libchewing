@@ -554,11 +554,11 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to)
 
     start = toPreeditBufIndex(pgdata, from);
 
-    LOG_VERBOSE("Fill preeditBuf start %d, from = %d, to = %d", start, from, to);
+    LOG_VERBOSE("Fill preeditBuf phrase=%s, start = %d, from = %d, to = %d", phrase, start, from, to);
 
     for (i = start; i < start - from + to; ++i) {
 //        ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
-	  strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
+	strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
 	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s", i, pgdata->preeditBuf[i].char_);
     }
 }
@@ -569,14 +569,13 @@ static void OutputRecordStr(ChewingData *pgdata, const TreeDataType *ptd)
     PhraseIntervalType inter;
     int i;
 
-    LOG_VERBOSE("%s, %d, ptd->phList->nInter=%d\n", __func__, __LINE__, ptd->phList->nInter);
+    LOG_VERBOSE("%d, ptd->phList->nInter=%d\n", __LINE__, ptd->phList->nInter);
     for (i = 0; i < ptd->phList->nInter; i++) {
         inter = ptd->interval[ptd->phList->arrIndex[i]];
         FillPreeditBuf(pgdata, inter.p_phr->phrase, inter.from, inter.to);
     }
-
+    LOG_VERBOSE("%d, pgdata->nSelect=%d\n", __LINE__, pgdata->nSelect);
     for (i = 0; i < pgdata->nSelect; i++) {
-	LOG_VERBOSE("%s, %d\n", __func__, __LINE__);
         FillPreeditBuf(pgdata, pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to);
     }
 }

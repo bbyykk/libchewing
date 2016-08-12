@@ -117,6 +117,7 @@ int HaninSymbolInput(ChewingData *pgdata)
     ChoiceInfo *pci = &(pgdata->choiceInfo);
     AvailInfo *pai = &(pgdata->availInfo);
 
+    printf("---- %s, %d -----\n", __func__, __LINE__);
     /* No available symbol table */
     if (!pgdata->static_data.symbol_table)
         return BOPOMOFO_ABSORB;
@@ -311,6 +312,7 @@ int SymbolChoice(ChewingData *pgdata, int sel_i)
     int symbol_type;
     int key;
 
+    printf("---- %s, %d ----\n", __func__, __LINE__);
     if (!pgdata->static_data.symbol_table && pgdata->choiceInfo.isSymbol != SYMBOL_CHOICE_UPDATE)
         return BOPOMOFO_ABSORB;
 
@@ -372,6 +374,7 @@ int SymbolChoice(ChewingData *pgdata, int sel_i)
 
         if (symbol_type == SYMBOL_CHOICE_INSERT) {
             pgdata->chiSymbolBufLen++;
+	    printf("UUUUUUUUUUU chiSymbolCursor++\n");
             pgdata->chiSymbolCursor++;
         }
 
@@ -941,11 +944,11 @@ int CountSymbols(ChewingData *pgdata, int to)
     int chi;
     int i;
 
-    DEBUG_OUT("--%s: to=%d\n", __func__, to);
     for (chi = i = 0; i < to; i++) {
         if (ChewingIsChiAt(i, pgdata))
             chi++;
     }
+    DEBUG_OUT("---- %s: to=%d, chi=%d, return=%d ----\n", __func__, to, chi, to - chi);
     return to - chi;
 }
 
@@ -1228,6 +1231,7 @@ int OpenSymbolChoice(ChewingData *pgdata)
     const char *const *pBuf;
     ChoiceInfo *pci = &(pgdata->choiceInfo);
 
+    printf("---- %s, %d -----\n", __func__, __LINE__);
     pci->oldChiSymbolCursor = pgdata->chiSymbolCursor;
 
     /* see if there is some word in the cursor position */

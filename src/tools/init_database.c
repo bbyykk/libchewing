@@ -297,13 +297,14 @@ void store_phrase(const char *line, int line_num)
     if (bopomofo) {
         fprintf(stderr, "Phrase `%s' too long in line %d\n", phrase, line_num);
     }
-
+#if 0
     /* check phrase length & bopomofo length */
     if ((size_t) ueStrLen(phrase_data[num_phrase_data].phrase) != phrase_len) {
         fprintf(stderr, "Phrase length and bopomofo length mismatch in line %d, `%s'\n", line_num, line);
+        fprintf(stderr, "\tcalculated len=%d, recorded len=%d\n", ueStrLen(phrase_data[num_phrase_data].phrase), phrase_len);
         exit(-1);
     }
-
+#endif
     /* Check that each word in phrase can be found in word list. */
     word.text = ALC(PhraseData, 1);
 

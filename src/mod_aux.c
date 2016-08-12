@@ -174,15 +174,28 @@ CHEWING_API int taigi_bopomofo_Check(const ChewingContext *ctx)
 CHEWING_API int taigi_cursor_Current(const ChewingContext *ctx)
 {
     const ChewingData *pgdata;
+    int i;
 
     if (!ctx) {
         return -1;
     }
     pgdata = ctx->data;
 
+    int total_len = 0;
+    for (i=0;i < 16;i++) {
+	    int len = strlen(pgdata->preeditBuf[i].char_);
+	    printf("%s, %d, preeditBuf[%d].char_=%s, len=%d\n",
+			    __func__, __LINE__, i,
+			    pgdata->preeditBuf[i].char_, len);
+	    if(!len)
+		    break;
+	    total_len += len;	
+    }
     LOG_API("");
+    if(total_len > 1) total_len-=1;
 
-    return (ctx->output->chiSymbolCursor);
+    return total_len;
+    //return (ctx->output->chiSymbolCursor);
 }
 
 CHEWING_API int taigi_cand_CheckDone(const ChewingContext *ctx)
@@ -297,6 +310,7 @@ CHEWING_API const char *taigi_cand_String_static(ChewingContext *ctx)
 
     if (taigi_cand_hasNext(ctx)) {
         s = ctx->output->pci->totalChoiceStr[ctx->cand_no];
+	printf("%s, Get: %s\n", __func__, s);
         ctx->cand_no++;
     }
 

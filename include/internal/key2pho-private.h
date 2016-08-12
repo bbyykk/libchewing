@@ -47,6 +47,7 @@ typedef SSIZE_T ssize_t;
  * @return an 16-bit unsigned integer or 0 if the phonetic symbols are illegal.
  */
 uint32_t UintFromPhone(const char *phone);
+uint32_t IsThePhone(const char *c);
 
 /**
  * @brief Get the unsigned 16-bit representation of phonetic symbols by index.

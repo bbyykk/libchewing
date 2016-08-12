@@ -50,8 +50,8 @@ const char *const zhuin_tab[] = {               /* number of bits */
     taigi_pho,
     taigi_tone
 };
-static const phone_num = 17;
-static const tone_num = 9;
+static const int phone_num = 17;
+static const int tone_num = 9;
 
 //static const int zhuin_tab_num[] = { 22, 4, 14, 5 };
 //static const int shift[] = { 9, 7, 3, 0 };
@@ -100,6 +100,14 @@ static const char *const key_str[KBTYPE_COUNT] = {
  *
  * return the number it means. 0 means error.
  */
+uint32_t IsThePhone(const char *c)
+{
+	if (strchr(taigi_tone, *c))
+		return 1;
+	return 0;
+}
+
+
 uint32_t UintFromPhone(const char *zhuin)
 {
     const char *iter;
