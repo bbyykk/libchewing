@@ -121,47 +121,6 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     pBopomofo->phone = u32Pho;
     pBopomofo->phoneAlt = u32Pho;
     memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));
-#if 0
-    if (pBopomofo->pho_inx[0] == 0 && pBopomofo->pho_inx[1] == 0 && pBopomofo->pho_inx[2] == 0 && pBopomofo->pho_inx[3] == 0) {
-        /*
-         * Special handle for space key (Indeed very special one).
-         * Un-break the situation that OnKeySpace() is not called,
-         * hence the Candidate window doesn't show up, because
-         * BOPOMOFO_NO_WORD is returned.
-         */
-	    printf("%s, %d\n", __func__, __LINE__);
-        return (key == ' ') ? BOPOMOFO_KEY_ERROR : BOPOMOFO_NO_WORD;
-    }
-
-    pho_inx = PhoneInxFromKey(key, 3, pBopomofo->kbtype, searchTimes);
-    if (pBopomofo->pho_inx[3] == 0) {
-        pBopomofo->pho_inx[3] = pho_inx;
-        pBopomofo->pho_inx_alt[3] = pho_inx;
-    } else if (key != ' ') {
-        pBopomofo->pho_inx[3] = pho_inx;
-        pBopomofo->pho_inx_alt[3] = pho_inx;
-        return BOPOMOFO_NO_WORD;
-    }
-
-    u32Pho = UintFromPhoneInx(pBopomofo->pho_inx);
-    if (GetCharFirst(pgdata, &tempword, u32Pho) == 0) {
-        BopomofoRemoveAll(pBopomofo);
-        return BOPOMOFO_NO_WORD;
-    }
-
-    pBopomofo->phone = u32Pho;
-
-    if (pBopomofo->pho_inx_alt[0] == 0 && pBopomofo->pho_inx_alt[1] == 0 && pBopomofo->pho_inx_alt[2] == 0) {
-        /* no alternative phone, copy from default as alt */
-        pBopomofo->phoneAlt = u32Pho;
-    } else {
-        u32PhoAlt = UintFromPhoneInx(pBopomofo->pho_inx_alt);
-        pBopomofo->phoneAlt = u32PhoAlt;
-    }
-
-    memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));
-    memset(pBopomofo->pho_inx_alt, 0, sizeof(pBopomofo->pho_inx_alt));
-#endif
     printf("##### %s, %d, END #####\n", __func__, __LINE__);
     return BOPOMOFO_COMMIT;
 }

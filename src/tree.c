@@ -557,8 +557,11 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to)
     LOG_VERBOSE("Fill preeditBuf phrase=%s, start = %d, from = %d, to = %d", phrase, start, from, to);
 
     for (i = start; i < start - from + to; ++i) {
-//        ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
-	strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
+	if (phrase && IsThePhone(phrase[0])) {
+		strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
+	} else {
+		ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
+	}
 	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s", i, pgdata->preeditBuf[i].char_);
     }
 }

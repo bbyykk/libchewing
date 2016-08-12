@@ -100,10 +100,19 @@ static const char *const key_str[KBTYPE_COUNT] = {
  *
  * return the number it means. 0 means error.
  */
-uint32_t IsThePhone(const char *c)
+uint32_t IsThePhone(const char c)
 {
-	if (strchr(taigi_tone, *c))
+	int len = sizeof(taigi_pho);
+	int i;
+
+	if (strchr(taigi_pho, c))
 		return 1;
+#if 0
+	for(i=0;i < len;i++) {
+		if(taigi_pho[i] == c)
+			return 1;
+	}
+#endif
 	return 0;
 }
 
