@@ -180,7 +180,8 @@ CHEWING_API int taigi_cursor_Current(const ChewingContext *ctx)
         return -1;
     }
     pgdata = ctx->data;
-
+    LOG_API("");
+#if 0
     int total_len = 0;
     for (i=0;i < 16;i++) {
 	    int len = strlen(pgdata->preeditBuf[i].char_);
@@ -191,11 +192,11 @@ CHEWING_API int taigi_cursor_Current(const ChewingContext *ctx)
 		    break;
 	    total_len += len;	
     }
-    LOG_API("");
     if(total_len > 1) total_len-=1;
-
     return total_len;
-    //return (ctx->output->chiSymbolCursor);
+#endif
+
+    return (ctx->output->chiSymbolCursor);
 }
 
 CHEWING_API int taigi_cand_CheckDone(const ChewingContext *ctx)

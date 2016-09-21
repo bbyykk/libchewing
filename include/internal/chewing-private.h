@@ -230,9 +230,9 @@ typedef struct ChewingStaticData {
 } ChewingStaticData;
 
 typedef enum Category {
-    CHEWING_NONE,
-    CHEWING_CHINESE,
-    CHEWING_SYMBOL,
+    TAIGI_NONE,
+    TAIGI_CHINESE,
+    TAIGI_SYMBOL,
 } Category;
 
 typedef struct PreeditBuf {

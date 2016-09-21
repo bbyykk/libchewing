@@ -95,7 +95,7 @@ int NoSymbolBetween(ChewingData *pgdata, int begin, int end)
     int i;
 
     for (i = begin; i < end; ++i) {
-        if (pgdata->preeditBuf[i].category == CHEWING_SYMBOL) {
+        if (pgdata->preeditBuf[i].category == TAIGI_SYMBOL) {
             return 0;
         }
     }
@@ -117,7 +117,6 @@ int HaninSymbolInput(ChewingData *pgdata)
     ChoiceInfo *pci = &(pgdata->choiceInfo);
     AvailInfo *pai = &(pgdata->availInfo);
 
-    printf("---- %s, %d -----\n", __func__, __LINE__);
     /* No available symbol table */
     if (!pgdata->static_data.symbol_table)
         return BOPOMOFO_ABSORB;
@@ -154,7 +153,7 @@ static int _Inner_InternalSpecialSymbol(int key, ChewingData *pgdata, char symke
                 sizeof(pgdata->preeditBuf[0]) * (pgdata->chiSymbolBufLen - pgdata->chiSymbolCursor));
 
         strncpy(buf->char_, chibuf, sizeof(buf->char_) - 1);
-        buf->category = CHEWING_SYMBOL;
+        buf->category = TAIGI_SYMBOL;
 
         /* Save Symbol Key */
         memmove(&(pgdata->symbolKeyBuf[pgdata->chiSymbolCursor + 1]),
@@ -312,7 +311,6 @@ int SymbolChoice(ChewingData *pgdata, int sel_i)
     int symbol_type;
     int key;
 
-    printf("---- %s, %d ----\n", __func__, __LINE__);
     if (!pgdata->static_data.symbol_table && pgdata->choiceInfo.isSymbol != SYMBOL_CHOICE_UPDATE)
         return BOPOMOFO_ABSORB;
 
@@ -359,7 +357,7 @@ int SymbolChoice(ChewingData *pgdata, int sel_i)
             }
         }
         strncpy(buf->char_, pgdata->choiceInfo.totalChoiceStr[sel_i], sizeof(buf->char_) - 1);
-        buf->category = CHEWING_SYMBOL;
+        buf->category = TAIGI_SYMBOL;
 
         /* This is very strange */
         key = FindSymbolKey(pgdata->choiceInfo.totalChoiceStr[sel_i]);
@@ -374,7 +372,6 @@ int SymbolChoice(ChewingData *pgdata, int sel_i)
 
         if (symbol_type == SYMBOL_CHOICE_INSERT) {
             pgdata->chiSymbolBufLen++;
-	    printf("UUUUUUUUUUU chiSymbolCursor++\n");
             pgdata->chiSymbolCursor++;
         }
 
@@ -397,7 +394,7 @@ int SymbolInput(int key, ChewingData *pgdata)
 
         buf->char_[0] = (char) key;
         buf->char_[1] = 0;
-        buf->category = CHEWING_SYMBOL;
+        buf->category = TAIGI_SYMBOL;
 
         /* Save Symbol Key */
         memmove(&(pgdata->symbolKeyBuf[pgdata->chiSymbolCursor + 1]),
@@ -446,7 +443,6 @@ void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
     for (i = 0; i < pgo->commitBufLen; ++i) {
         assert(pos + MAX_UTF8_SIZE + 1 < pgo->commitBuf + sizeof(pgo->commitBuf));
         strcpy(pos, pgdata->preeditBuf[i].char_);
-	printf("%s, copying %s\n", __func__, pgdata->preeditBuf[i].char_);
         pos += strlen(pgdata->preeditBuf[i].char_);
     }
     *pos = 0;
@@ -490,7 +486,6 @@ static void KillFromLeft(ChewingData *pgdata, int nKill)
 void CleanAllBuf(ChewingData *pgdata)
 {
     /* 1 */
-    printf("XXXXXXXXXXX %s, %d, set nPHoneSeq to 0 XXXXXXXXXXXXXXXXXXXXXXXXxx\n", __func__, __LINE__);
     pgdata->nPhoneSeq = 0;
     memset(pgdata->phoneSeq, 0, sizeof(pgdata->phoneSeq));
     /* 2 */
@@ -653,7 +648,6 @@ int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
     int i;
     int cursor = PhoneSeqCursor(pgdata);
 
-    LOG_VERBOSE("\t\tXXXXXXXXXXXXXXXXXXXXXXXxxx %s, phone=%d, pgdata->nPhoneSeq=%d, cursor=%d\n", __func__, phone, pgdata->nPhoneSeq, cursor);
     /* shift the selectInterval */
     for (i = 0; i < pgdata->nSelect; i++) {
         if (pgdata->selectInterval[i].from >= cursor) {
@@ -677,7 +671,6 @@ int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
             &(pgdata->phoneSeqAlt[cursor]), sizeof(uint32_t) * (pgdata->nPhoneSeq - cursor));
     pgdata->phoneSeqAlt[cursor] = phoneAlt;
     pgdata->nPhoneSeq++;
-    LOG_VERBOSE("\t\tXXXXXXXXXXXXXXXXXXXXXXXxxx %s, phone=%d, pgdata->nPhoneSeq=%d, cursor=%d\n", __func__, phone, pgdata->nPhoneSeq, cursor);
 
     /* add to chiSymbolBuf */
     assert(pgdata->chiSymbolBufLen >= pgdata->chiSymbolCursor);
@@ -685,7 +678,7 @@ int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
             &(pgdata->preeditBuf[pgdata->chiSymbolCursor]),
             sizeof(pgdata->preeditBuf[0]) * (pgdata->chiSymbolBufLen - pgdata->chiSymbolCursor));
     /* "0" means Chinese word */
-    pgdata->preeditBuf[pgdata->chiSymbolCursor].category = CHEWING_CHINESE;
+    pgdata->preeditBuf[pgdata->chiSymbolCursor].category = TAIGI_CHINESE;
     pgdata->chiSymbolBufLen++;
     pgdata->chiSymbolCursor++;
 
@@ -850,10 +843,11 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
     int inx;
     char *pos;
 
-    DEBUG_OUT("XXXXX %s XXXXX\n", __func__);
     /* fill zero to chiSymbolBuf first */
-    pgo->preeditBuf[0] = 0;
-    pgo->bopomofoBuf[0] = 0;
+    //pgo->preeditBuf[0] = 0;
+    //pgo->bopomofoBuf[0] = 0;
+    memset(pgo->preeditBuf, 0, sizeof(pgo->preeditBuf));
+    memset(pgo->bopomofoBuf, 0, sizeof(pgo->bopomofoBuf));
 
     pos = pgo->preeditBuf;
     for (i = 0; i < pgdata->chiSymbolBufLen && pos < pgo->preeditBuf + sizeof(pgo->preeditBuf) + MAX_UTF8_SIZE + 1; ++i) {
@@ -886,7 +880,6 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
 //	strncpy(pgo->bopomofoBuf + strlen(pgo->bopomofoBuf),
 //	    pgdata->bopomofoData.pho_inx, BOPOMOFO_SIZE);
     }
-    printf("%s, %d, pgo->bopomofoBuf=%s\n", __func__ , __LINE__ , pgo->bopomofoBuf);
     ShiftInterval(pgo, pgdata);
     memcpy(pgo->dispBrkpt, pgdata->bUserArrBrkpt, sizeof(pgo->dispBrkpt[0]) * (MAX_PHONE_SEQ_LEN + 1));
     pgo->pci = &(pgdata->choiceInfo);
@@ -963,7 +956,7 @@ int PhoneSeqCursor(ChewingData *pgdata)
 int ChewingIsChiAt(int chiSymbolCursor, ChewingData *pgdata)
 {
     DEBUG_OUT("\n");
-    return pgdata->preeditBuf[chiSymbolCursor].category == CHEWING_CHINESE;
+    return pgdata->preeditBuf[chiSymbolCursor].category == TAIGI_CHINESE;
 }
 
 void RemoveSelectElement(int i, ChewingData *pgdata)
@@ -1015,7 +1008,6 @@ int ChewingKillChar(ChewingData *pgdata, int chiSymbolCursorToKill, int minus)
 {
     int tmp, cursorToKill;
 
-    printf("%s, %d\n", __func__, __LINE__);
     tmp = pgdata->chiSymbolCursor;
     pgdata->chiSymbolCursor = chiSymbolCursorToKill;
     cursorToKill = PhoneSeqCursor(pgdata);
@@ -1231,7 +1223,6 @@ int OpenSymbolChoice(ChewingData *pgdata)
     const char *const *pBuf;
     ChoiceInfo *pci = &(pgdata->choiceInfo);
 
-    printf("---- %s, %d -----\n", __func__, __LINE__);
     pci->oldChiSymbolCursor = pgdata->chiSymbolCursor;
 
     /* see if there is some word in the cursor position */
