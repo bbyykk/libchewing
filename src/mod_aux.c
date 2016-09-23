@@ -180,7 +180,7 @@ CHEWING_API int taigi_cursor_Current(const ChewingContext *ctx)
         return -1;
     }
     pgdata = ctx->data;
-    LOG_API("");
+    LOG_API("ctx->output->chiSymbolCursor=%d", ctx->output->chiSymbolCursor);
 #if 0
     int total_len = 0;
     for (i=0;i < 16;i++) {

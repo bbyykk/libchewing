@@ -1608,16 +1608,13 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 
   End_keyproc:
     if (!bQuickCommit) {
-	printf("XXXX %s, %d\n", __func__, __LINE__);
         CallPhrasing(pgdata, 0);
-        if (ReleaseChiSymbolBuf(pgdata, pgo) != 0) {
-	    printf("XXXX %s, %d\n", __func__, __LINE__);
+	if (ReleaseChiSymbolBuf(pgdata, pgo) != 0) {
             keystrokeRtn = KEYSTROKE_COMMIT;
 	}
     }
     /* Quick commit */
     else {
-        DEBUG_OUT("\t\tXXXX Quick commit buf[0]=%c\n", pgdata->preeditBuf[0].char_);
         WriteChiSymbolToCommitBuf(pgdata, pgo, 1);
         pgdata->chiSymbolBufLen = 0;
         pgdata->chiSymbolCursor = 0;
@@ -1627,7 +1624,6 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     if (pgdata->phrOut.nNumCut > 0) {
         int i;
 
-	printf("XXXX %s, %d\n", __func__, __LINE__);
         for (i = 0; i < pgdata->phrOut.nDispInterval; i++) {
             pgdata->bUserArrBrkpt[pgdata->phrOut.dispInterval[i].from] = 1;
             pgdata->bUserArrBrkpt[pgdata->phrOut.dispInterval[i].to] = 1;
