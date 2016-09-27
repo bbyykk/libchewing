@@ -56,6 +56,7 @@ CHEWING_API int taigi_bopomofo_Check(const ChewingContext *ctx);
 /*@}*/
 
 CHEWING_API int taigi_cursor_Current(const ChewingContext *ctx);
+CHEWING_API int taigi_cursor_Raw(const ChewingContext *ctx);
 
 /*@{*/
 CHEWING_API int taigi_cand_CheckDone(const ChewingContext *ctx);

@@ -49,6 +49,11 @@
 #    include "hash-private.h"
 #endif
 
+#ifndef LOG_API_TAIGIIO
+#undef LOG_API
+#define LOG_API(fmt, ...) 
+#endif
+
 const char *const kb_type_str[] = {
     "KB_DEFAULT",
     "KB_HSU",

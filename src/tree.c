@@ -35,6 +35,11 @@
 
 #define INTERVAL_SIZE ( ( MAX_PHONE_SEQ_LEN + 1 ) * MAX_PHONE_SEQ_LEN / 2 )
 
+#ifndef LOG_API_TREE
+#undef LOG_API
+#define LOG_API(fmt, ...) 
+#endif
+
 typedef struct PhraseIntervalType {
     int from, to, source;
     Phrase *p_phr;

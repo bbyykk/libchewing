@@ -23,6 +23,10 @@
 #include "chewing-utf8-util.h"
 #include "private.h"
 
+#ifndef LOG_API_MOD_AUX
+#undef LOG_API
+#define LOG_API(fmt, ...) 
+#endif
 /**
  * @param ctx handle to Chewing IM context
  * @retval TRUE if it currnet input state is at the "end-of-a-char"
@@ -181,22 +185,24 @@ CHEWING_API int taigi_cursor_Current(const ChewingContext *ctx)
     }
     pgdata = ctx->data;
     LOG_API("ctx->output->chiSymbolCursor=%d", ctx->output->chiSymbolCursor);
-#if 0
-    int total_len = 0;
-    for (i=0;i < 16;i++) {
-	    int len = strlen(pgdata->preeditBuf[i].char_);
-	    printf("%s, %d, preeditBuf[%d].char_=%s, len=%d\n",
-			    __func__, __LINE__, i,
-			    pgdata->preeditBuf[i].char_, len);
-	    if(!len)
-		    break;
-	    total_len += len;	
-    }
-    if(total_len > 1) total_len-=1;
-    return total_len;
-#endif
 
     return (ctx->output->chiSymbolCursor);
+}
+
+CHEWING_API int taigi_cursor_Raw(const ChewingContext *ctx)
+{
+    const ChewingData *pgdata;
+    int i;
+    int raw_cursor = 0;
+
+    if (!ctx) {
+        return -1;
+    }
+    pgdata = ctx->data;
+    for (i=0; i < ctx->output->chiSymbolCursor; ++i) {
+	    raw_cursor += strlen(pgdata->preeditBuf[i].char_);
+    }
+    return raw_cursor;
 }
 
 CHEWING_API int taigi_cand_CheckDone(const ChewingContext *ctx)
