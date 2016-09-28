@@ -48,6 +48,7 @@ typedef SSIZE_T ssize_t;
  */
 uint32_t UintFromPhone(const char *phone);
 uint32_t IsThePhone(const char c);
+uint32_t IsTheTaiLoPhone(const char *s);
 
 /**
  * @brief Get the unsigned 16-bit representation of phonetic symbols by index.

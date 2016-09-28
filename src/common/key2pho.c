@@ -46,6 +46,24 @@ const char *const zhuin_tab[] = {               /* number of bits */
 #endif
 const char taigi_tone[] = "0123456789";
 const char taigi_pho[] =  "abeghijklmnopstuc";
+const char taigi_pho_cap[] =  "ABEGHIJKLMNOPSTUC";
+#define TAIGI_PHO_SPEC_NUM 98
+const char *taigi_pho_spec[ TAIGI_PHO_SPEC_NUM ] =  { 
+	"á", "à", "â", "ǎ", "ā", "a̍", "a̋",
+	"é", "è", "ê", "ě", "ē", "e̍", "e̋",
+	"í", "ì", "î", "ǐ", "ī", "i̍", "i̋",
+	"ó", "ò", "ô", "ǒ", "ō", "o̍", "ő",
+	"ú", "ù", "û", "ǔ", "ū", "u̍", "ű",
+	"ḿ", "m̀", "m̂", "m̆", "m̄", "m̍", "m",
+	"ńg","ǹg","n̂g","n̆g","n̄g","n̍g","ng",
+	"Á", "À", "Â", "Ǎ", "Ā", "A̍", "A̋",
+        "É", "È", "Ê", "Ě", "Ē", "E̍", "E",
+        "Í", "Ì", "Î", "Ǐ", "Ī", "I̍", "I",
+        "Ó", "Ò", "Ô", "Ǒ", "Ō", "O̍", "Ő",
+        "Ú", "Ù", "Û", "Ǔ", "Ū", "U̍", "Ű",
+        "Ḿ", "M̀", "M̂", "M̆", "M̄", "M̍", "M",
+        "Ńg","Ǹg","N̂g","N̆g","N̄g","N̍g", "Ng"
+};
 const char *const zhuin_tab[] = {               /* number of bits */
     taigi_pho,
     taigi_tone
@@ -102,17 +120,18 @@ static const char *const key_str[KBTYPE_COUNT] = {
  */
 uint32_t IsThePhone(const char c)
 {
-	int len = sizeof(taigi_pho);
-	int i;
-
-	if (strchr(taigi_pho, c))
+	if (strchr(taigi_pho, c) || strchr(taigi_pho_cap, c))
 		return 1;
-#if 0
-	for(i=0;i < len;i++) {
-		if(taigi_pho[i] == c)
+	return 0;
+}
+
+uint32_t IsTheTaiLoPhone(const char *s)
+{
+	int i;
+	for (i = 0; i < TAIGI_PHO_SPEC_NUM; ++i) {
+		if(!strncmp(taigi_pho_spec[i], s, strlen(taigi_pho_spec[i])))
 			return 1;
 	}
-#endif
 	return 0;
 }
 
