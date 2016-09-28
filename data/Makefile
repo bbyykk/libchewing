@@ -70,10 +70,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/libtaigi
-pkgincludedir = $(includedir)/libtaigi
-pkglibdir = $(libdir)/libtaigi
-pkglibexecdir = $(libexecdir)/libtaigi
+pkgdatadir = $(datadir)/libchewing
+pkgincludedir = $(includedir)/libchewing
+pkglibdir = $(libdir)/libchewing
+pkglibexecdir = $(libexecdir)/libchewing
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -321,9 +321,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu data/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign data/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu data/Makefile
+	  $(AUTOMAKE) --foreign data/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

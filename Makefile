@@ -71,10 +71,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/libtaigi
-pkgincludedir = $(includedir)/libtaigi
-pkglibdir = $(libdir)/libtaigi
-pkglibexecdir = $(libexecdir)/libtaigi
+pkgdatadir = $(datadir)/libchewing
+pkgincludedir = $(includedir)/libchewing
+pkglibdir = $(libdir)/libchewing
+pkglibexecdir = $(libexecdir)/libchewing
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -196,7 +196,7 @@ CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = src/tools data src test doc \
 	thirdparty/sqlite-amalgamation
-am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/taigi.pc.in \
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/chewing.pc.in \
 	$(srcdir)/libchewing.spec.in $(top_srcdir)/build-aux/compile \
 	$(top_srcdir)/build-aux/config.guess \
 	$(top_srcdir)/build-aux/config.sub \
@@ -205,7 +205,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/taigi.pc.in \
 	$(top_srcdir)/build-aux/missing \
 	$(top_srcdir)/include/config.h.in AUTHORS COPYING NEWS TODO \
 	build-aux/compile build-aux/config.guess build-aux/config.sub \
-	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
+	build-aux/depcomp build-aux/install-sh build-aux/ltmain.sh \
+	build-aux/mdate-sh build-aux/missing build-aux/texinfo.tex
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -406,8 +407,8 @@ EXTRA_DIST = \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = taigi.pc
-chewing_includedir = $(includedir)/taigi
+pkgconfig_DATA = chewing.pc
+chewing_includedir = $(includedir)/chewing
 chewing_include_HEADERS = \
 	include/chewingio.h \
 	include/mod_aux.h \
@@ -490,7 +491,7 @@ $(top_srcdir)/include/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f include/config.h include/stamp-h1
-taigi.pc: $(top_builddir)/config.status $(srcdir)/taigi.pc.in
+chewing.pc: $(top_builddir)/config.status $(srcdir)/chewing.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 libchewing.spec: $(top_builddir)/config.status $(srcdir)/libchewing.spec.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@

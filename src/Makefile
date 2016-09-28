@@ -71,10 +71,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/libtaigi
-pkgincludedir = $(includedir)/libtaigi
-pkglibdir = $(libdir)/libtaigi
-pkglibexecdir = $(libexecdir)/libtaigi
+pkgdatadir = $(datadir)/libchewing
+pkgincludedir = $(includedir)/libchewing
+pkglibdir = $(libdir)/libchewing
+pkglibexecdir = $(libexecdir)/libchewing
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -335,11 +335,11 @@ OBJDUMP = objdump
 OBJEXT = o
 OTOOL = 
 OTOOL64 = 
-PACKAGE = libtaigi
-PACKAGE_BUGREPORT = taigi-devel@googlegroups.com
-PACKAGE_NAME = libtaigi
-PACKAGE_STRING = libtaigi 0.5.1
-PACKAGE_TARNAME = libtaigi
+PACKAGE = libchewing
+PACKAGE_BUGREPORT = chewing-devel@googlegroups.com
+PACKAGE_NAME = libchewing
+PACKAGE_STRING = libchewing 0.5.1
+PACKAGE_TARNAME = libchewing
 PACKAGE_URL = 
 PACKAGE_VERSION = 0.5.1
 PATH_SEPARATOR = :
@@ -411,7 +411,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/include/internal \
 	-I$(top_srcdir)/src/porting_layer/include \
-	-DCHEWING_DATADIR=\"$(datadir)/libtaigi\" \
+	-DTAIGI_DATADIR=\"$(datadir)/libtaigi\" \
 	$(USERPHRASE_CPPFLAGS) \
 	$(DEFAULT_CPPFLAGS) \
 	$(NULL)
@@ -432,7 +432,7 @@ libchewing_la_LDFLAGS = \
 	-rpath $(libdir) \
 	-no-undefined \
 	$(NO_UNDEFINED_LDFLAGS) \
-	-export-symbols-regex "^(taigi)_" \
+	-export-symbols-regex "^(chewing)_" \
 	$(NULL)
 
 all: all-recursive
@@ -448,9 +448,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu src/Makefile
+	  $(AUTOMAKE) --foreign src/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -504,7 +504,7 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-libtaigi.la: $(libchewing_la_OBJECTS) $(libchewing_la_DEPENDENCIES) $(EXTRA_libchewing_la_DEPENDENCIES) 
+libchewing.la: $(libchewing_la_OBJECTS) $(libchewing_la_DEPENDENCIES) $(EXTRA_libchewing_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libchewing_la_LINK) -rpath $(libdir) $(libchewing_la_OBJECTS) $(libchewing_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
