@@ -6,7 +6,7 @@ datarootdir=${prefix}/share
 datadir=${datarootdir}/libtaigi
 sysconfdir=/etc
 
-taigi_binary_version=1.0.0
+taigi_binary_version=@LIBCHEWING_BINARY_VERSION@
 
 Name: Taigi
 Description: Intelligent Chinese phonetic input method library

@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.8.8)
 project(libtaigi)
 
-# Update configure.ac if LIBCHEWING_VERSION is changed.
-set(LIBCHEWING_VERSION 0.5.1)
-set(PACKAGE_VERSION ${LIBCHEWING_VERSION})
-# Update configure.ac if LIBCHEWING_BINARY_VERSION is changed.
-set(LIBCHEWING_BINARY_VERSION 1.0.0)
+# Update configure.ac if LIBTAIGI_VERSION is changed.
+set(LIBTAIGI_VERSION 0.5.1)
+set(PACKAGE_VERSION ${LIBTAIGI_VERSION})
+# Update configure.ac if LIBTAIGI_BINARY_VERSION is changed.
+set(LIBTAIGI_BINARY_VERSION 1.0.0)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 if(UNIX)
@@ -304,7 +304,7 @@ add_library(testhelper STATIC
 target_link_libraries(testhelper userphrase)
 set_target_properties(testhelper PROPERTIES
     COMPILE_DEFINITIONS
-        "CHEWING_DATA_PREFIX=\"${DATA_BIN_DIR}\";TEST_HASH_DIR=\"${TEST_BIN_DIR}\";TEST_DATA_DIR=\"${TEST_SRC_DIR}/data\";TESTDATA=\"${TEST_SRC_DIR}/default-test.txt\""
+        "TAIGI_DATA_PREFIX=\"${DATA_BIN_DIR}\";TEST_HASH_DIR=\"${TEST_BIN_DIR}\";TEST_DATA_DIR=\"${TEST_SRC_DIR}/data\";TESTDATA=\"${TEST_SRC_DIR}/default-test.txt\""
 )
 
 set_target_properties(${ALL_TESTS} PROPERTIES
@@ -314,7 +314,7 @@ set_target_properties(${ALL_TESTS} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${TEST_BIN_DIR}
     RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${TEST_BIN_DIR}
     COMPILE_DEFINITIONS
-        "CHEWING_DATA_PREFIX=\"${DATA_BIN_DIR}\";TEST_HASH_DIR=\"${TEST_BIN_DIR}\";TEST_DATA_DIR=\"${TEST_SRC_DIR}/data\""
+        "TAIGI_DATA_PREFIX=\"${DATA_BIN_DIR}\";TEST_HASH_DIR=\"${TEST_BIN_DIR}\";TEST_DATA_DIR=\"${TEST_SRC_DIR}/data\""
 )
 foreach(target ${ALL_TESTS})
     target_link_libraries(${target} testhelper)
@@ -362,7 +362,7 @@ add_library(taigi OBJECT
     ${SRC_DIR}/bopomofo.c
 )
 set_target_properties(taigi PROPERTIES
-    COMPILE_DEFINITIONS "CHEWING_DATADIR=\"${CMAKE_INSTALL_FULL_DATADIR}/libtaigi\""
+    COMPILE_DEFINITIONS "TAIGI_DATADIR=\"${CMAKE_INSTALL_FULL_DATADIR}/libtaigi\""
 )
 
 if (WITH_SQLITE3)
@@ -407,7 +407,7 @@ endif()
 
 if (BUILD_DLL OR NOT MSVC)
     if (MSVC)
-        add_definitions(-DCHEWINGDLL_EXPORTS)
+        add_definitions(-DTAIGIDLL_EXPORTS)
     endif()
     add_library(taigi_shared SHARED
         $<TARGET_OBJECTS:taigi>

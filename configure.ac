@@ -25,30 +25,30 @@ AC_SUBST(PACKAGE_VERSION)
 #   http://www.freebsd.org/doc/en/books/developers-handbook/policies-shlib.html
 
 # increment if the interface has incompatible update (changes, removals).
-LIBCHEWING_MAJOR=3
+LIBTAIGI_MAJOR=3
 
 # increment if the inteface has compatible update (additions).
 # Set to 0 if MAJOR is increased.
-LIBCHEWING_MINOR=3
+LIBTAIGI_MINOR=3
 
 # increment any time the source changes
 # Set to 0 if MAJOR or MINOR is increased.
-LIBCHEWING_REVISION=1
+LIBTAIGI_REVISION=1
 
-AC_SUBST(LIBCHEWING_MAJOR)
-AC_SUBST(LIBCHEWING_MINOR)
-AC_SUBST(LIBCHEWING_REVISION)
+AC_SUBST(LIBTAIGI_MAJOR)
+AC_SUBST(LIBTAIGI_MINOR)
+AC_SUBST(LIBTAIGI_REVISION)
 
 # Define a string for the earliest version that this release has
 # binary compatibility with. This is used for module locations.
 #
-# Update CMakeFiles.txt if LIBCHEWING_BINARY_VERSION is changed.
-LIBCHEWING_BINARY_VERSION=1.0.0
-AC_SUBST(LIBCHEWING_BINARY_VERSION)
+# Update CMakeFiles.txt if LIBTAIGI_BINARY_VERSION is changed.
+LIBTAIGI_BINARY_VERSION=1.0.0
+AC_SUBST(LIBTAIGI_BINARY_VERSION)
 
-AC_DEFINE_UNQUOTED(LIBCHEWING_BINARY_VERSION,
-        "$LIBCHEWING_BINARY_VERSION", [The binary version of libtaigi.])
-AC_DEFINE_UNQUOTED(LIBCHEWING_VERSION,
+AC_DEFINE_UNQUOTED(LIBTAIGI_BINARY_VERSION,
+        "$LIBTAIGI_BINARY_VERSION", [The binary version of libtaigi.])
+AC_DEFINE_UNQUOTED(LIBTAIGI_VERSION,
         "$PACKAGE_VERSION", [The release version of libtaigi.])
 
 # Init automake stuff

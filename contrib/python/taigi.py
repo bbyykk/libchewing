@@ -2,49 +2,49 @@ from ctypes import *
 from functools import partial
 import sys
 
-_libchewing = None
+_libtaigi = None
 if sys.platform == "win32": # Windows
     import os.path
     # find in current dir first
-    dll_path = os.path.join(os.path.dirname(__file__), "chewing.dll")
+    dll_path = os.path.join(os.path.dirname(__file__), "taigi.dll")
     if not os.path.exists(dll_path):
-        dll_path = "chewing.dll" # search in system path
-    _libchewing = CDLL(dll_path)
+        dll_path = "taigi.dll" # search in system path
+    _libtaigi = CDLL(dll_path)
 else: # UNIX-like systems
-    _libchewing = CDLL('libchewing.so.3')
+    _libtaigi = CDLL('libtaigi.so.3')
 
-_libchewing.chewing_commit_String.restype = c_char_p
-_libchewing.chewing_buffer_String.restype = c_char_p
-_libchewing.chewing_cand_String.restype = c_char_p
-_libchewing.chewing_zuin_String.restype = c_char_p
-_libchewing.chewing_aux_String.restype = c_char_p
-_libchewing.chewing_get_KBString.restype = c_char_p
+_libtaigi.taigi_commit_String.restype = c_char_p
+_libtaigi.taigi_buffer_String.restype = c_char_p
+_libtaigi.taigi_cand_String.restype = c_char_p
+_libtaigi.taigi_zuin_String.restype = c_char_p
+_libtaigi.taigi_aux_String.restype = c_char_p
+_libtaigi.taigi_get_KBString.restype = c_char_p
 
 
 def Init(datadir, userdir):
-    return _libchewing.chewing_Init(datadir, userdir)
+    return _libtaigi.taigi_Init(datadir, userdir)
 
 
-class ChewingContext:
+class TaigiContext:
     def __init__(self, **kwargs):
         if not kwargs:
-            self.ctx = _libchewing.chewing_new()
+            self.ctx = _libtaigi.taigi_new()
         else:
             syspath = kwargs.get("syspath", None)
             userpath = kwargs.get("userpath", None)
-            self.ctx = _libchewing.chewing_new2(
+            self.ctx = _libtaigi.taigi_new2(
                 syspath,
                 userpath,
                 None,
                 None)
 
     def __del__(self):
-        _libchewing.chewing_delete(self.ctx)
+        _libtaigi.taigi_delete(self.ctx)
 
     def __getattr__(self, name):
-        func = 'chewing_' + name
-        if hasattr(_libchewing, func):
-            wrap = partial(getattr(_libchewing, func), self.ctx)
+        func = 'taigi_' + name
+        if hasattr(_libtaigi, func):
+            wrap = partial(getattr(_libtaigi, func), self.ctx)
             setattr(self, name, wrap)
             return wrap
         else:

@@ -17,7 +17,7 @@ CMAKE_FILES = \
 
 CONTRIB_FILES = \
 	contrib/python/test.py \
-	contrib/python/chewing.py \
+	contrib/python/taigi.py \
 	contrib/simple-select.c \
 	contrib/Makefile \
 	$(NULL)

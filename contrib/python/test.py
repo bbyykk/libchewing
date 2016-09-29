@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import chewing
+import taigi
 
-chewing.Init('/usr/share/chewing', '/tmp')
-ctx = chewing.ChewingContext()
+taigi.Init('/usr/share/taigi', '/tmp')
+ctx = taigi.ChewingContext()
 ctx.Configure(18, 16, 0, 1, 0)
 ctx.set_ChiEngMode(1)
 ctx.handle_Default(ord("g"))
