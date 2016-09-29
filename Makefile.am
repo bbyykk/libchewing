@@ -29,22 +29,22 @@ EXTRA_DIST = \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = chewing.pc
+pkgconfig_DATA = taigi.pc
 
-chewing_includedir = $(includedir)/chewing
-chewing_include_HEADERS = \
-	include/chewingio.h \
+taigi_includedir = $(includedir)/taigi
+taigi_include_HEADERS = \
+	include/taigiio.h \
 	include/mod_aux.h \
-	include/chewing.h \
-	include/chewing-compat.h \
+	include/taigi.h \
+	include/taigi-compat.h \
 	include/global.h \
 	$(NULL)
 
 noinst_HEADERS =\
-	include/internal/chewing-private.h \
-	include/internal/chewing-sql.h \
-	include/internal/chewing-utf8-util.h \
-	include/internal/chewingutil.h \
+	include/internal/taigi-private.h \
+	include/internal/taigi-sql.h \
+	include/internal/taigi-utf8-util.h \
+	include/internal/taigiutil.h \
 	include/internal/choice-private.h \
 	include/internal/dict-private.h \
 	include/internal/global-private.h \

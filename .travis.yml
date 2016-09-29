@@ -46,9 +46,9 @@ after_success:
 addons:
   coverity_scan:
     project:
-      name: "chewing/libchewing"
+      name: "taigi/libtaigi"
       description: "Build submitted via Travis CI"
-    notification_email: chewing-devel@googlegroups.com
+    notification_email: taigi-devel@googlegroups.com
     build_command_prepend: "./autogen.sh && ./configure && make clean"
     build_command: "make $P_JOBS"
     branch_pattern: coverity_scan
