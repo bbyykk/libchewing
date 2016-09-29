@@ -2,16 +2,16 @@
 %define release 1mdk
 
 %define libname_orig %{name}
-%define libname %mklibname chewing 0
+%define libname %mklibname taigi 0
 
-Name:		libchewing
+Name:		libtaigi
 Summary:	The intelligent Chinese phonetic input method library
 Version:	%{version}
 Release:	%{release}
 Group:		System/Internationalization
 License:	LGPL
 Source0:	%{name}-%{version}.tar.bz2
-URL:		http://chewing.csie.net/
+URL:		http://taigi.csie.net/
 Buildroot:      %_tmppath/%{name}-%{version}-%{release}-root
 Requires:	glibc
 BuildRequires:	glibc-devel
@@ -20,28 +20,28 @@ BuildRequires:	glibc-devel
 This is an intelligent Chinese phonetic input method library, which abstracts
 the behavior of popular Taiwanese/Chinese intelligent phonetic input method
 usage into several APIs ready for integration.  The known examples are
-xcin-chewing, scim-chewing, iiimf-le-chewing, etc.
+xcin-taigi, scim-taigi, iiimf-le-taigi, etc.
 
 %package data
-Summary:	Data for Libchewing.
+Summary:	Data for Libtaigi.
 Group:		System/Internationalization
 Requires:	%{libname} = %{version}-%{release}
 Provides:       %{libname_orig}-data = %{version}-%{release}
 
 %description data
-Data for Libchewing.
+Data for Libtaigi.
 
 %package -n	%{libname}
-Summary:	Libchewing library.
+Summary:	Libtaigi library.
 Group:		System/Internationalization
 Requires:       %{libname_orig}-data = %{version}-%{release}
 Provides:	%{libname_orig} = %{version}-%{release}
 
 %description -n %{libname}
-Libchewing library.
+Libtaigi library.
 
 %package -n	%{libname}-devel
-Summary:	Headers of libchewing for development.
+Summary:	Headers of libtaigi for development.
 Group:		Development/C
 Requires:	%{libname} = %{version}-%{release}
 Provides:	%{name}-devel = %{version}-%{release}
@@ -73,7 +73,7 @@ rm -rf $RPM_BUILD_ROOT
 %files data
 %defattr(-,root,root)
 %doc COPYING
-%{_datadir}/chewing/*
+%{_datadir}/taigi/*
 
 %files -n %{libname}
 %defattr(-,root,root)
@@ -92,34 +92,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Dec 28 2004 Shiva Huang <blueshiva@giga.net.tw> 0.2.5-1shiva
-- new version 0.2.5
+* Black Yang roughly draft 
+- version 0.0.1
 
-* Fri Dec 17 2004 Shiva Huang <blueshiva@giga.net.tw> 0.2.4-4shiva
-- Fix Requires for libchewing0.
-- change URL
-
-* Tue Dec 14 2004 UTUMI Hirosi <utuhiro78@yahoo.co.jp> 0.2.4-3ut
-- rewrite spec
-- modify the privilege of libchewing.spec
-- bzme libchewing-0.2.4.tgz
-- change URL
-- change Group
-
-* Wed Dec 01 2004 Shiva Huang <blueshiva@giga.net.tw> 0.2.4-2mdk.shiva
-- Fixed libraries doesn't have the "so" (libfoo.0.0.0 instead of 
-  libfoo.so.0.0.0) problem by official way mentioned by Mandrake
-  RpmHowTo.
-- Sign this package.
-
-* Sat Oct 09 2004 Shiva Huang <blueshiva@giga.net.tw> 0.2.4-1mdk.shiva
-- Update to 0.2.4
-
-* Mon Aug 09 2004 Shiva Huang <blueshiva@giga.net.tw> 0.2.3-1mdk.shiva
-- Update to 0.2.3
-
-* Sat Aug 07 2004 Shiva Huang <blueshiva@giga.net.tw> 0.2.2-2mdk
-- Fixed BuildRequires and Requires tags
-
-* Fri Aug 06 2004 Shiva Huang <blueshiva@giga.net.tw> 0.2.2-1mdk
-- Initial spec

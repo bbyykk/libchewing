@@ -3,14 +3,14 @@
 AC_PREREQ([2.65])
 
 # Update CMakeLists.txt if version is changed.
-AC_INIT([libchewing],[0.5.1],[chewing-devel@googlegroups.com])
+AC_INIT([libtaigi],[0.5.1],[taigi-devel@googlegroups.com])
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_SRCDIR([src/chewingio.c])
+AC_CONFIG_SRCDIR([src/taigiio.c])
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_SUBST(PACKAGE_VERSION)
 
-# libtool versioning for libchewing
+# libtool versioning for libtaigi
 
 # Update CMakeLists.txt if one of MAJOR/MINOR/REVISION is updated.
 #
@@ -47,9 +47,9 @@ LIBCHEWING_BINARY_VERSION=1.0.0
 AC_SUBST(LIBCHEWING_BINARY_VERSION)
 
 AC_DEFINE_UNQUOTED(LIBCHEWING_BINARY_VERSION,
-        "$LIBCHEWING_BINARY_VERSION", [The binary version of libchewing.])
+        "$LIBCHEWING_BINARY_VERSION", [The binary version of libtaigi.])
 AC_DEFINE_UNQUOTED(LIBCHEWING_VERSION,
-        "$PACKAGE_VERSION", [The release version of libchewing.])
+        "$PACKAGE_VERSION", [The release version of libtaigi.])
 
 # Init automake stuff
 AM_INIT_AUTOMAKE
@@ -112,10 +112,10 @@ AS_IF([test x"$with_sqlite3" = x"yes"], [
 # plat_mmap_posix
 AC_FUNC_MMAP
 
-# chewing-utf8-util.h
+# taigi-utf8-util.h
 AC_TYPE_SIZE_T
 
-# chewing-private.h
+# taigi-private.h
 AC_C_INLINE
 AC_TYPE_UINT16_T
 
@@ -205,10 +205,10 @@ AC_CONFIG_LINKS([
 
 AC_CONFIG_FILES([
         Makefile
-        chewing.pc
+        taigi.pc
         data/Makefile
         doc/Makefile
-        libchewing.spec
+        libtaigi.spec
         src/Makefile
         src/common/Makefile
         src/porting_layer/Makefile
