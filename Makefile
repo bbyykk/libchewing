@@ -99,9 +99,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ax_pthread.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
-	$(am__configure_deps) $(dist_noinst_DATA) \
-	$(chewing_include_HEADERS) $(noinst_HEADERS) \
-	$(am__DIST_COMMON)
+	$(am__configure_deps) $(dist_noinst_DATA) $(noinst_HEADERS) \
+	$(taigi_include_HEADERS) $(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -163,9 +162,9 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(pkgconfigdir)" \
-	"$(DESTDIR)$(chewing_includedir)"
+	"$(DESTDIR)$(taigi_includedir)"
 DATA = $(dist_noinst_DATA) $(pkgconfig_DATA)
-HEADERS = $(chewing_include_HEADERS) $(noinst_HEADERS)
+HEADERS = $(noinst_HEADERS) $(taigi_include_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -395,7 +394,7 @@ CMAKE_FILES = \
 
 CONTRIB_FILES = \
 	contrib/python/test.py \
-	contrib/python/chewing.py \
+	contrib/python/taigi.py \
 	contrib/simple-select.c \
 	contrib/Makefile \
 	$(NULL)
@@ -407,21 +406,21 @@ EXTRA_DIST = \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = chewing.pc
-chewing_includedir = $(includedir)/chewing
-chewing_include_HEADERS = \
-	include/chewingio.h \
+pkgconfig_DATA = taigi.pc
+taigi_includedir = $(includedir)/taigi
+taigi_include_HEADERS = \
+	include/taigiio.h \
 	include/mod_aux.h \
-	include/chewing.h \
-	include/chewing-compat.h \
+	include/taigi.h \
+	include/taigi-compat.h \
 	include/global.h \
 	$(NULL)
 
 noinst_HEADERS = \
-	include/internal/chewing-private.h \
-	include/internal/chewing-sql.h \
-	include/internal/chewing-utf8-util.h \
-	include/internal/chewingutil.h \
+	include/internal/taigi-private.h \
+	include/internal/taigi-sql.h \
+	include/internal/taigi-utf8-util.h \
+	include/internal/taigiutil.h \
 	include/internal/choice-private.h \
 	include/internal/dict-private.h \
 	include/internal/global-private.h \
@@ -525,27 +524,27 @@ uninstall-pkgconfigDATA:
 	@list='$(pkgconfig_DATA)'; test -n "$(pkgconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(pkgconfigdir)'; $(am__uninstall_files_from_dir)
-install-chewing_includeHEADERS: $(chewing_include_HEADERS)
+install-taigi_includeHEADERS: $(taigi_include_HEADERS)
 	@$(NORMAL_INSTALL)
-	@list='$(chewing_include_HEADERS)'; test -n "$(chewing_includedir)" || list=; \
+	@list='$(taigi_include_HEADERS)'; test -n "$(taigi_includedir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(chewing_includedir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(chewing_includedir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(taigi_includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(taigi_includedir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(chewing_includedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(chewing_includedir)" || exit $$?; \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(taigi_includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(taigi_includedir)" || exit $$?; \
 	done
 
-uninstall-chewing_includeHEADERS:
+uninstall-taigi_includeHEADERS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(chewing_include_HEADERS)'; test -n "$(chewing_includedir)" || list=; \
+	@list='$(taigi_include_HEADERS)'; test -n "$(taigi_includedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(chewing_includedir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(taigi_includedir)'; $(am__uninstall_files_from_dir)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -846,7 +845,7 @@ check: check-recursive
 all-am: Makefile $(DATA) $(HEADERS)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(chewing_includedir)"; do \
+	for dir in "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(taigi_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -901,7 +900,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-chewing_includeHEADERS install-pkgconfigDATA
+install-data-am: install-pkgconfigDATA install-taigi_includeHEADERS
 
 install-dvi: install-dvi-recursive
 
@@ -947,7 +946,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-chewing_includeHEADERS uninstall-pkgconfigDATA
+uninstall-am: uninstall-pkgconfigDATA uninstall-taigi_includeHEADERS
 
 .MAKE: $(am__recursive_targets) install-am install-strip
 
@@ -958,16 +957,17 @@ uninstall-am: uninstall-chewing_includeHEADERS uninstall-pkgconfigDATA
 	dist-xz dist-zip distcheck distclean distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags distcleancheck \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
-	info-am install install-am install-chewing_includeHEADERS \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-pkgconfigDATA install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
-	ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-chewing_includeHEADERS uninstall-pkgconfigDATA
+	info-am install install-am install-data install-data-am \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-pkgconfigDATA \
+	install-ps install-ps-am install-strip \
+	install-taigi_includeHEADERS installcheck installcheck-am \
+	installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-pkgconfigDATA \
+	uninstall-taigi_includeHEADERS
 
 .PRECIOUS: Makefile
 

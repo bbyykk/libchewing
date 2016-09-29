@@ -149,8 +149,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(chewing_datadir)"
-DATA = $(chewing_data_DATA) $(dist_noinst_DATA)
+am__installdirs = "$(DESTDIR)$(taigi_datadir)"
+DATA = $(dist_noinst_DATA) $(taigi_data_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/pinyin.tab \
 	$(srcdir)/swkb.dat $(srcdir)/symbols.dat
@@ -302,8 +302,8 @@ dist_noinst_DATA = \
 	tsi.src \
 	$(NULL)
 
-chewing_datadir = $(pkgdatadir)
-chewing_data_DATA = \
+taigi_datadir = $(pkgdatadir)
+taigi_data_DATA = \
 	$(static_tables) \
 	$(datas) \
 	$(NULL)
@@ -347,27 +347,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-chewing_dataDATA: $(chewing_data_DATA)
+install-taigi_dataDATA: $(taigi_data_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(chewing_data_DATA)'; test -n "$(chewing_datadir)" || list=; \
+	@list='$(taigi_data_DATA)'; test -n "$(taigi_datadir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(chewing_datadir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(chewing_datadir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(taigi_datadir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(taigi_datadir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(chewing_datadir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(chewing_datadir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(taigi_datadir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(taigi_datadir)" || exit $$?; \
 	done
 
-uninstall-chewing_dataDATA:
+uninstall-taigi_dataDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(chewing_data_DATA)'; test -n "$(chewing_datadir)" || list=; \
+	@list='$(taigi_data_DATA)'; test -n "$(taigi_datadir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(chewing_datadir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(taigi_datadir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -409,7 +409,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(chewing_datadir)"; do \
+	for dir in "$(DESTDIR)$(taigi_datadir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -463,7 +463,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-chewing_dataDATA
+install-data-am: install-taigi_dataDATA
 
 install-dvi: install-dvi-am
 
@@ -507,22 +507,22 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-chewing_dataDATA
+uninstall-am: uninstall-taigi_dataDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	cscopelist-am ctags-am distclean distclean-generic \
 	distclean-libtool distdir dvi dvi-am html html-am info info-am \
-	install install-am install-chewing_dataDATA install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip install-taigi_dataDATA installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags-am uninstall \
-	uninstall-am uninstall-chewing_dataDATA
+	uninstall-am uninstall-taigi_dataDATA
 
 .PRECIOUS: Makefile
 

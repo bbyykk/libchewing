@@ -23,7 +23,7 @@ libtesthelper_la_SOURCES = \
 	$(NULL)
 
 libtesthelper_la_LIBADD = \
-	$(top_builddir)/src/libchewing.la \
+	$(top_builddir)/src/libtaigi.la \
 	$(NULL)
 
 TESTS = $(NATIVE_TESTS)

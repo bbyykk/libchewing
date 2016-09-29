@@ -427,7 +427,7 @@ libtaigi_la_LIBADD = $(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/porting_layer/src/libporting_layer.la \
 	$(NULL) $(am__append_2)
 libtaigi_la_LDFLAGS = \
-	-version-number $(LIBCHEWING_MAJOR):$(LIBCHEWING_MINOR):$(LIBCHEWING_REVISION) \
+	-version-number $(LIBTAIGI_MAJOR):$(LIBTAIGI_MINOR):$(LIBTAIGI_REVISION) \
 	-rpath $(libdir) \
 	-no-undefined \
 	$(NO_UNDEFINED_LDFLAGS) \

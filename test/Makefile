@@ -109,7 +109,7 @@ CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES = stresstest.py
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libtesthelper_la_DEPENDENCIES = $(top_builddir)/src/libchewing.la
+libtesthelper_la_DEPENDENCIES = $(top_builddir)/src/libtaigi.la
 am_libtesthelper_la_OBJECTS = testhelper.lo
 libtesthelper_la_OBJECTS = $(am_libtesthelper_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
@@ -711,7 +711,7 @@ libtesthelper_la_SOURCES = \
 	$(NULL)
 
 libtesthelper_la_LIBADD = \
-	$(top_builddir)/src/libchewing.la \
+	$(top_builddir)/src/libtaigi.la \
 	$(NULL)
 
 NATIVE_TESTS = \

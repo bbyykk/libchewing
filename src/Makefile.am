@@ -34,7 +34,7 @@ libtaigi_la_LIBADD = \
 	$(NULL)
 
 libtaigi_la_LDFLAGS = \
-	-version-number $(LIBCHEWING_MAJOR):$(LIBCHEWING_MINOR):$(LIBCHEWING_REVISION) \
+	-version-number $(LIBTAIGI_MAJOR):$(LIBTAIGI_MINOR):$(LIBTAIGI_REVISION) \
 	-rpath $(libdir) \
 	-no-undefined \
 	$(NO_UNDEFINED_LDFLAGS) \
