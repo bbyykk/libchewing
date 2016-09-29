@@ -71,10 +71,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/libchewing
-pkgincludedir = $(includedir)/libchewing
-pkglibdir = $(libdir)/libchewing
-pkglibexecdir = $(libexecdir)/libchewing
+pkgdatadir = $(datadir)/libtaigi
+pkgincludedir = $(includedir)/libtaigi
+pkglibdir = $(libdir)/libtaigi
+pkglibexecdir = $(libexecdir)/libtaigi
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -106,7 +106,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/include/config.h
-CONFIG_CLEAN_FILES = chewing.pc libchewing.spec
+CONFIG_CLEAN_FILES = taigi.pc libtaigi.spec
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
@@ -196,8 +196,8 @@ CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = src/tools data src test doc \
 	thirdparty/sqlite-amalgamation
-am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/chewing.pc.in \
-	$(srcdir)/libchewing.spec.in $(top_srcdir)/build-aux/compile \
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/libtaigi.spec.in \
+	$(srcdir)/taigi.pc.in $(top_srcdir)/build-aux/compile \
 	$(top_srcdir)/build-aux/config.guess \
 	$(top_srcdir)/build-aux/config.sub \
 	$(top_srcdir)/build-aux/install-sh \
@@ -249,16 +249,16 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/black/yyy/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_CFLAGS =  -Wall -g -O2 -fvisibility=hidden
 AM_DEFAULT_VERBOSITY = 1
 AM_LDFLAGS =  -lsqlite3
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /home/black/yyy/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/black/yyy/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/black/yyy/build-aux/missing automake-1.15
+AUTOCONF = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=none
@@ -300,7 +300,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /home/black/yyy/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -310,11 +310,11 @@ OBJDUMP = objdump
 OBJEXT = o
 OTOOL = 
 OTOOL64 = 
-PACKAGE = libchewing
-PACKAGE_BUGREPORT = chewing-devel@googlegroups.com
-PACKAGE_NAME = libchewing
-PACKAGE_STRING = libchewing 0.5.1
-PACKAGE_TARNAME = libchewing
+PACKAGE = libtaigi
+PACKAGE_BUGREPORT = taigi-devel@googlegroups.com
+PACKAGE_NAME = libtaigi
+PACKAGE_STRING = libtaigi 0.5.1
+PACKAGE_TARNAME = libtaigi
 PACKAGE_URL = 
 PACKAGE_VERSION = 0.5.1
 PATH_SEPARATOR = :
@@ -327,10 +327,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.5.1
-abs_builddir = /home/black/yyy
-abs_srcdir = /home/black/yyy
-abs_top_builddir = /home/black/yyy
-abs_top_srcdir = /home/black/yyy
+abs_builddir = /home/black/data/fcitx/src/zzz
+abs_srcdir = /home/black/data/fcitx/src/zzz
+abs_top_builddir = /home/black/data/fcitx/src/zzz
+abs_top_srcdir = /home/black/data/fcitx/src/zzz
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -360,7 +360,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = /usr/include/x86_64-linux-gnu
 infodir = ${prefix}/share/info
-install_sh = ${SHELL} /home/black/yyy/build-aux/install-sh
+install_sh = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/install-sh
 libdir = ${prefix}/lib/x86_64-linux-gnu
 libexecdir = ${prefix}/lib/x86_64-linux-gnu
 localedir = ${datarootdir}/locale
@@ -491,9 +491,9 @@ $(top_srcdir)/include/config.h.in:  $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f include/config.h include/stamp-h1
-chewing.pc: $(top_builddir)/config.status $(srcdir)/chewing.pc.in
+taigi.pc: $(top_builddir)/config.status $(srcdir)/taigi.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
-libchewing.spec: $(top_builddir)/config.status $(srcdir)/libchewing.spec.in
+libtaigi.spec: $(top_builddir)/config.status $(srcdir)/libtaigi.spec.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 mostlyclean-libtool:

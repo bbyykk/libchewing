@@ -70,10 +70,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/libchewing
-pkgincludedir = $(includedir)/libchewing
-pkglibdir = $(libdir)/libchewing
-pkglibexecdir = $(libexecdir)/libchewing
+pkgdatadir = $(datadir)/libtaigi
+pkgincludedir = $(includedir)/libtaigi
+pkglibdir = $(libdir)/libtaigi
+pkglibexecdir = $(libexecdir)/libtaigi
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -155,16 +155,16 @@ am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/pinyin.tab \
 	$(srcdir)/swkb.dat $(srcdir)/symbols.dat
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/black/yyy/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_CFLAGS =  -Wall -g -O2 -fvisibility=hidden
 AM_DEFAULT_VERBOSITY = 1
 AM_LDFLAGS =  -lsqlite3
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /home/black/yyy/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/black/yyy/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/black/yyy/build-aux/missing automake-1.15
+AUTOCONF = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=none
@@ -206,7 +206,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /home/black/yyy/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -216,11 +216,11 @@ OBJDUMP = objdump
 OBJEXT = o
 OTOOL = 
 OTOOL64 = 
-PACKAGE = libchewing
-PACKAGE_BUGREPORT = chewing-devel@googlegroups.com
-PACKAGE_NAME = libchewing
-PACKAGE_STRING = libchewing 0.5.1
-PACKAGE_TARNAME = libchewing
+PACKAGE = libtaigi
+PACKAGE_BUGREPORT = taigi-devel@googlegroups.com
+PACKAGE_NAME = libtaigi
+PACKAGE_STRING = libtaigi 0.5.1
+PACKAGE_TARNAME = libtaigi
 PACKAGE_URL = 
 PACKAGE_VERSION = 0.5.1
 PATH_SEPARATOR = :
@@ -233,10 +233,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.5.1
-abs_builddir = /home/black/yyy/data
-abs_srcdir = /home/black/yyy/data
-abs_top_builddir = /home/black/yyy
-abs_top_srcdir = /home/black/yyy
+abs_builddir = /home/black/data/fcitx/src/zzz/data
+abs_srcdir = /home/black/data/fcitx/src/zzz/data
+abs_top_builddir = /home/black/data/fcitx/src/zzz
+abs_top_srcdir = /home/black/data/fcitx/src/zzz
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -266,7 +266,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = /usr/include/x86_64-linux-gnu
 infodir = ${prefix}/share/info
-install_sh = ${SHELL} /home/black/yyy/build-aux/install-sh
+install_sh = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/install-sh
 libdir = ${prefix}/lib/x86_64-linux-gnu
 libexecdir = ${prefix}/lib/x86_64-linux-gnu
 localedir = ${datarootdir}/locale
@@ -321,9 +321,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign data/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu data/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign data/Makefile
+	  $(AUTOMAKE) --gnu data/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

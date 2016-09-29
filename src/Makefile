@@ -71,10 +71,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/libchewing
-pkgincludedir = $(includedir)/libchewing
-pkglibdir = $(libdir)/libchewing
-pkglibexecdir = $(libexecdir)/libchewing
+pkgdatadir = $(datadir)/libtaigi
+pkgincludedir = $(includedir)/libtaigi
+pkglibdir = $(libdir)/libtaigi
+pkglibexecdir = $(libexecdir)/libtaigi
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -90,7 +90,7 @@ POST_UNINSTALL = :
 build_triplet = x86_64-pc-linux-gnu
 host_triplet = x86_64-pc-linux-gnu
 am__append_1 = \
-	chewing-sql.c \
+	taigi-sql.c \
 	userphrase-sql.c \
 	$(NULL)
 
@@ -148,26 +148,25 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 #am__DEPENDENCIES_1 = $(top_builddir)/thirdparty/sqlite-amalgamation/libsqlite3-internal.la
-libchewing_la_DEPENDENCIES = $(top_builddir)/src/common/libcommon.la \
+libtaigi_la_DEPENDENCIES = $(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/porting_layer/src/libporting_layer.la \
 	$(am__DEPENDENCIES_1)
-am__libchewing_la_SOURCES_DIST = compat.c chewingio.c chewingutil.c \
-	choice.c dict.c tree.c bopomofo.c pinyin.c mod_aux.c \
-	userphrase.c chewing-sql.c userphrase-sql.c hash.c \
-	userphrase-hash.c
-am__objects_1 = chewing-sql.lo userphrase-sql.lo
+am__libtaigi_la_SOURCES_DIST = compat.c taigiio.c taigiutil.c choice.c \
+	dict.c tree.c bopomofo.c pinyin.c mod_aux.c userphrase.c \
+	taigi-sql.c userphrase-sql.c hash.c userphrase-hash.c
+am__objects_1 = taigi-sql.lo userphrase-sql.lo
 #am__objects_2 = hash.lo userphrase-hash.lo
-am_libchewing_la_OBJECTS = compat.lo chewingio.lo chewingutil.lo \
-	choice.lo dict.lo tree.lo bopomofo.lo pinyin.lo mod_aux.lo \
-	userphrase.lo $(am__objects_1) $(am__objects_2)
-libchewing_la_OBJECTS = $(am_libchewing_la_OBJECTS)
+am_libtaigi_la_OBJECTS = compat.lo taigiio.lo taigiutil.lo choice.lo \
+	dict.lo tree.lo bopomofo.lo pinyin.lo mod_aux.lo userphrase.lo \
+	$(am__objects_1) $(am__objects_2)
+libtaigi_la_OBJECTS = $(am_libtaigi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-libchewing_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+libtaigi_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libchewing_la_LDFLAGS) $(LDFLAGS) -o $@
+	$(libtaigi_la_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -202,8 +201,8 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libchewing_la_SOURCES)
-DIST_SOURCES = $(am__libchewing_la_SOURCES_DIST)
+SOURCES = $(libtaigi_la_SOURCES)
+DIST_SOURCES = $(am__libtaigi_la_SOURCES_DIST)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -274,16 +273,16 @@ am__relativize = \
     dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
   done; \
   reldir="$$dir2"
-ACLOCAL = ${SHELL} /home/black/yyy/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_CFLAGS =  -Wall -g -O2 -fvisibility=hidden
 AM_DEFAULT_VERBOSITY = 1
 AM_LDFLAGS =  -lsqlite3
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /home/black/yyy/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/black/yyy/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/black/yyy/build-aux/missing automake-1.15
+AUTOCONF = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=none
@@ -325,7 +324,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /home/black/yyy/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -335,11 +334,11 @@ OBJDUMP = objdump
 OBJEXT = o
 OTOOL = 
 OTOOL64 = 
-PACKAGE = libchewing
-PACKAGE_BUGREPORT = chewing-devel@googlegroups.com
-PACKAGE_NAME = libchewing
-PACKAGE_STRING = libchewing 0.5.1
-PACKAGE_TARNAME = libchewing
+PACKAGE = libtaigi
+PACKAGE_BUGREPORT = taigi-devel@googlegroups.com
+PACKAGE_NAME = libtaigi
+PACKAGE_STRING = libtaigi 0.5.1
+PACKAGE_TARNAME = libtaigi
 PACKAGE_URL = 
 PACKAGE_VERSION = 0.5.1
 PATH_SEPARATOR = :
@@ -352,10 +351,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.5.1
-abs_builddir = /home/black/yyy/src
-abs_srcdir = /home/black/yyy/src
-abs_top_builddir = /home/black/yyy
-abs_top_srcdir = /home/black/yyy
+abs_builddir = /home/black/data/fcitx/src/zzz/src
+abs_srcdir = /home/black/data/fcitx/src/zzz/src
+abs_top_builddir = /home/black/data/fcitx/src/zzz
+abs_top_srcdir = /home/black/data/fcitx/src/zzz
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -385,7 +384,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = /usr/include/x86_64-linux-gnu
 infodir = ${prefix}/share/info
-install_sh = ${SHELL} /home/black/yyy/build-aux/install-sh
+install_sh = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/install-sh
 libdir = ${prefix}/lib/x86_64-linux-gnu
 libexecdir = ${prefix}/lib/x86_64-linux-gnu
 localedir = ${datarootdir}/locale
@@ -421,18 +420,18 @@ noinst_HEADERS = \
 	$(NULL)
 
 lib_LTLIBRARIES = libtaigi.la
-libchewing_la_SOURCES = compat.c chewingio.c chewingutil.c choice.c \
-	dict.c tree.c bopomofo.c pinyin.c mod_aux.c userphrase.c \
+libtaigi_la_SOURCES = compat.c taigiio.c taigiutil.c choice.c dict.c \
+	tree.c bopomofo.c pinyin.c mod_aux.c userphrase.c \
 	$(USERPHRASE_SOURCES) $(NULL) $(am__append_1) $(am__append_3)
-libchewing_la_LIBADD = $(top_builddir)/src/common/libcommon.la \
+libtaigi_la_LIBADD = $(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/porting_layer/src/libporting_layer.la \
 	$(NULL) $(am__append_2)
-libchewing_la_LDFLAGS = \
+libtaigi_la_LDFLAGS = \
 	-version-number $(LIBCHEWING_MAJOR):$(LIBCHEWING_MINOR):$(LIBCHEWING_REVISION) \
 	-rpath $(libdir) \
 	-no-undefined \
 	$(NO_UNDEFINED_LDFLAGS) \
-	-export-symbols-regex "^(chewing)_" \
+	-export-symbols-regex "^(taigi)_" \
 	$(NULL)
 
 all: all-recursive
@@ -448,9 +447,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign src/Makefile
+	  $(AUTOMAKE) --gnu src/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -504,8 +503,8 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-libchewing.la: $(libchewing_la_OBJECTS) $(libchewing_la_DEPENDENCIES) $(EXTRA_libchewing_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(libchewing_la_LINK) -rpath $(libdir) $(libchewing_la_OBJECTS) $(libchewing_la_LIBADD) $(LIBS)
+libtaigi.la: $(libtaigi_la_OBJECTS) $(libtaigi_la_DEPENDENCIES) $(EXTRA_libtaigi_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libtaigi_la_LINK) -rpath $(libdir) $(libtaigi_la_OBJECTS) $(libtaigi_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -514,15 +513,15 @@ distclean-compile:
 	-rm -f *.tab.c
 
 #include ./$(DEPDIR)/bopomofo.Plo
-#include ./$(DEPDIR)/chewing-sql.Plo
-#include ./$(DEPDIR)/chewingio.Plo
-#include ./$(DEPDIR)/chewingutil.Plo
 #include ./$(DEPDIR)/choice.Plo
 #include ./$(DEPDIR)/compat.Plo
 #include ./$(DEPDIR)/dict.Plo
 #include ./$(DEPDIR)/hash.Plo
 #include ./$(DEPDIR)/mod_aux.Plo
 #include ./$(DEPDIR)/pinyin.Plo
+#include ./$(DEPDIR)/taigi-sql.Plo
+#include ./$(DEPDIR)/taigiio.Plo
+#include ./$(DEPDIR)/taigiutil.Plo
 #include ./$(DEPDIR)/tree.Plo
 #include ./$(DEPDIR)/userphrase-hash.Plo
 #include ./$(DEPDIR)/userphrase-sql.Plo
