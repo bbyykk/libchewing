@@ -31,7 +31,7 @@
 typedef SSIZE_T ssize_t;
 #endif
 
-#include "chewing-private.h"
+#include "taigi-private.h"
 
 /**
  * @brief Get the unsigned 16-bit representation of phonetic symbols.

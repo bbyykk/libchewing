@@ -26,25 +26,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "chewing-utf8-util.h"
+#include "taigi-utf8-util.h"
 #include "global.h"
 #include "bopomofo-private.h"
-#include "chewingutil.h"
+#include "taigiutil.h"
 #include "userphrase-private.h"
 #include "choice-private.h"
 #include "dict-private.h"
 #include "tree-private.h"
 #include "pinyin-private.h"
 #include "private.h"
-#include "chewingio.h"
+#include "taigiio.h"
 #include "mod_aux.h"
 #include "global-private.h"
 #include "plat_path.h"
-#include "chewing-private.h"
+#include "taigi-private.h"
 #include "key2pho-private.h"
 
 #if WITH_SQLITE3
-#    include "chewing-sql.h"
+#    include "taigi-sql.h"
 #else
 #    include "hash-private.h"
 #endif

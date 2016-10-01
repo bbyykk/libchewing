@@ -1,5 +1,5 @@
 /*
- * chewingio.h
+ * taigiio.h
  *
  * Copyright (c) 1999, 2000, 2001
  *      Lu-chuan Kung and Kang-pen Chen.
@@ -17,7 +17,7 @@
 #define _CHEWING_IO_H
 /* *INDENT-ON* */
 
-/*! \file chewingio.h
+/*! \file taigiio.h
  *  \brief Chewing I/O module
  *  \author libchewing Core Team
  */

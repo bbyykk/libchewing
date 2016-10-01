@@ -1,5 +1,5 @@
 /*
- * chewing-utf8-util.h
+ * taigi-utf8-util.h
  *
  * Copyright (c) 2005, 2006, 2008, 2012
  *      libchewing Core Team. See ChangeLog for details.

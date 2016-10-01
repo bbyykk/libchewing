@@ -12,8 +12,8 @@
 
 #include <assert.h>
 
-#include "chewing-private.h"
-#include "chewing-sql.h"
+#include "taigi-private.h"
+#include "taigi-sql.h"
 #include "private.h"
 
 #include "plat_path.h"

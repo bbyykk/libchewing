@@ -12,7 +12,7 @@
 #include <string.h>
 
 #include "testhelper.h"
-#include "chewing.h"
+#include "taigi.h"
 
 FILE *fd;
 

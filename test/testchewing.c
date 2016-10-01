@@ -8,7 +8,7 @@
  * of this file.
  */
 
-#include "chewing.h"
+#include "taigi.h"
 #include "testhelper.h"
 
 #include <stdio.h>
@@ -23,7 +23,7 @@ char expect_string_buf[MAXLEN];
 #    define getchar fake_getchar
 int fake_getchar();
 
-#    include "internal/chewing-utf8-util.h"
+#    include "internal/taigi-utf8-util.h"
 int tested_word_count = 0;
 int failed_word_count = 0;
 #endif

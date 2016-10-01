@@ -12,7 +12,7 @@
 #    include <config.h>
 #endif
 
-#include "chewing.h"
+#include "taigi.h"
 
 #include <stdio.h>
 #include <stdlib.h>

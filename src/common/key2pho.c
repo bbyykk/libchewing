@@ -19,7 +19,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include "chewing-utf8-util.h"
+#include "taigi-utf8-util.h"
 
 /* NOTE:
  * The reason why we convert string literal to hex representation is for the

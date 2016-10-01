@@ -13,9 +13,9 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#include "chewing.h"
-#include "chewingio.h"
-#include "chewing-utf8-util.h"
+#include "taigi.h"
+#include "taigiio.h"
+#include "taigi-utf8-util.h"
 
 #include "plat_path.h"
 

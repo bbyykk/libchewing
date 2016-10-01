@@ -15,7 +15,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "chewing.h"
+#include "taigi.h"
 #include "testhelper.h"
 
 static const TestData FULLSHAPE_DATA[] = {

@@ -14,11 +14,11 @@
 
 #include <string.h>
 
-#include "chewing-utf8-util.h"
+#include "taigi-utf8-util.h"
 
 /* for compatibility */
 
-#include "chewing.h"
+#include "taigi.h"
 
 CHEWING_API int taigi_zuin_Check(const ChewingContext *ctx)
 {

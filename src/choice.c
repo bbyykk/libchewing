@@ -20,10 +20,10 @@
 #include <string.h>
 #include <assert.h>
 
-#include "chewing-utf8-util.h"
+#include "taigi-utf8-util.h"
 #include "global.h"
 #include "dict-private.h"
-#include "chewingutil.h"
+#include "taigiutil.h"
 #include "tree-private.h"
 #include "userphrase-private.h"
 #include "choice-private.h"

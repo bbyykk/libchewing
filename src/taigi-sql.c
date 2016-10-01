@@ -8,8 +8,8 @@
  * of this file.
  */
 
-#include "chewing-sql.h"
-#include "chewing-private.h"
+#include "taigi-sql.h"
+#include "taigi-private.h"
 
 #include <assert.h>
 #include <stdlib.h>

@@ -1,5 +1,5 @@
 /*
- * chewing-compat.h
+ * taigi-compat.h
  *
  * Copyright (c) 2014
  *      libchewing Core Team. See ChangeLog for details.

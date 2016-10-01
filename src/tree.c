@@ -21,8 +21,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "chewing-private.h"
-#include "chewing-utf8-util.h"
+#include "taigi-private.h"
+#include "taigi-utf8-util.h"
 #include "userphrase-private.h"
 #include "global.h"
 #include "global-private.h"
@@ -31,7 +31,7 @@
 #include "tree-private.h"
 #include "private.h"
 #include "plat_mmap.h"
-#include "chewingutil.h"
+#include "taigiutil.h"
 
 #define INTERVAL_SIZE ( ( MAX_PHONE_SEQ_LEN + 1 ) * MAX_PHONE_SEQ_LEN / 2 )
 

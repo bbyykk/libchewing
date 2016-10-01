@@ -23,10 +23,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "chewing-utf8-util.h"
+#include "taigi-utf8-util.h"
 #include "global.h"
 #include "global-private.h"
-#include "chewingutil.h"
+#include "taigiutil.h"
 #include "bopomofo-private.h"
 #include "choice-private.h"
 #include "tree-private.h"

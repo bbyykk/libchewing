@@ -12,10 +12,10 @@
 #    include <config.h>
 #endif
 
-#include "chewing.h"
+#include "taigi.h"
 
 /* Only used by calculating char position */
-#include "internal/chewing-utf8-util.h"
+#include "internal/taigi-utf8-util.h"
 
 #include <stdio.h>
 #include <stdlib.h>

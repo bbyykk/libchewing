@@ -1,5 +1,5 @@
 /**
- * chewing-private.h
+ * taigi-private.h
  *
  * Copyright (c) 2008, 2010
  *      libchewing Core Team. See ChangeLog for details.
@@ -35,7 +35,7 @@ typedef SSIZE_T ssize_t;
 #include "userphrase-private.h"
 #if WITH_SQLITE3
 #    include "sqlite3.h"
-#    include "chewing-sql.h"
+#    include "taigi-sql.h"
 #endif
 
 #define MAX_UTF8_SIZE 16

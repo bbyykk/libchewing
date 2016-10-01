@@ -17,10 +17,10 @@
 #include <stdlib.h>
 
 #include "global.h"
-#include "chewing-private.h"
+#include "taigi-private.h"
 #include "bopomofo-private.h"
-#include "chewingio.h"
-#include "chewing-utf8-util.h"
+#include "taigiio.h"
+#include "taigi-utf8-util.h"
 #include "private.h"
 
 #ifndef LOG_API_MOD_AUX

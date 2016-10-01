@@ -23,7 +23,7 @@
 #include <string.h>
 
 #include "bopomofo-private.h"
-#include "chewingutil.h"
+#include "taigiutil.h"
 #include "dict-private.h"
 #include "key2pho-private.h"
 #include "pinyin-private.h"

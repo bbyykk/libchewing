@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "chewing.h"
+#include "taigi.h"
 #include "testhelper.h"
 
 static const int MIN_CAND_PER_PAGE = 1;

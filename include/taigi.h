@@ -1,5 +1,5 @@
 /*
- * chewing.h
+ * taigi.h
  *
  * Copyright (c) 2004, 2005, 2006, 2008
  *      libchewing Core Team. See ChangeLog for details.
@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-/*! \file chewing.h
+/*! \file taigi.h
  *  \brief Chewing Headers
  *  \author libchewing Core Team
  *  \mainpage Chewing API
@@ -44,12 +44,12 @@ extern "C" {
  * specific functionality.
  */
 
-#include "chewingio.h"
+#include "taigiio.h"
 #include "global.h"
 #include "mod_aux.h"
 
 /* backward compatibility */
-#include "chewing-compat.h"
+#include "taigi-compat.h"
 
 #ifdef __cplusplus
 }

@@ -16,7 +16,7 @@
 #define _CHEWING_PINYIN_PRIVATE_H
 /* *INDENT-ON* */
 
-#include "chewing-private.h"
+#include "taigi-private.h"
 
 /*
   This is a key-sequense map.

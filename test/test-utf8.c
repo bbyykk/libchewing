@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 #include "testhelper.h"
-#include "chewing-utf8-util.h"
+#include "taigi-utf8-util.h"
 
 FILE *fd;
 

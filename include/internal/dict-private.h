@@ -13,7 +13,7 @@
 #define _CHEWING_DICT_PRIVATE_H
 /* *INDENT-ON* */
 
-#include "chewing-private.h"
+#include "taigi-private.h"
 
 #ifndef SEEK_SET
 #    define SEEK_SET 0

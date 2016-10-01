@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "chewing.h"
+#include "taigi.h"
 #include "plat_types.h"
 #include "testhelper.h"
 

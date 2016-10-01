@@ -26,7 +26,7 @@
 #    include <config.h>
 #endif
 
-#include "chewing-private.h"
+#include "taigi-private.h"
 #include "global-private.h"
 #include "key2pho-private.h"
 #include "memory-private.h"

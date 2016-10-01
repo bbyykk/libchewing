@@ -8,7 +8,7 @@
  * of this file.
  */
 
-#include "chewing.h"
+#include "taigi.h"
 #include "testhelper.h"
 
 #include <stdio.h>

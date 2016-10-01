@@ -1,5 +1,5 @@
 /**
- * chewingutil.h
+ * taigiutil.h
  *
  * Copyright (c) 1999, 2000, 2001
  *      Lu-chuan Kung and Kang-pen Chen.
@@ -17,7 +17,7 @@
 #define _CHEWING_UTIL_H
 /* *INDENT-ON* */
 
-#include "chewing-private.h"
+#include "taigi-private.h"
 
 #define SYMBOL_KEY_OK 0
 #define SYMBOL_KEY_ERROR 1

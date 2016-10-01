@@ -13,7 +13,7 @@
 #define _CHEWING_BOPOMOFO_PRIVATE_H
 /* *INDENT-ON* */
 
-#include "chewing-private.h"
+#include "taigi-private.h"
 
 /** Chewing Phonetic Definitions */
 enum {

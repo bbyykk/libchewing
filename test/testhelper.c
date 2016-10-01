@@ -16,8 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "chewing-private.h"
-#include "chewing-utf8-util.h"
+#include "taigi-private.h"
+#include "taigi-utf8-util.h"
 #include "key2pho-private.h"
 #include "plat_path.h"
 #include "userphrase-private.h"
