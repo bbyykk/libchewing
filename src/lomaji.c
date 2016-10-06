@@ -537,67 +537,6 @@ static int PinYinInput(ChewingData *pgdata, int key)
         return BOPOMOFO_KEY_ERROR;
     }
 
-    if (IsPinYinEndKey(key)) {
-        err = PinyinToBopomofo(pgdata, pBopomofo->pinYinData.keySeq, bopomofoKeySeq, bopomofoKeySeqAlt);
-        if (err) {
-            pBopomofo->pinYinData.keySeq[0] = '\0';
-            return BOPOMOFO_ABSORB;
-        }
-
-        DEBUG_OUT("bopomofoKeySeq: %s\n", bopomofoKeySeq);
-        DEBUG_OUT("bopomofoKeySeqAlt: %s\n", bopomofoKeySeqAlt);
-
-        len = strlen(bopomofoKeySeq);
-        for (i = 0; i < len; i++) {
-            int type = 0, inx = 0;
-
-            for (type = 0; type <= 3; type++) {
-                inx = PhoneInxFromKey(bopomofoKeySeq[i], type, pBopomofo->kbtype, 1);
-                if (inx)
-                    break;
-            }
-
-            /* the key is NOT a phone */
-            if (type > 3) {
-                return BOPOMOFO_KEY_ERROR;
-            }
-
-            pBopomofo->pho_inx[type] = inx;
-
-        }
-
-        len = strlen(bopomofoKeySeqAlt);
-        for (i = 0; i < len; i++) {
-            int type = 0, inx = 0;
-
-            for (type = 0; type <= 3; type++) {
-                inx = PhoneInxFromKey(bopomofoKeySeqAlt[i], type, pBopomofo->kbtype, 1);
-                if (inx)
-                    break;
-            }
-
-            /* the key is NOT a phone */
-            if (type > 3) {
-                return BOPOMOFO_KEY_ERROR;
-            }
-
-            pBopomofo->pho_inx_alt[type] = inx;
-
-        }
-
-        switch (key) {
-        case '1':
-            key = ' ';
-            break;
-        case '2':
-            key = '6';
-            break;
-        case '5':
-            key = '7';
-        }
-        pBopomofo->pinYinData.keySeq[0] = '\0';
-        return EndKeyProcess(pgdata, key, 1);
-    }
     buf[0] = key;
     buf[1] = '\0';
     strcat(pBopomofo->pinYinData.keySeq, buf);

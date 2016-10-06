@@ -277,12 +277,6 @@ CHEWING_API ChewingContext *taigi_new2(const char *syspath,
         goto error;
     }
 
-    ret = InitPinyin(ctx->data, path);
-    if (!ret) {
-        LOG_ERROR("InitPinyin returns %d", ret);
-        goto error;
-    }
-
     return ctx;
   error:
     taigi_delete(ctx);
@@ -393,7 +387,6 @@ CHEWING_API void taigi_delete(ChewingContext *ctx)
 {
     if (ctx) {
         if (ctx->data) {
-            TerminatePinyin(ctx->data);
             TerminateEasySymbolTable(ctx->data);
             TerminateSymbolTable(ctx->data);
             TerminateUserphrase(ctx->data);

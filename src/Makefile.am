@@ -21,8 +21,7 @@ libtaigi_la_SOURCES = \
 	choice.c \
 	dict.c \
 	tree.c \
-	bopomofo.c \
-	pinyin.c \
+	lomaji.c \
 	mod_aux.c \
 	userphrase.c \
 	$(USERPHRASE_SOURCES) \

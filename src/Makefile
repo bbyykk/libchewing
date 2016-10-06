@@ -152,12 +152,12 @@ libtaigi_la_DEPENDENCIES = $(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/porting_layer/src/libporting_layer.la \
 	$(am__DEPENDENCIES_1)
 am__libtaigi_la_SOURCES_DIST = compat.c taigiio.c taigiutil.c choice.c \
-	dict.c tree.c bopomofo.c pinyin.c mod_aux.c userphrase.c \
-	taigi-sql.c userphrase-sql.c hash.c userphrase-hash.c
+	dict.c tree.c lomaji.c mod_aux.c userphrase.c taigi-sql.c \
+	userphrase-sql.c hash.c userphrase-hash.c
 am__objects_1 = taigi-sql.lo userphrase-sql.lo
 #am__objects_2 = hash.lo userphrase-hash.lo
 am_libtaigi_la_OBJECTS = compat.lo taigiio.lo taigiutil.lo choice.lo \
-	dict.lo tree.lo bopomofo.lo pinyin.lo mod_aux.lo userphrase.lo \
+	dict.lo tree.lo lomaji.lo mod_aux.lo userphrase.lo \
 	$(am__objects_1) $(am__objects_2)
 libtaigi_la_OBJECTS = $(am_libtaigi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
@@ -421,8 +421,8 @@ noinst_HEADERS = \
 
 lib_LTLIBRARIES = libtaigi.la
 libtaigi_la_SOURCES = compat.c taigiio.c taigiutil.c choice.c dict.c \
-	tree.c bopomofo.c pinyin.c mod_aux.c userphrase.c \
-	$(USERPHRASE_SOURCES) $(NULL) $(am__append_1) $(am__append_3)
+	tree.c lomaji.c mod_aux.c userphrase.c $(USERPHRASE_SOURCES) \
+	$(NULL) $(am__append_1) $(am__append_3)
 libtaigi_la_LIBADD = $(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/porting_layer/src/libporting_layer.la \
 	$(NULL) $(am__append_2)
@@ -512,13 +512,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-#include ./$(DEPDIR)/bopomofo.Plo
 #include ./$(DEPDIR)/choice.Plo
 #include ./$(DEPDIR)/compat.Plo
 #include ./$(DEPDIR)/dict.Plo
 #include ./$(DEPDIR)/hash.Plo
+#include ./$(DEPDIR)/lomaji.Plo
 #include ./$(DEPDIR)/mod_aux.Plo
-#include ./$(DEPDIR)/pinyin.Plo
 #include ./$(DEPDIR)/taigi-sql.Plo
 #include ./$(DEPDIR)/taigiio.Plo
 #include ./$(DEPDIR)/taigiutil.Plo

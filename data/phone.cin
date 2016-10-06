@@ -49,6 +49,7 @@ ah4 押
 ah4 啊
 ah4 鴨
 ah4 壓
+ah4 仔
 ah8 曷
 ah8 盒
 ai1 哀
@@ -245,6 +246,7 @@ bit8 密
 biu7 繆
 biu7 謬
 bo2 母
+bo2 拇
 bo5 無
 bo7 帽
 bo7 磨
@@ -484,6 +486,7 @@ gok8 嘓
 gong5 楞
 gong5 昂
 gong7 戇
+goo3 戈
 goo5 蜈
 goo5 娛
 goo7 五
@@ -621,6 +624,7 @@ he7 係
 he7 夏
 he7 蟹
 he7 繫
+he7 會
 heh4 嘿
 heh4 嚇
 hi1 虛
@@ -853,6 +857,7 @@ hong5 蓬
 hong5 磺
 hong5 篷
 hong5 縫
+hong5 潢
 hong5 鴻
 hong7 鳳
 hong7 奉
@@ -1060,6 +1065,7 @@ hun1 芬
 hun1 紛
 hun1 熏
 hun1 勳
+hun1 氛
 hun2 粉
 hun2 忿
 hun3 楦
@@ -1617,6 +1623,7 @@ keh4 隔
 keh4 鍥
 keh4 嗝
 keh4 膈
+keh4 骼
 keh8 扴
 kenn1 更
 kenn1 庚
@@ -1842,6 +1849,7 @@ khok4 擴
 khok4 鵠
 khok8 硞
 khok8 鱷
+khok8 嘓
 khong1 框
 khong1 悾
 khong1 空
@@ -1932,6 +1940,7 @@ khun2 捆
 khun2 窘
 khun2 墾
 khun2 懇
+khun2 菌
 khun3 睏
 khun3 困
 khun5 囷
@@ -2158,6 +2167,7 @@ kip4 急
 kip4 級
 kip4 給
 kip8 及
+kip8 笈
 kiu1 勼
 kiu2 九
 kiu2 久
@@ -2195,6 +2205,7 @@ ko1 篙
 ko1 糕
 ko1 鍋
 ko1 羔
+ko1 ⿸
 ko1 戈
 ko2 果
 ko2 稿
@@ -2235,6 +2246,7 @@ kong1 胱
 kong1 崗
 kong1 綱
 kong1 鋼
+kong1 肱
 kong2 管
 kong2 廣
 kong2 講
@@ -2397,6 +2409,7 @@ kui2 鬼
 kui2 幾
 kui2 軌
 kui2 詭
+kui2 疒
 kui3 季
 kui3 挂
 kui3 貴
@@ -2552,6 +2565,7 @@ le5 梨
 le5 璃
 le5 黎
 le5 檸
+le5 蕾
 le5 麗
 le7 例
 le7 戾
@@ -2561,11 +2575,14 @@ le7 篱
 le7 麗
 le7 鑢
 le7 鱺
+le7 隸
 leh4 咧
+leh4 肭
 leh8 笠
 leh8 剺
 li1 哩
 li1 離
+li1 縭
 li2 女
 li2 子
 li2 你
@@ -2763,6 +2780,7 @@ ling5 稜
 ling5 零
 ling5 寧
 ling5 綾
+ling5 嚀
 ling5 薐
 ling5 齡
 ling7 冗
@@ -2895,6 +2913,7 @@ long2 壟
 long2 籠
 long3 挵
 long3 閬
+long3 躘
 long5 郎
 long5 狼
 long5 農
@@ -2916,6 +2935,7 @@ loo2 櫓
 loo2 努
 loo2 勞
 loo2 硓
+loo2 虜
 loo5 奴
 loo5 爐
 loo5 鱸
@@ -3213,6 +3233,7 @@ ngoo7 悟
 ngoo7 傲
 ni1 奶
 ni1 拈
+ni1 呢
 ni2 耳
 ni2 染
 ni5 年
@@ -3257,6 +3278,7 @@ nng5 榔
 nng7 卵
 nng7 兩
 noo2 老
+noo2 腦
 noo7 怒
 noo7 懦
 nua2 撋
@@ -3267,6 +3289,7 @@ nua7 瀾
 nua7 爛
 nua7 僆
 nua7 懶
+nua7 疒
 o1 呵
 o1 阿
 o1 媧
@@ -3317,6 +3340,7 @@ pa1 芭
 pa1 笆
 pa1 羓
 pa1 吧
+pa1 八
 pa2 飽
 pa2 把
 pa3 豹
@@ -3453,6 +3477,7 @@ phau7 抱
 phauh8 雹
 phe1 坯
 phe1 胚
+phe1 批
 phe2 襞
 phe3 帕
 phe3 配
@@ -3785,6 +3810,7 @@ pong7 碰
 pong7 磅
 pong7 傍
 pong7 蓬
+pong7 鎊
 poo1 埔
 poo1 埠
 poo1 晡
@@ -4365,6 +4391,7 @@ soo1 蔬
 soo1 穌
 soo1 蘇
 soo1 搜
+soo1 甦
 soo2 所
 soo2 瘦
 soo3 素
@@ -4594,6 +4621,7 @@ tang5 筒
 tang5 銅
 tang5 同
 tang5 桐
+tang5 胴
 tang7 重
 tang7 動
 tann1 今
@@ -4630,6 +4658,7 @@ tauh8 沓
 te1 炱
 te1 秪
 te1 嗲
+te1 茶
 te2 底
 te2 短
 te2 貯
@@ -4826,6 +4855,7 @@ tho3 透
 tho3 唾
 tho5 桃
 tho5 迌
+tho5 頭
 thoh4 魠
 thoh8 倒
 thok4 戳
@@ -4867,6 +4897,7 @@ thuann3 炭
 thuann3 湠
 thuann3 碳
 thuat4 脫
+thue2 體
 thue3 替
 thuh4 托
 thuh4 黜
@@ -5319,6 +5350,7 @@ tse3 製
 tse3 際
 tse3 劑
 tse3 濟
+tse3 齊
 tse5 齊
 tse5 臍
 tse5 蠐
@@ -5332,6 +5364,7 @@ tseh4 績
 tseh8 絕
 tsenn1 爭
 tsenn2 井
+tsenn2 阱
 tsenn3 諍
 tsenn5 晴
 tsenn7 靜
@@ -5372,6 +5405,7 @@ tshan5 殘
 tshan5 蠶
 tshang1 蔥
 tshang1 娼
+tshang2 氅
 tshang3 聳
 tshang3 藏
 tshann7 錚
@@ -5432,6 +5466,7 @@ tshi1 痴
 tshi1 腮
 tshi1 鴟
 tshi1 癡
+tshi1 七
 tshi2 鼠
 tshi3 刺
 tshi3 試
@@ -5442,6 +5477,7 @@ tshi5 持
 tshi5 徐
 tshi7 市
 tshi7 飼
+tshih8 嗤
 tshia1 車
 tshia1 捙
 tshia1 奢
@@ -5857,6 +5893,7 @@ tsin1 津
 tsin1 珍
 tsin1 榛
 tsin1 甄
+tsin1 蓁
 tsin2 拯
 tsin2 振
 tsin2 疹
@@ -5916,6 +5953,7 @@ tsinn1 晶
 tsinn1 氈
 tsinn2 井
 tsinn2 茈
+tsinn2 阱
 tsinn3 搢
 tsinn3 箭
 tsinn3 糋
@@ -6194,6 +6232,7 @@ tuat4 綴
 tuat8 奪
 tue2 底
 tue2 貯
+tue2 體
 tue3 綴
 tue5 蹄
 tue5 題
@@ -6220,6 +6259,7 @@ tun2 囤
 tun2 盾
 tun3 鈍
 tun3 頓
+tun3 噸
 tun5 脣
 tun5 唇
 tun7 鈍
@@ -6297,6 +6337,7 @@ uat8 閱
 ue1 椏
 ue1 煨
 ue1 鍋
+ue1 挨
 ue1 萵
 ue2 挖
 ue2 矮
@@ -6306,6 +6347,7 @@ ue5 喂
 ue7 畫
 ue7 話
 ue7 衛
+ue7 劃
 ueh4 喂
 ueh8 狹
 ueh8 劃
@@ -10074,6 +10116,8 @@ tshan5 tshân
 tshan5 Tshân
 tshang1 tshang
 tshang1 Tshang
+tshang2 tsháng
+tshang2 Tsháng
 tshang3 tshàng
 tshang3 Tshàng
 tshann7 tshānn
