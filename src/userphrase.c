@@ -32,7 +32,7 @@ char *GetDefaultChewingUserPath(ChewingData *pgdata)
 
     assert(pgdata);
 
-    len = GetEnvironmentVariableW(L"CHEWING_USER_PATH", NULL, 0);
+    len = GetEnvironmentVariableW(L"TAIGI_USER_PATH", NULL, 0);
     if (len) {
         tmp = calloc(sizeof(*tmp), len);
         if (!tmp) {
@@ -40,7 +40,7 @@ char *GetDefaultChewingUserPath(ChewingData *pgdata)
             exit(-1);
         }
 
-        GetEnvironmentVariableW(L"CHEWING_USER_PATH", tmp, len);
+        GetEnvironmentVariableW(L"TAIGI_USER_PATH", tmp, len);
 
         len = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, tmp, -1, NULL, 0, NULL, NULL);
         path_len = len + 1;
@@ -52,7 +52,7 @@ char *GetDefaultChewingUserPath(ChewingData *pgdata)
         }
         WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, tmp, -1, path, len, NULL, NULL);
 
-        LOG_INFO("chewing user path is at %s", path);
+        LOG_INFO("taigi user path is at %s", path);
 
         free(tmp);
         return path;
@@ -78,7 +78,7 @@ char *GetDefaultChewingUserPath(ChewingData *pgdata)
         WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, tmp, -1, path, len, NULL, NULL);
 
         strcpy(path + len - 1, "\\" USERPHRASE_DIR);
-        LOG_INFO("chewing user path is at %s", path);
+        LOG_INFO("taigi user path is at %s", path);
 
         free(tmp);
         return path;
@@ -119,7 +119,7 @@ char *GetDefaultUserPhrasePath(ChewingData *pgdata)
 /* FIXME: Shall this path pre user? */
 #        define USERPHRASE_DIR	"/Library/ChewingOSX"
 #    else
-#        define USERPHRASE_DIR	".chewing"
+#        define USERPHRASE_DIR	".taigi"
 #    endif
 
 #    include <stdio.h>
@@ -135,7 +135,7 @@ char *GetDefaultChewingUserPath(ChewingData *pgdata)
 
     assert(pgdata);
 
-    tmp = getenv("CHEWING_USER_PATH");
+    tmp = getenv("TAIGI_USER_PATH");
     if (tmp) {
         ret = asprintf(&path, "%s", tmp);
         if (ret == -1) {

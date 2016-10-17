@@ -178,6 +178,7 @@ CHEWING_API ChewingContext *taigi_new2(const char *syspath,
     if (!logger)
         logger = NullLogger;
 
+
     ctx = ALC(ChewingContext, 1);
 
     if (!ctx)
@@ -193,8 +194,6 @@ CHEWING_API ChewingContext *taigi_new2(const char *syspath,
         goto error;
     ctx->data = pgdata;
 
-    LOG_API("syspath = %d, userpath = %d", syspath, userpath);
-
     taigi_Reset(ctx);
 
     if (syspath) {
@@ -206,7 +205,6 @@ CHEWING_API ChewingContext *taigi_new2(const char *syspath,
             goto error;
         }
     }
-    LOG_VERBOSE("search_path is %s", search_path);
 
     ret = find_path_by_files(search_path, DICT_FILES, path, sizeof(path));
     if (ret) {
@@ -231,7 +229,6 @@ CHEWING_API ChewingContext *taigi_new2(const char *syspath,
     } else {
         userphrase_path = GetDefaultUserPhrasePath(ctx->data);
     }
-
     if (!userphrase_path) {
         LOG_ERROR("GetUserPhraseStoragePath returns %p", path);
         goto error;

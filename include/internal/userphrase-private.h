@@ -24,7 +24,7 @@
 #endif
 
 #if WITH_SQLITE3
-#    define DB_NAME	"chewing.sqlite3"
+#    define DB_NAME	"taigi.sqlite3"
 #else
 #    define DB_NAME	"uhash.dat"
 #endif
