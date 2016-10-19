@@ -21,29 +21,6 @@
 #include <string.h>
 #include "taigi-utf8-util.h"
 
-/* NOTE:
- * The reason why we convert string literal to hex representation is for the
- * sake of portability, that avoid some buggy or faulty environment like
- * Microsoft VC9 to misinterpret the string.
- */
-#if 0
-const char *const zhuin_tab[] = {               /* number of bits */
-    "\xE3\x84\x85\xE3\x84\x86\xE3\x84\x87\xE3\x84\x88\xE3\x84\x89"
-    "\xE3\x84\x8A\xE3\x84\x8B\xE3\x84\x8C\xE3\x84\x8D\xE3\x84\x8E"
-    "\xE3\x84\x8F\xE3\x84\x90\xE3\x84\x91\xE3\x84\x92\xE3\x84\x93"
-    "\xE3\x84\x94\xE3\x84\x95\xE3\x84\x96\xE3\x84\x97\xE3\x84\x98"
-    "\xE3\x84\x99",                             /* 5 */
-    /* ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙ */
-    "\xE3\x84\xA7\xE3\x84\xA8\xE3\x84\xA9",   /* 2 */
-    /* ㄧㄨㄩ */
-    "\xE3\x84\x9A\xE3\x84\x9B\xE3\x84\x9C\xE3\x84\x9D\xE3\x84\x9E"
-    "\xE3\x84\x9F\xE3\x84\xA0\xE3\x84\xA1\xE3\x84\xA2\xE3\x84\xA3"
-    "\xE3\x84\xA4\xE3\x84\xA5\xE3\x84\xA6",     /* 4 */
-    /* ㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ */
-    "\xCB\x99\xCB\x8A\xCB\x87\xCB\x8B"        /* 3 */
-    /* ˙ˊˇˋ */
-};
-#endif
 const char taigi_tone[] = "0123456789";
 const char taigi_pho[] =  "abeghijklmnopstuc";
 const char taigi_pho_cap[] =  "ABEGHIJKLMNOPSTUC";
@@ -64,14 +41,14 @@ const char *taigi_pho_spec[ TAIGI_PHO_SPEC_NUM ] =  {
         "Ḿ", "M̀", "M̂", "M̆", "M̄", "M̍", "M",
         "Ńg","Ǹg","N̂g","N̆g","N̄g","N̍g", "Ng"
 };
-const char *const zhuin_tab[] = {               /* number of bits */
+const char *const lomaji_tab[] = {               /* number of bits */
     taigi_pho,
     taigi_tone
 };
 static const int phone_num = 17;
 static const int tone_num = 9;
 
-//static const int zhuin_tab_num[] = { 22, 4, 14, 5 };
+//static const int lomaji_tab_num[] = { 22, 4, 14, 5 };
 //static const int shift[] = { 9, 7, 3, 0 };
 static const int mask[] = { 0x1F, 0x3, 0xF, 0x7 };
 
@@ -113,6 +90,8 @@ static const char *const key_str[KBTYPE_COUNT] = {
     "1qdz2gsxmtclnv5wrjyikfap8ue,9bo.0;h/-7634",        /* Carpalx */
 };
 
+
+
 /*
  * Read one zhuin string,
  *
@@ -153,7 +132,7 @@ uint32_t UintFromPhone(const char *zhuin)
         buf[0] = iter[0];
 
         for (; zhuin_index < 2; ++zhuin_index) {
-		pos = strchr(zhuin_tab[ zhuin_index ], buf[0]);
+		pos = strchr(lomaji_tab[ zhuin_index ], buf[0]);
 		if (pos) {
 	//		printf("Got %c\n", pos[0]);
 			break;
@@ -163,7 +142,7 @@ uint32_t UintFromPhone(const char *zhuin)
         if (zhuin_index >= 2) {
             return 0;
         }
-	offset = (int) (pos - zhuin_tab[zhuin_index]);
+	offset = (int) (pos - lomaji_tab[zhuin_index]);
 	if (zhuin_index == 1) {
 	    break;
 	}
@@ -234,12 +213,12 @@ int PhoneFromUint(char *phone, size_t phone_len, uint32_t phone_num)
     memset(tmp, 0x0, 16);
 
     for (i = 0; i < BOPOMOFO_SIZE, phone_num > 0; ++i) {
-        /* The first two characters in zhuin_tab are space, so we need
+        /* The first two characters in lomaji_tab are space, so we need
            to add 1 here. */
 #if 0
         index = ((phone_num >> shift[i]) & mask[i]);
         if (index >= 1) {
-            pos = ueConstStrSeek(zhuin_tab[i], index - 1);
+            pos = ueConstStrSeek(lomaji_tab[i], index - 1);
             ueStrNCpy(tmp, pos, 1, STRNCPY_CLOSE);
             strcat(buffer, tmp);
         }
@@ -271,13 +250,13 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
 
     keyStr[0] = key;
     keyStr[1] = '\0';
-    printf("\t\t\t%s, key=%d, type=%d\n", __func__, key, type);
-    printf("%s: %d\n", __func__, __LINE__);
+    TRACX("\t\t\t%s, key=%d, type=%d\n", __func__, key, type);
+    TRACX("%s: %d\n", __func__, __LINE__);
     if (!PhoneFromKey(rtStr, keyStr, kbtype, searchTimes))
         return 0;
 
-    printf("%s: %d, type=%d, rtStr=%s\n", __func__, __LINE__, type, rtStr);
-    p = strstr(zhuin_tab[type], rtStr);
+    TRACX("%s: %d, type=%d, rtStr=%s\n", __func__, __LINE__, type, rtStr);
+    p = strstr(lomaji_tab[type], rtStr);
     if (!p)
         return 0;
     {
@@ -294,7 +273,7 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
 	    printf("\n");
     }
     printf("%s: %d\n", __func__, __LINE__);
-//    return zhuin_tab_num[type] - ueStrLen(p);
+//    return lomaji_tab_num[type] - ueStrLen(p);
 //    Return the key directly
     return *p;
 }
@@ -309,12 +288,12 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
     for (i = 0; i < BOPOMOFO_SIZE - 1; i++) {
 	    if(ph_inx[ i + 1 ] == 0)
 		    break;
-	    pos = strchr(zhuin_tab[0], ph_inx[i]);
+	    pos = strchr(lomaji_tab[0], ph_inx[i]);
 	    printf("%s, got=%c\n", __func__, *pos);
-	    result = result * 17 + (uint32_t) (pos - zhuin_tab[0]) + 1;
+	    result = result * 17 + (uint32_t) (pos - lomaji_tab[0]) + 1;
     }
-    pos = strchr(zhuin_tab[1], ph_inx[i]);
-    offset = (uint32_t) (pos - zhuin_tab[1]);
+    pos = strchr(lomaji_tab[1], ph_inx[i]);
+    offset = (uint32_t) (pos - lomaji_tab[1]);
     if (pos) {
 	    result = (result << 4) + offset;
     } else {
@@ -411,11 +390,11 @@ size_t GetPhoneLenFromUint(uint32_t phone_num)
 
 #if 0
     for (i = 0; i < BOPOMOFO_SIZE; ++i) {
-        /* The first two characters in zhuin_tab are space, so we need
+        /* The first two characters in lomaji_tab are space, so we need
            to add 1 here. */
         int index = ((phone_num >> shift[i]) & mask[i]);
         if (index >= 1) {
-            const char *pos = ueConstStrSeek(zhuin_tab[i], index - 1);
+            const char *pos = ueConstStrSeek(lomaji_tab[i], index - 1);
             len += ueStrNBytes(pos, 1) + 1;
         }
     }

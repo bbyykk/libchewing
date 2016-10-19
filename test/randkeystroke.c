@@ -19,7 +19,7 @@
 #include <string.h>
 #include <time.h>
 
-const char *zhuin_tab[] = {
+const char *lomaji_tab[] = {
     "1qaz2wsxedcrfv5tgbyhn",    /* ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙ */
     "ujm",                      /* ㄧㄨㄩ */
     "8ik,9ol.0p;/-",            /* ㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ */
@@ -51,10 +51,10 @@ int main(int argc, char *argv[])
     int nk = 100;
     int total_random = 0;
     int i, n;
-    int n_tab1 = strlen(zhuin_tab[0]);
-    int n_tab2 = strlen(zhuin_tab[1]);
-    int n_tab3 = strlen(zhuin_tab[2]);
-    int n_tab4 = strlen(zhuin_tab[3]);
+    int n_tab1 = strlen(lomaji_tab[0]);
+    int n_tab2 = strlen(lomaji_tab[1]);
+    int n_tab3 = strlen(lomaji_tab[2]);
+    int n_tab4 = strlen(lomaji_tab[3]);
 
     srand(time(NULL));
 
@@ -83,13 +83,13 @@ int main(int argc, char *argv[])
     } else {
         for (i = 0; i < nk; i++) {
             if (rand() % 2)
-                printf("%c", zhuin_tab[0][rand() % n_tab1]);
+                printf("%c", lomaji_tab[0][rand() % n_tab1]);
             if (rand() % 2)
-                printf("%c", zhuin_tab[1][rand() % n_tab2]);
+                printf("%c", lomaji_tab[1][rand() % n_tab2]);
             if (rand() % 2)
-                printf("%c", zhuin_tab[2][rand() % n_tab3]);
+                printf("%c", lomaji_tab[2][rand() % n_tab3]);
             if (rand() % 2)
-                printf("%c", zhuin_tab[3][rand() % n_tab4]);
+                printf("%c", lomaji_tab[3][rand() % n_tab4]);
             else
                 printf(" ");
             if (rand() % 2)

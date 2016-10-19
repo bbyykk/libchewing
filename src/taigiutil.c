@@ -47,7 +47,7 @@
 #undef LOG_API
 #define LOG_API(fmt, ...) 
 #endif
-extern const char *const zhuin_tab[];
+extern const char *const lomaji_tab[];
 static void MakePreferInterval(ChewingData *pgdata);
 static void ShiftInterval(ChewingOutput *pgo, ChewingData *pgdata);
 static int ChewingKillSelectIntervalAcross(int cursor, ChewingData *pgdata);

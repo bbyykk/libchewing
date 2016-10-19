@@ -1528,7 +1528,7 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
                 goto End_keyproc;
             }
 
-            rtn = BopomofoPhoInput(pgdata, key);
+            rtn = LomajiInput(pgdata, key);
             DEBUG_OUT("\n\t\tChinese mode key, " "BopomofoPhoInput return value = %d\n", rtn);
 
             if (rtn == BOPOMOFO_KEY_ERROR)
