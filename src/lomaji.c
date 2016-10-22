@@ -88,7 +88,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     Phrase tempword;
     int pho_inx;
 
-    printf("##### %s, %d Start\n", __func__, __LINE__);
+    TRACX("##### %s, %d Start\n", __func__, __LINE__);
     /* Only for the tone 1~8 */
     pho_inx = PhoneInxFromKey(key, 1, pBopomofo->kbtype, searchTimes);
 
@@ -98,20 +98,20 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
 	    ++len;
     };
     pBopomofo->pho_inx[len] = pho_inx;
-    printf("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
+    TRACX("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
 
     u32Pho = UintFromPhoneInx(pBopomofo->pho_inx);
     if (GetCharFirst(pgdata, &tempword, u32Pho) == 0) {
-	printf("%s, %d, u32Pho=%d\n", __func__, __LINE__, u32Pho);
+	TRACX("%s, %d, u32Pho=%d\n", __func__, __LINE__, u32Pho);
         BopomofoRemoveAll(pBopomofo);
         return BOPOMOFO_NO_WORD;
     }
 
-    printf("%s, %d, get tempword: phrase=%s, freq=%d\n", __func__ , __LINE__, tempword.phrase, tempword.freq);
+    TRACX("%s, %d, get tempword: phrase=%s, freq=%d\n", __func__ , __LINE__, tempword.phrase, tempword.freq);
     pBopomofo->phone = u32Pho;
     pBopomofo->phoneAlt = u32Pho;
     memset(pBopomofo->pho_inx, 0, sizeof(pBopomofo->pho_inx));
-    printf("##### %s, %d, END #####\n", __func__, __LINE__);
+    TRACX("##### %s, %d, END #####\n", __func__, __LINE__);
     return BOPOMOFO_COMMIT;
 }
 
@@ -149,7 +149,7 @@ static int DefPhoInput(ChewingData *pgdata, int key)
     }
 
     /* fill the key into the phone buffer */
-    printf("%s, %d, pBopomofo->pho_inx[%d]=%d\n", __func__, __LINE__, pBopomofo->pho_inx_n, inx);
+    TRACX("%s, %d, pBopomofo->pho_inx[%d]=%d\n", __func__, __LINE__, pBopomofo->pho_inx_n, inx);
     pBopomofo->pho_inx[pBopomofo->pho_inx_n++] = inx;
     return BOPOMOFO_ABSORB;
 }

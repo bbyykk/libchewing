@@ -726,8 +726,8 @@ int CallPhrasing(ChewingData *pgdata, int all_phrasing)
     /* set "bSymbolArrBrkpt" && "bArrBrkpt" */
     int i, ch_count = 0;
 
-    DEBUG_OUT("------ %s -----\n", __func__);
-    DEBUG_OUT("\tall_phrasing: %d\n", all_phrasing);
+    TRACX("------ %s -----\n", __func__);
+    TRACX("\tall_phrasing: %d\n", all_phrasing);
     memcpy(pgdata->bArrBrkpt, pgdata->bUserArrBrkpt, (MAX_PHONE_SEQ_LEN + 1) * sizeof(int));
     memset(pgdata->bSymbolArrBrkpt, 0, (MAX_PHONE_SEQ_LEN + 1) * sizeof(int));
 
@@ -959,7 +959,7 @@ int PhoneSeqCursor(ChewingData *pgdata)
 
 int ChewingIsChiAt(int chiSymbolCursor, ChewingData *pgdata)
 {
-    DEBUG_OUT("\n");
+    TRACX("\n");
     return pgdata->preeditBuf[chiSymbolCursor].category == TAIGI_CHINESE;
 }
 

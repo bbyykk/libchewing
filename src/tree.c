@@ -280,7 +280,7 @@ const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const ui
  */
 void TreeChildRange(ChewingData *pgdata, const TreeType *parent)
 {
-    printf("%s, %d\n", __func__, __LINE__);
+    TRACX("%s, %d\n", __func__, __LINE__);
     pgdata->static_data.tree_cur_pos = pgdata->static_data.tree + GetUint32(parent->child.begin);
     pgdata->static_data.tree_end_pos = pgdata->static_data.tree + GetUint32(parent->child.end);
 }

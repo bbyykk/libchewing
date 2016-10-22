@@ -259,22 +259,7 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
     p = strstr(lomaji_tab[type], rtStr);
     if (!p)
         return 0;
-    {
-	    int i;
-
-	    printf("rtStr:\n");
-	    for (i=0; i<10;++i) {
-		    printf("%x ", (unsigned char) rtStr[i]);
-	    }
-	    printf("\n");
-	    for (i=0; i<10;++i) {
-		    printf("%c ", (unsigned char) rtStr[i]);
-	    }
-	    printf("\n");
-    }
     printf("%s: %d\n", __func__, __LINE__);
-//    return lomaji_tab_num[type] - ueStrLen(p);
-//    Return the key directly
     return *p;
 }
 
@@ -300,7 +285,7 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
 	    printf("No tone\n");
 	    return result;
     }
-    printf("%s END result=%d\n", __func__, result);
+    TRACX("%s END result=%d\n", __func__, result);
     return result;
 }
 

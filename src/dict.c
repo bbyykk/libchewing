@@ -74,10 +74,10 @@ int GetCharFirst(ChewingData *pgdata, Phrase *wrd_ptr, uint32_t key)
     /* &key serves as an array whose begin and end are both 0. */
     const TreeType *pinx = TreeFindPhrase(pgdata, 0, 0, &key);
 
-    printf("%s, %d\n", __func__, __LINE__);
+    TRACX("%s, %d\n", __func__, __LINE__);
     if (!pinx)
         return 0;
-    printf("%s, %d\n", __func__, __LINE__);
+    TRACX("%s, %d\n", __func__, __LINE__);
     TreeChildRange(pgdata, pinx);
     GetVocabFromDict(pgdata, wrd_ptr);
     return 1;
