@@ -337,7 +337,7 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
     for (begin = 0; begin < pgdata->nPhoneSeq; begin++) {
         for (end = begin; end < min(pgdata->nPhoneSeq, begin + MAX_PHRASE_LEN); end++) {
             if (!CheckBreakpoint(begin, end + 1, pgdata->bArrBrkpt)) {
-		printf("%s, %d, Break!!\n", __func__, __LINE__);
+		TRACX("%s, %d, Break!!\n", __func__, __LINE__);
                 break;
 	    }
 
