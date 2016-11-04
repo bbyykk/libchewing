@@ -123,10 +123,14 @@ static int DefPhoInput(ChewingData *pgdata, int key)
 
     TRACX("\t\t%s, key=%d\n", __func__, key);
     if (IsDefPhoEndKey(key, pBopomofo->kbtype)) {
-	printf("This is END keyn\n");
         for (i = 0; i < BOPOMOFO_SIZE; ++i)
-            if (pBopomofo->pho_inx[i] != 0)
+            if (pBopomofo->pho_inx[i] == 0)
                 break;
+	if (i == 0) {
+		// The first key is Num, should be key error
+		return BOPOMOFO_KEY_ERROR;
+	}
+	TRACX("This is END key is %c at:%d\n", key, i);
         if (i < BOPOMOFO_SIZE) {
 	    pBopomofo->pho_inx_n = 0;
             return EndKeyProcess(pgdata, key, 1);
