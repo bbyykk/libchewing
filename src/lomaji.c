@@ -89,16 +89,26 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
     int pho_inx;
 
     TRACX("##### %s, %d Start\n", __func__, __LINE__);
+
     /* Only for the tone 1~8 */
     pho_inx = PhoneInxFromKey(key, 1, pBopomofo->kbtype, searchTimes);
 
     int len = 0;
     while(pBopomofo->pho_inx[len] != 0) {
-	    printf("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
+	    TRACX("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
 	    ++len;
     };
-    pBopomofo->pho_inx[len] = pho_inx;
-    TRACX("pBopomofo->pho_inx[%d]=%c\n", len, pBopomofo->pho_inx[len]);
+
+    /* For tone 1 and 4, skip the enter for tone */
+    int *temp = NULL;
+    if(len > 1) temp = &pBopomofo->pho_inx[ len - 1];
+    if (key == ' ') {
+	    if (*temp == 'k' || *temp == 't' || *temp == 'h') {
+		    pBopomofo->pho_inx[len] = '4';
+	    } else
+		    pBopomofo->pho_inx[len] = '1';
+    } else
+	    pBopomofo->pho_inx[len] = pho_inx;
 
     u32Pho = UintFromPhoneInx(pBopomofo->pho_inx);
     if (GetCharFirst(pgdata, &tempword, u32Pho) == 0) {

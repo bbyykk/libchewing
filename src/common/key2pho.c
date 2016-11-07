@@ -259,7 +259,7 @@ int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
     p = strstr(lomaji_tab[type], rtStr);
     if (!p)
         return 0;
-    printf("%s: %d\n", __func__, __LINE__);
+    TRACX("%s: %d\n", __func__, __LINE__);
     return *p;
 }
 
