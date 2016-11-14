@@ -235,74 +235,26 @@ static void SetChoiceInfo(ChewingData *pgdata)
 
     /* secondly, read tree phrase */
     if (len == 1) {             /* single character */
+	printf("---- %s, %d -----\n", __func__, __LINE__);
         ChoiceInfoAppendChi(pgdata, pci, phoneSeq[cursor]);
 
         if (phoneSeq[cursor] != phoneSeqAlt[cursor]) {
+            printf("---- %s, %d -----\n", __func__, __LINE__);
             ChoiceInfoAppendChi(pgdata, pci, phoneSeqAlt[cursor]);
-        }
-
-        if (pgdata->bopomofoData.kbtype == KB_HSU || pgdata->bopomofoData.kbtype == KB_DVORAK_HSU) {
-	    printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx\n");
-            switch (phoneSeq[cursor]) {
-            case 0x2800:       /* 'ㄘ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x30); /* 'ㄟ' */
-                break;
-            case 0x80:         /* 'ㄧ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x20); /* 'ㄝ' */
-                break;
-            case 0x2A00:       /* 'ㄙ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1);  /* '˙' */
-                break;
-            case 0xA00:        /* 'ㄉ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x2);  /* 'ˊ' */
-                break;
-            case 0x800:        /* 'ㄈ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x3);  /* 'ˇ' */
-                break;
-            case 0x18:         /* 'ㄜ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1200);       /* 'ㄍ' */
-                break;
-            case 0x10:         /* 'ㄛ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1600);       /* 'ㄏ' */
-                break;
-            case 0x1E00:       /* 'ㄓ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1800);       /* 'ㄐ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x4);  /* 'ˋ' */
-                break;
-            case 0x58:         /* 'ㄤ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1400);       /* 'ㄎ' */
-                break;
-            case 0x68:         /* 'ㄦ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1000);       /* 'ㄌ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x60); /* 'ㄥ' */
-                break;
-            case 0x2200:       /* 'ㄕ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1C00);       /* 'ㄒ' */
-                break;
-            case 0x2000:       /* 'ㄔ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x1A00);       /* 'ㄑ' */
-                break;
-            case 0x50:         /* 'ㄣ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0xE00);        /* 'ㄋ' */
-                break;
-            case 0x48:         /* 'ㄢ' */
-                ChoiceInfoAppendChi(pgdata, pci, 0x600);        /* 'ㄇ' */
-                break;
-            default:
-                break;
-            }
         }
     }
     /* phrase */
     else {
         if (pai->avail[pai->currentAvail].id) {
             GetPhraseFirst(pgdata, &tempPhrase, pai->avail[pai->currentAvail].id);
+	    printf("---- %s, %d -----\n", __func__, __LINE__);
             do {
                 if (ChoiceTheSame(pci, tempPhrase.phrase, len * ueBytesFromChar(tempPhrase.phrase[0]))) {
                     continue;
                 }
                 ueStrNCpy(pci->totalChoiceStr[pci->nTotalChoice], tempPhrase.phrase, len, 1);
                 pci->nTotalChoice++;
+		printf("---- %s, %d -----\n", __func__, __LINE__);
             } while (GetVocabNext(pgdata, &tempPhrase));
         }
 
@@ -376,11 +328,14 @@ int ChoiceInitAvail(ChewingData *pgdata)
 		    pgdata->chiSymbolCursor, begin, end);
     SetAvailInfo(pgdata, begin, end);
 
+    printf("XXX %s, %d XXX\n", __func__, __LINE__);
     if (!pgdata->availInfo.nAvail)
         return ChoiceEndChoice(pgdata);
 
+    printf("XXX %s, %d XXX\n", __func__, __LINE__);
     pgdata->availInfo.currentAvail = pgdata->availInfo.nAvail - 1;
     SetChoiceInfo(pgdata);
+    printf("XXX %s, %d XXX\n", __func__, __LINE__);
     return 0;
 }
 

@@ -110,11 +110,15 @@ static void chooseCandidate(ChewingContext *ctx, int toSelect, int key_buf_curso
     if (toSelect) {
         if (!pgdata->bSelect) {
             ChoiceInitAvail(pgdata);
+	    printf("--------------- %s, %d XXXXXXXXXXXXXXXX\n", __func__, __LINE__);
         } else {
-            if (ChoiceHasNextAvail(pgdata))
+            if (ChoiceHasNextAvail(pgdata)) {
+	        printf("--------------- %s, %d XXXXXXXXXXXXXXXX\n", __func__, __LINE__);
                 ChoiceNextAvail(pgdata);
-            else                /* rollover */
+	    } else {                /* rollover */
+	        printf("--------------- %s, %d XXXXXXXXXXXXXXXX\n", __func__, __LINE__);
                 ChoiceFirstAvail(pgdata);
+	    }
         }
     } else if (pgdata->symbolKeyBuf[key_buf_cursor]) {
         /* Open Symbol Choice List */
@@ -128,6 +132,7 @@ static void chooseCandidate(ChewingContext *ctx, int toSelect, int key_buf_curso
          * set the page number to 0 directly.
          */
         else if (pgdata->bSelect) {
+	    printf("--------------- %s, %d XXXXXXXXXXXXXXXX\n", __func__, __LINE__);
             pgdata->choiceInfo.pageNo = 0;
         }
     } else {
@@ -138,6 +143,7 @@ static void chooseCandidate(ChewingContext *ctx, int toSelect, int key_buf_curso
          * libchewing needs to reset pageNo to 0 to do rollover.
          */
         if (pgdata->bSelect) {
+	    printf("--------------- %s, %d XXXXXXXXXXXXXXXX\n", __func__, __LINE__);
             pgdata->choiceInfo.pageNo = 0;
         }
     }
@@ -1037,6 +1043,7 @@ CHEWING_API int taigi_handle_Down(ChewingContext *ctx)
     CheckAndResetRange(pgdata);
 
     if (!ChewingIsEntering(pgdata)) {
+	printf("--------------- %s, %d XXXXXXXXXXXXXXXX\n", __func__, __LINE__);
         keystrokeRtn = KEYSTROKE_IGNORE;
     }
 
@@ -1045,8 +1052,10 @@ CHEWING_API int taigi_handle_Down(ChewingContext *ctx)
         key_buf_cursor--;
 
     /* see if to select */
-    if (ChewingIsChiAt(key_buf_cursor, pgdata))
+    if (ChewingIsChiAt(key_buf_cursor, pgdata)) {
         toSelect = 1;
+	printf("--------------- %s, %d XXXXXXXXXXXXXXXX\n", __func__, __LINE__);
+    }
 
     chooseCandidate(ctx, toSelect, key_buf_cursor);
 
