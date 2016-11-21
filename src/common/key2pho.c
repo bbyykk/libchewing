@@ -167,29 +167,6 @@ int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes
 	
     strncpy(pho, inputkey, 20);
     printf("\t\t\tpho=%s\n", pho);
-#if 0
-    pho[0] = '\0';
-    for (i = 0; i < len; i++) {
-        char *findptr = NULL;
-        int _index;
-
-        pTarget = key_str[kbtype];
-        for (s = 0; s < searchTimes; s++) {
-            findptr = strchr(pTarget, inputkey[i]);
-            if (!findptr) {
-		printf("\t\t\t\tfindptr is NULL\n");
-                return 0;
-            }
-	    printf("%c ", pTarget);
-            pTarget = findptr + 1;
-        }
-        _index = findptr - key_str[kbtype];
-        ueStrNCpy(ueStrSeek(pho, i), ueConstStrSeek(ph_str, _index), 1, STRNCPY_NOT_CLOSE);
-    }
-    pho = ueStrSeek(pho, len);
-    pho[0] = '\0';
-    printf("\t\t\t\t%s, get pho=%s\n", __func__, pho);
-#endif
     return 1;
 }
 
