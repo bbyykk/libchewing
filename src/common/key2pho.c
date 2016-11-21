@@ -147,14 +147,11 @@ uint32_t UintFromPhone(const char *zhuin)
 	    break;
 	}
 	result = result * 17 + offset + 1;
-	printf("result=%d\n", result);
         ++iter;
 	//printf("buf=%c, zhuin_index=%d, result=%d\n", buf[0], zhuin_index, result); 
     }
     result = result << 4;
-    printf("The !!!! phone=%d\n", offset);
     result |= offset;
-    printf("%d\t%s\n", result, zhuin);
     return result;
 }
 

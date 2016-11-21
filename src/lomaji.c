@@ -19,6 +19,11 @@
 #include "pinyin-private.h"
 #include "private.h"
 
+#ifndef LOG_LOMAJI
+#undef DEBUG_OUT
+#define DEBUG_OUT(fmt, ...)
+#endif
+
 /*
  * process a key input
  * return value:

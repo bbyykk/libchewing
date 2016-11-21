@@ -1,15 +1,6 @@
 /**
- * chewingio.c
+ * taigiio.c
  *
- * Copyright (c) 1999, 2000, 2001
- *      Lu-chuan Kung and Kang-pen Chen.
- *      All rights reserved.
- *
- * Copyright (c) 2004-2008, 2010-2014
- *      libchewing Core Team. See ChangeLog for details.
- *
- * See the file "COPYING" for information on usage and redistribution
- * of this file.
  */
 
 /**
@@ -51,7 +42,9 @@
 
 #ifndef LOG_API_TAIGIIO
 #undef LOG_API
+#undef DEBUG_OUT
 #define LOG_API(fmt, ...) 
+#define DEBUG_OUT(fmt, ...) 
 #endif
 
 const char *const kb_type_str[] = {

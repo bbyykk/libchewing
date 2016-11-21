@@ -45,7 +45,9 @@
 
 #ifndef LOG_API_TAIGIUTIL
 #undef LOG_API
+#undef DEBUG_OUT
 #define LOG_API(fmt, ...) 
+#define DEBUG_OUT(fmt, ...) 
 #endif
 extern const char *const lomaji_tab[];
 static void MakePreferInterval(ChewingData *pgdata);
@@ -660,6 +662,8 @@ int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
         }
     }
 
+    printf("%s, %d, nPhoneSeq=%d, chiSymbolBufLen=%d, chiSymbolCursor=%d, cursor=%d\n", __func__, __LINE__, 
+		    pgdata->nPhoneSeq, pgdata->chiSymbolBufLen, pgdata->chiSymbolCursor, cursor);
     /* shift the Brkpt */
     assert(pgdata->nPhoneSeq >= cursor);
     memmove(&(pgdata->bUserArrBrkpt[cursor + 2]),
@@ -685,7 +689,8 @@ int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
     pgdata->preeditBuf[pgdata->chiSymbolCursor].category = TAIGI_CHINESE;
     pgdata->chiSymbolBufLen++;
     pgdata->chiSymbolCursor++;
-
+    printf("%s, %d, nPhoneSeq=%d, chiSymbolBufLen=%d, chiSymbolCursor=%d, cursor=%d\n", __func__, __LINE__, 
+		    pgdata->nPhoneSeq, pgdata->chiSymbolBufLen, pgdata->chiSymbolCursor, cursor);
     return 0;
 }
 
