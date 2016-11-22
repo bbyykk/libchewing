@@ -234,7 +234,7 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
 	    if(ph_inx[ i + 1 ] == 0)
 		    break;
 	    pos = strchr(lomaji_tab[0], ph_inx[i]);
-	    printf("%s, got=%c\n", __func__, *pos);
+	    TRACX("%s, got=%c\n", __func__, *pos);
 	    result = result * 17 + (uint32_t) (pos - lomaji_tab[0]) + 1;
     }
     pos = strchr(lomaji_tab[1], ph_inx[i]);
@@ -242,7 +242,7 @@ uint32_t UintFromPhoneInx(const int ph_inx[])
     if (pos) {
 	    result = (result << 4) + offset;
     } else {
-	    printf("No tone\n");
+	    TRACX("No tone\n");
 	    return result;
     }
     TRACX("%s END result=%d\n", __func__, result);

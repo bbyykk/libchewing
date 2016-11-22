@@ -97,4 +97,5 @@ typedef int (*CompFuncType)(const void *, const void *);
 #undef LOG_API_TREE
 #undef LOG_API_TAIGIUTIL
 #undef LOG_LOMAJI
+#undef LOG_USERPHRASE_SQL
 #endif

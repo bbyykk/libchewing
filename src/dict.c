@@ -92,7 +92,6 @@ int GetPhraseFirst(ChewingData *pgdata, Phrase *phr_ptr, const TreeType *phrase_
 {
     assert(phrase_parent);
 
-    printf("%s, %d\n", __func__, __LINE__);
     TreeChildRange(pgdata, phrase_parent);
     GetVocabFromDict(pgdata, phr_ptr);
     return 1;

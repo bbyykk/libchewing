@@ -38,7 +38,9 @@
 
 #ifndef LOG_API_TREE
 #undef LOG_API
+#undef LOG_VERBOSE
 #define LOG_API(fmt, ...) 
+#define LOG_VERBOSE(fmt, ...) 
 #endif
 
 typedef struct PhraseIntervalType {
@@ -288,7 +290,7 @@ void TreeChildRange(ChewingData *pgdata, const TreeType *parent)
 
 static void AddInterval(TreeDataType *ptd, int begin, int end, Phrase *p_phrase, int dict_or_user)
 {
-    printf("%s, %d\n", __func__, __LINE__);
+    TRACX("%s, %d\n", __func__, __LINE__);
     ptd->interval[ptd->nInterval].from = begin;
     ptd->interval[ptd->nInterval].to = end + 1;
     ptd->interval[ptd->nInterval].p_phr = p_phrase;
@@ -893,7 +895,7 @@ static RecordNode *DuplicateRecordAndInsertInterval(const RecordNode *record, Tr
     assert(pdt);
 
 
-    printf("<<<< %s, %d, interval_id=%d >>>>\n", __func__, __LINE__, interval_id);
+    TRACX("<<<< %s, %d, interval_id=%d >>>>\n", __func__, __LINE__, interval_id);
     ret = ALC(RecordNode, 1);
 
     if (!ret)
@@ -920,7 +922,7 @@ static RecordNode *CreateSingleIntervalRecord(TreeDataType *pdt, const int inter
 
     assert(pdt);
 
-    printf("<<<< %s, %d >>>>\n", __func__, __LINE__);
+    TRACX("<<<< %s, %d >>>>\n", __func__, __LINE__);
     ret = ALC(RecordNode, 1);
 
     if (!ret)
@@ -945,7 +947,7 @@ static RecordNode *CreateNullIntervalRecord()
     RecordNode *ret = NULL;
     ret = ALC(RecordNode, 1);
 
-    printf("<<<< %s, %d >>>>\n", __func__, __LINE__);
+    TRACX("<<<< %s, %d >>>>\n", __func__, __LINE__);
     if (!ret)
         return NULL;
 
@@ -1026,7 +1028,7 @@ static void DoDpPhrasing(ChewingData *pgdata, TreeDataType *pdt)
     }
 
     if (pgdata->nPhoneSeq - 1 < 0 || highest_score[pgdata->nPhoneSeq - 1] == NULL) {
-	printf("-->>-->> %s, %d, pgdata->nPhoneSeq=%d\n", __func__, __LINE__, pgdata->nPhoneSeq);
+	TRACX("-->>-->> %s, %d, pgdata->nPhoneSeq=%d\n", __func__, __LINE__, pgdata->nPhoneSeq);
         pdt->phList = CreateNullIntervalRecord();
     } else {
         pdt->phList = highest_score[pgdata->nPhoneSeq - 1];

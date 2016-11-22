@@ -20,6 +20,13 @@
 #include "private.h"
 #include "key2pho-private.h"
 
+#ifndef LOG_USERPHRASE_SQL
+#undef LOG_WARN
+#undef LOG_ERROR
+#define LOG_WARN(fmt...)
+#define LOG_ERROR(fmt...)
+#endif
+
 static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq[], int len)
 {
     int i;
