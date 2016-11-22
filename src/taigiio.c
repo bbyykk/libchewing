@@ -43,8 +43,10 @@
 #ifndef LOG_API_TAIGIIO
 #undef LOG_API
 #undef DEBUG_OUT
-#define LOG_API(fmt, ...) 
-#define DEBUG_OUT(fmt, ...) 
+#undef DEBUG_CHECKPOINT
+#define LOG_API(fmt...) 
+#define DEBUG_OUT(fmt...) 
+#define DEBUG_CHECKPOINT(fmt...) 
 #endif
 
 const char *const kb_type_str[] = {

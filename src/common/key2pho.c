@@ -158,15 +158,10 @@ uint32_t UintFromPhone(const char *zhuin)
 int PhoneFromKey(char *pho, const char *inputkey, KBTYPE kbtype, int searchTimes)
 {
     int len;
-    int i;
-    int s;
-    const char *pTarget;
 
-    printf("\t\t\t\t%s, inputkey=%s\n", __func__, inputkey);
     len = strlen(inputkey);
 	
     strncpy(pho, inputkey, 20);
-    printf("\t\t\tpho=%s\n", pho);
     return 1;
 }
 
@@ -218,19 +213,10 @@ int PhoneFromUint(char *phone, size_t phone_len, uint32_t phone_num)
 
 int PhoneInxFromKey(int key, int type, KBTYPE kbtype, int searchTimes)
 {
-    char keyStr[2];
-    char rtStr[10];
     char *p;
 
-    keyStr[0] = key;
-    keyStr[1] = '\0';
-    TRACX("\t\t\t%s, key=%d, type=%d\n", __func__, key, type);
-    TRACX("%s: %d\n", __func__, __LINE__);
-    if (!PhoneFromKey(rtStr, keyStr, kbtype, searchTimes))
-        return 0;
-
-    TRACX("%s: %d, type=%d, rtStr=%s\n", __func__, __LINE__, type, rtStr);
-    p = strstr(lomaji_tab[type], rtStr);
+    TRACX("%s: %d, type=%d, key=%d\n", __func__, __LINE__, type, key);
+    p = strchr(lomaji_tab[type], key);
     if (!p)
         return 0;
     TRACX("%s: %d\n", __func__, __LINE__);

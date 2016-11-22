@@ -114,7 +114,7 @@ static int CreateTable(ChewingData *pgdata)
 {
     int ret;
 
-    STATIC_ASSERT(MAX_PHRASE_LEN == 16);
+    STATIC_ASSERT(MAX_PHRASE_LEN == 32);
 
     ret = sqlite3_exec(pgdata->static_data.db,
                        "CREATE TABLE IF NOT EXISTS userphrase_v1 ("

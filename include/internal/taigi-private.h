@@ -38,10 +38,10 @@ typedef SSIZE_T ssize_t;
 #    include "taigi-sql.h"
 #endif
 
-#define MAX_UTF8_SIZE 16
-#define BOPOMOFO_SIZE 16
+#define MAX_UTF8_SIZE 32
+#define BOPOMOFO_SIZE 32
 #define PINYIN_SIZE 10
-#define MAX_PHRASE_LEN 16
+#define MAX_PHRASE_LEN 32
 #define MAX_PHONE_SEQ_LEN 50
 #define MIN_CHI_SYMBOL_LEN 0
 #define MAX_CHI_SYMBOL_LEN (MAX_PHONE_SEQ_LEN - MAX_PHRASE_LEN)
