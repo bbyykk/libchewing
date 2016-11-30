@@ -195,7 +195,7 @@ static void ChoiceInfoAppendChi(ChewingData *pgdata, ChoiceInfo *pci, uint32_t p
             if (ChoiceTheSame(pci, tempWord.phrase, len))
                 continue;
             assert(pci->nTotalChoice < MAX_CHOICE);
-	    printf("---- %s, %d -----\n", __func__, __LINE__);
+	    printf("---- %s, %d Here Copy to Candidate buffer so that adaptor layer can get retrieve-----\n", __func__, __LINE__);
             memcpy(pci->totalChoiceStr[pci->nTotalChoice], tempWord.phrase, len);
 	    printf("---- %s, %d -----\n", __func__, __LINE__);
             pci->totalChoiceStr[pci->nTotalChoice]

@@ -143,7 +143,7 @@ static int DefPhoInput(ChewingData *pgdata, int key)
                 break;
 	if (i == 0) {
 		// The first key is Num, should be key error
-		return BOPOMOFO_KEY_ERROR;
+		return BOPOMOFO_MODIFY;
 	}
 	TRACX("This is END key is %c at:%d\n", key, i);
         if (i < BOPOMOFO_SIZE) {

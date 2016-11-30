@@ -41,10 +41,10 @@
 #endif
 
 #ifndef LOG_API_TAIGIIO
-#undef LOG_API
+//#undef LOG_API
 #undef DEBUG_OUT
 #undef DEBUG_CHECKPOINT
-#define LOG_API(fmt...) 
+//#define LOG_API(fmt...) 
 #define DEBUG_OUT(fmt...) 
 #define DEBUG_CHECKPOINT(fmt...) 
 #endif
@@ -1479,8 +1479,10 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 
     /* selecting */
     if (pgdata->bSelect) {
-        if (key == ' ')
-            return taigi_handle_Right(ctx);
+	printf("%s, %d\n", __func__, __LINE__);
+        if (key == ' ') {
+            return taigi_handle_Esc(ctx);
+	}
         /* num starts from 0 */
         num = CountSelKeyNum(key, pgdata);
         if (num >= 0) {
@@ -1526,12 +1528,14 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     }
     /* editing */
     else {
+	printf("%s, %d\n", __func__, __LINE__);
         if (pgdata->bChiSym == CHINESE_MODE) {
             if (pgdata->config.bEasySymbolInput != 0) {
                 EasySymbolInput(key, pgdata);
                 goto End_keyproc;
             }
-
+		
+	printf("%s, %d\n", __func__, __LINE__);
             rtn = LomajiInput(pgdata, key);
             DEBUG_OUT("\n\t\tChinese mode key, " "BopomofoPhoInput return value = %d\n", rtn);
 
@@ -1542,8 +1546,13 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
                 DEBUG_OUT("\t\tBOPOMOFO_ABSORB=%d\n", key);
                 keystrokeRtn = KEYSTROKE_ABSORB;
                 break;
+	    case BOPOMOFO_MODIFY:
+                ModifyChi(pgdata->bopomofoData.phone, pgdata->bopomofoData.phoneAlt, pgdata, key);
+                DEBUG_OUT("\t\tBOPOMOFO_MODIFY=%d\n", key);
+		break;
             case BOPOMOFO_COMMIT:
                 AddChi(pgdata->bopomofoData.phone, pgdata->bopomofoData.phoneAlt, pgdata);
+		chooseCandidate(ctx, 1, PhoneSeqCursor(pgdata));
                 DEBUG_OUT("\t\tBOPOMOFO_COMMIT=%d\n", key);
                 break;
             case BOPOMOFO_NO_WORD:

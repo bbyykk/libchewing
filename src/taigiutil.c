@@ -45,11 +45,11 @@
 
 #ifndef LOG_API_TAIGIUTIL
 #undef LOG_API
-#undef DEBUG_OUT
+//#undef DEBUG_OUT
 #undef LOG_VERBOSE
 #define LOG_API(fmt...) 
 #define LOG_VERBOSE(fmt...)
-#define DEBUG_OUT(fmt...) 
+//#define DEBUG_OUT(fmt...) 
 #endif
 extern const char *const lomaji_tab[];
 static void MakePreferInterval(ChewingData *pgdata);
@@ -651,6 +651,28 @@ void AutoLearnPhrase(ChewingData *pgdata)
     UserUpdatePhraseEnd(pgdata);
 }
 
+
+int ModifyChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata, int key)
+{
+    int i;
+    int cursor = PhoneSeqCursor(pgdata);
+    char *pos;
+    uint32_t offset = 0;
+
+    if(cursor >= pgdata->chiSymbolBufLen)
+	    cursor--;
+    /* Only for the tone 1~8 */
+    pos = strchr(lomaji_tab[1], key);
+    offset = (uint32_t) (pos - lomaji_tab[1]);
+
+    uint32_t phone2 = pgdata->phoneSeq[cursor];
+
+    phone2 = (phone2 & 0xfffffff0) + offset; 
+    pgdata->phoneSeq[cursor] = phone2;
+    return 0;
+}
+
+
 int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
 {
     int i;
@@ -727,6 +749,7 @@ static void ShowChewingData(ChewingData *pgdata)
 
     DEBUG_OUT("\tbChiSym : %d , bSelect : %d\n", pgdata->bChiSym, pgdata->bSelect);
 }
+
 
 int CallPhrasing(ChewingData *pgdata, int all_phrasing)
 {
