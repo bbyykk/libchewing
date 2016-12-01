@@ -47,6 +47,7 @@ CHEWING_API void taigi_Terminate()
 
 CHEWING_API int taigi_Configure(ChewingContext *ctx, ChewingConfigData * pcd)
 {
+    printf("YYYYYYYYYYYYYYYYYYYYYYY\n");
     taigi_set_candPerPage(ctx, pcd->candPerPage);
     taigi_set_maxChiSymbolLen(ctx, pcd->maxChiSymbolLen);
     taigi_set_selKey(ctx, pcd->selKey, MAX_SELKEY);

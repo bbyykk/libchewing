@@ -1481,7 +1481,7 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     if (pgdata->bSelect) {
 	printf("%s, %d\n", __func__, __LINE__);
         if (key == ' ') {
-            return taigi_handle_Esc(ctx);
+            return taigi_handle_Down(ctx);
 	}
         /* num starts from 0 */
         num = CountSelKeyNum(key, pgdata);
@@ -1552,7 +1552,7 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 		break;
             case BOPOMOFO_COMMIT:
                 AddChi(pgdata->bopomofoData.phone, pgdata->bopomofoData.phoneAlt, pgdata);
-		chooseCandidate(ctx, 1, PhoneSeqCursor(pgdata));
+	//	chooseCandidate(ctx, 1, PhoneSeqCursor(pgdata));
                 DEBUG_OUT("\t\tBOPOMOFO_COMMIT=%d\n", key);
                 break;
             case BOPOMOFO_NO_WORD:
