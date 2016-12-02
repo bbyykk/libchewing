@@ -22,6 +22,13 @@
 #include "sqlite3.h"
 #include "userphrase-private.h"
 
+#undef LOG_ERROR
+#undef LOG_INFO
+#undef LOG_WARN
+#define LOG_ERROR(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#define LOG_INFO(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#define LOG_WARN(fmt, ...) printf(fmt, ##__VA_ARGS__)
+
 const SqlStmtUserphrase SQL_STMT_USERPHRASE[STMT_USERPHRASE_COUNT] = {
     {
      "SELECT length, phrase, "
@@ -99,6 +106,7 @@ static sqlite3 *GetSQLiteInstance(ChewingData *pgdata, const char *path)
     assert(pgdata);
     assert(path);
 
+   LOG_ERROR("<<<<<<<<<<< %s, %d", __func__, __LINE__);
     ret = sqlite3_open(path, &db);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_open returns %d", ret);
@@ -114,8 +122,9 @@ static int CreateTable(ChewingData *pgdata)
 {
     int ret;
 
-    STATIC_ASSERT(MAX_PHRASE_LEN == 32);
+    STATIC_ASSERT(MAX_PHRASE_LEN == 11);
 
+   LOG_ERROR("%s, %d\n", __func__, __LINE__);
     ret = sqlite3_exec(pgdata->static_data.db,
                        "CREATE TABLE IF NOT EXISTS userphrase_v1 ("
                        "time INTEGER,"
@@ -172,6 +181,7 @@ static int SetupUserphraseLifeTime(ChewingData *pgdata)
 
     assert(pgdata->static_data.stmt_config[STMT_CONFIG_INSERT]);
 
+   LOG_ERROR("%s, %d\n", __func__, __LINE__);
     ret = sqlite3_bind_int(pgdata->static_data.stmt_config[STMT_CONFIG_INSERT], BIND_CONFIG_ID, CONFIG_ID_LIFETIME);
     if (ret != SQLITE_OK) {
         LOG_ERROR("Cannot bind ?%d to %d in stmt %s, error = %d",
@@ -232,6 +242,7 @@ static int UpdateLifeTime(ChewingData *pgdata)
     int ret;
     int result = 0;
 
+   LOG_ERROR("%s, %d\n", __func__, __LINE__);
     if (!pgdata->static_data.stmt_config[STMT_CONFIG_INCREASE]) {
         LOG_ERROR("pgdata->static_data.stmt_config[STMT_CONFIG_INCREASE] is NULL");
         result = -1;
@@ -288,6 +299,7 @@ static int ConfigDatabase(ChewingData *pgdata)
     assert(pgdata);
     assert(pgdata->static_data.db);
 
+   LOG_ERROR("%s, %d\n", __func__, __LINE__);
     ret = sqlite3_exec(pgdata->static_data.db, "PRAGMA synchronous=OFF", NULL, NULL, NULL);
     if (ret != SQLITE_OK) {
         LOG_ERROR("Cannot set synchronous=OFF, error = %d", ret);
@@ -343,6 +355,7 @@ static void MigrateOldFormat(ChewingData *pgdata, const char *path)
     assert(pgdata);
     assert(path);
 
+   LOG_ERROR("%s, %d\n", __func__, __LINE__);
     len = strlen(path) + 1 + strlen(HASH_NAME) + 1;
     uhash = calloc(sizeof(*uhash), len);
     if (!uhash) {
@@ -435,6 +448,7 @@ int InitUserphrase(ChewingData *pgdata, const char *path)
     assert(!pgdata->static_data.db);
     assert(path);
 
+   LOG_ERROR("%s, %d\n", __func__, __LINE__);
     pgdata->static_data.db = GetSQLiteInstance(pgdata, path);
     if (!pgdata->static_data.db) {
         LOG_ERROR("GetSQLiteInstance fails");
@@ -481,6 +495,7 @@ void TerminateUserphrase(ChewingData *pgdata)
     size_t i;
     int ret;
 
+   LOG_ERROR("%s, %d\n", __func__, __LINE__);
     UpdateLifeTime(pgdata);
 
     for (i = 0; i < ARRAY_SIZE(pgdata->static_data.stmt_config); ++i) {

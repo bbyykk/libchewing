@@ -41,13 +41,14 @@
 #endif
 
 #ifndef LOG_API_TAIGIIO
-//#undef LOG_API
+#undef LOG_API
 #undef DEBUG_OUT
 #undef DEBUG_CHECKPOINT
-//#define LOG_API(fmt...) 
+#define LOG_API(fmt...) 
 #define DEBUG_OUT(fmt...) 
 #define DEBUG_CHECKPOINT(fmt...) 
 #endif
+#define LOG_SQL(fmt, ...) printf(fmt, ##__VA_ARGS__)
 
 const char *const kb_type_str[] = {
     "KB_DEFAULT",
@@ -235,7 +236,9 @@ CHEWING_API ChewingContext *taigi_new2(const char *syspath,
         goto error;
     }
 
+    LOG_SQL("YYYY %s, %d, userphrase_path=%s\n", __func__, __LINE__, userphrase_path);
     ret = InitUserphrase(ctx->data, userphrase_path);
+    LOG_SQL("YYYY %s, %d: ret=%d\n", __func__, __LINE__, ret);
     free(userphrase_path);
 
     if (ret) {
@@ -1528,14 +1531,12 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     }
     /* editing */
     else {
-	printf("%s, %d\n", __func__, __LINE__);
         if (pgdata->bChiSym == CHINESE_MODE) {
             if (pgdata->config.bEasySymbolInput != 0) {
                 EasySymbolInput(key, pgdata);
                 goto End_keyproc;
             }
 		
-	printf("%s, %d\n", __func__, __LINE__);
             rtn = LomajiInput(pgdata, key);
             DEBUG_OUT("\n\t\tChinese mode key, " "BopomofoPhoInput return value = %d\n", rtn);
 

@@ -45,11 +45,11 @@
 
 #ifndef LOG_API_TAIGIUTIL
 #undef LOG_API
-//#undef DEBUG_OUT
+#undef DEBUG_OUT
 #undef LOG_VERBOSE
 #define LOG_API(fmt...) 
 #define LOG_VERBOSE(fmt...)
-//#define DEBUG_OUT(fmt...) 
+#define DEBUG_OUT(fmt...) 
 #endif
 extern const char *const lomaji_tab[];
 static void MakePreferInterval(ChewingData *pgdata);

@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "private.h"
 #include "taigi-utf8-util.h"
 #include "dict-private.h"
 #include "tree-private.h"
@@ -20,11 +21,12 @@
 #include "private.h"
 #include "key2pho-private.h"
 
+#define LOG_USERPHRASE_SQL
 #ifndef LOG_USERPHRASE_SQL
-#undef LOG_WARN
-#undef LOG_ERROR
-#define LOG_WARN(fmt...)
-#define LOG_ERROR(fmt...)
+//#undef LOG_WARN
+//#undef LOG_ERROR
+//#define LOG_WARN(fmt...)
+//#define LOG_ERROR(fmt...)
 #endif
 
 static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq[], int len)
@@ -35,6 +37,7 @@ static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq
     assert(pgdata);
     assert(phoneSeq);
 
+    LOG_VERBOSE("%s, %d, len=%d\n", __func__, __LINE__, len);
     if (len > MAX_PHRASE_LEN) {
         LOG_WARN("phoneSeq length %d > MAX_PHRASE_LEN(%d)", len, MAX_PHRASE_LEN);
         return -1;
@@ -49,7 +52,7 @@ static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq
     for (i = 0; i < len; ++i) {
         ret = sqlite3_bind_int(pgdata->static_data.stmt_userphrase[index], BIND_USERPHRASE_PHONE_0 + i, phoneSeq[i]);
         if (ret != SQLITE_OK) {
-            LOG_ERROR("sqlite3_bind_int returns %d", ret);
+            LOG_ERROR("sqlite3_bind_int returns %d, 2nd par=%d, phoneSeq[%d]=%d\n", ret, BIND_USERPHRASE_PHONE_0 + i, i, phoneSeq[i]);
             return ret;
         }
     }
@@ -57,7 +60,7 @@ static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq
     for (i = len; i < MAX_PHRASE_LEN; ++i) {
         ret = sqlite3_bind_int(pgdata->static_data.stmt_userphrase[index], BIND_USERPHRASE_PHONE_0 + i, 0);
         if (ret != SQLITE_OK) {
-            LOG_ERROR("sqlite3_bind_int returns %d", ret);
+            LOG_ERROR("sqlite3_bind_int returns %d, 2nd par=%d, phoneSeq[%d]=%d\n", ret, BIND_USERPHRASE_PHONE_0 + i, i, phoneSeq[i]);
             return ret;
         }
     }
@@ -402,6 +405,7 @@ UserPhraseData *UserGetPhraseFirst(ChewingData *pgdata, const uint32_t phoneSeq[
     }
 
     len = GetPhoneLen(phoneSeq);
+    LOG_ERROR("%s, %d, len=%d", __func__, __LINE__, len);
     ret = UserBindPhone(pgdata, STMT_USERPHRASE_SELECT_BY_PHONE, phoneSeq, len);
     if (ret != SQLITE_OK) {
         LOG_ERROR("UserBindPhone returns %d", ret);
