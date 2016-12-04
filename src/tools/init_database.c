@@ -698,6 +698,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    read_phone_cin("tailo.cin");
     read_phone_cin(argv[1]);
     printf("------- %s, %d --------\n", __func__, __LINE__);
     read_tsi_src(argv[2]);
