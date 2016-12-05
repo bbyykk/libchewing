@@ -106,7 +106,7 @@ static int EndKeyProcess(ChewingData *pgdata, int key, int searchTimes)
 
     /* For tone 1 and 4, skip the enter for tone */
     int *temp = NULL;
-    if(len > 1) temp = &pBopomofo->pho_inx[ len - 1];
+    if(len > 0) temp = &pBopomofo->pho_inx[ len - 1];
     if (key == ' ') {
 	    if (*temp == 'k' || *temp == 't' || *temp == 'h') {
 		    pBopomofo->pho_inx[len] = '4';
