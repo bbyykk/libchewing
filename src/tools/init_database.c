@@ -426,6 +426,67 @@ void store_word(const char *line, const int line_num)
     ++num_word_data;
 }
 
+void read_tailo_cin(const char *filename)
+{
+    FILE *phone_cin;
+    char buf[MAX_LINE_LEN];
+    char *ret;
+    int line_num = 0;
+    enum { INIT, HAS_CHARDEF_BEGIN, HAS_CHARDEF_END } status;
+
+    phone_cin = fopen(filename, "r");
+    if (!phone_cin) {
+        fprintf(stderr, "Error opening the file %s\n", filename);
+        exit(-1);
+    }
+
+    for (status = INIT; status != HAS_CHARDEF_BEGIN;) {
+        ret = fgets(buf, sizeof(buf), phone_cin);
+        ++line_num;
+        if (!ret) {
+            fprintf(stderr, "%s: No expected %s %s\n", filename, CHARDEF, BEGIN);
+            exit(-1);
+        }
+
+        strip(buf);
+        ret = strtok(buf, " \t");
+        if (!strcmp(ret, CHARDEF)) {
+            ret = strtok(NULL, " \t");
+            if (!strcmp(ret, BEGIN))
+                status = HAS_CHARDEF_BEGIN;
+            else {
+                fprintf(stderr, "%s:%d: Unexpected %s %s\n", filename, line_num, CHARDEF, ret);
+                exit(-1);
+            }
+        }
+    }
+
+    while (status != HAS_CHARDEF_END) {
+        ret = fgets(buf, sizeof(buf), phone_cin);
+        ++line_num;
+        if (!ret) {
+            fprintf(stderr, "%s: No expected %s %s\n", filename, CHARDEF, END);
+            exit(-1);
+        }
+
+        strip(buf);
+        if (!strncmp(buf, CHARDEF, strlen(CHARDEF))) {
+            strtok(buf, " \t");
+            ret = strtok(NULL, " \t");
+            if (!strcmp(ret, END))
+                status = HAS_CHARDEF_END;
+            else {
+                fprintf(stderr, "%s:%d: Unexpected %s %s\n", filename, line_num, CHARDEF, ret);
+                exit(-1);
+            }
+        } else
+            store_word(buf, line_num);
+    }
+
+    fclose(phone_cin);
+    qsort(word_data, num_word_data, sizeof(word_data[0]), compare_word_no_duplicated);
+}
+
 void read_phone_cin(const char *filename)
 {
     FILE *phone_cin;
@@ -698,7 +759,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    read_phone_cin("tailo.cin");
+    read_tailo_cin("tailo.cin");
     read_phone_cin(argv[1]);
     printf("------- %s, %d --------\n", __func__, __LINE__);
     read_tsi_src(argv[2]);
