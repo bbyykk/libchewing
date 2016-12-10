@@ -115,6 +115,7 @@ typedef struct TreeType {
             unsigned char freq[4];
         } phrase;
     };
+    unsigned char type[4];
 } TreeType;
 
 typedef struct PhrasingOutput {
@@ -335,6 +336,7 @@ struct ChewingContext {
 typedef struct Phrase {
     char phrase[MAX_PHRASE_LEN * MAX_UTF8_SIZE + 1];
     int freq;
+    int type;
 } Phrase;
 
 /* *INDENT-OFF* */

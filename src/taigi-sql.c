@@ -172,6 +172,42 @@ static int CreateTable(ChewingData *pgdata)
         return -1;
     }
 
+    ret = sqlite3_exec(pgdata->static_data.db,
+                       "CREATE TABLE IF NOT EXISTS tailo_v1 ("
+                       "time INTEGER,"
+                       "user_freq INTEGER,"
+                       "max_freq INTEGER,"
+                       "orig_freq INTEGER,"
+                       "length INTEGER,"
+                       "phone_0 INTEGER,"
+                       "phone_1 INTEGER,"
+                       "phone_2 INTEGER,"
+                       "phone_3 INTEGER,"
+                       "phone_4 INTEGER,"
+                       "phone_5 INTEGER,"
+                       "phone_6 INTEGER,"
+                       "phone_7 INTEGER,"
+                       "phone_8 INTEGER,"
+                       "phone_9 INTEGER,"
+                       "phone_10 INTEGER,"
+                       "phrase TEXT,"
+                       "PRIMARY KEY ("
+                       "phone_0,"
+                       "phone_1,"
+                       "phone_2,"
+                       "phone_3,"
+                       "phone_4,"
+                       "phone_5,"
+                       "phone_6,"
+                       "phone_7,"
+                       "phone_8,"
+                       "phone_9,"
+                       "phone_10,"
+                       "phrase)" ")", NULL, NULL, NULL);
+    if (ret != SQLITE_OK) {
+        LOG_ERROR("Cannot create table userphrase_v1, error = %d", ret);
+        return -1;
+    }
     return 0;
 }
 

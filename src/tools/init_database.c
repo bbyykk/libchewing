@@ -51,6 +51,13 @@
 #define MAX_PHRASE_BUF_LEN    (149)
 #define MAX_PHRASE_DATA       (420000)
 
+enum {
+	TYPE_NONE,
+	TYPE_TAILO,
+	TYPE_HAN,
+	TAYPE_END
+};
+
 const char USAGE[] =
     "Usage: %s <phone.cin> <tsi.src>\n"
     "This program creates the following new files:\n"
@@ -59,6 +66,7 @@ const char USAGE[] =
 /* An additional pos helps avoid duplicate Chinese strings. */
 typedef struct {
     char phrase[MAX_PHRASE_BUF_LEN];
+    uint32_t type;
     uint32_t freq;
     uint32_t phone[MAX_PHRASE_LEN + 1];
     long pos;
@@ -277,6 +285,7 @@ void store_phrase(const char *line, int line_num)
     }
 
     phrase_data[num_phrase_data].freq = strtoul(freq, &endptr, 0);
+    phrase_data[num_phrase_data].type = TYPE_HAN;
     printf("freq=%d\n", phrase_data[num_phrase_data].freq);
     if ((*freq == '\0' || *endptr != '\0') ||
         (phrase_data[num_phrase_data].freq == UINT32_MAX && errno == ERANGE)) {
@@ -387,6 +396,46 @@ void read_tsi_src(const char *filename)
     fclose(tsi_src);
 }
 
+void store_tailo(const char *line, const int line_num)
+{
+    char phone_buf[32];
+    char key_buf[16];
+    char buf[MAX_LINE_LEN + 1] = {0};
+
+    strncpy(buf, line, sizeof(buf) - 1);
+
+    strip(buf);
+    if (strlen(buf) == 0)
+        return;
+
+    if (num_word_data >= MAX_WORD_DATA) {
+        fprintf(stderr, "Need to increase MAX_WORD_DATA to process\n");
+        exit(-1);
+    }
+    if (top_phrase_data <= num_phrase_data) {
+        fprintf(stderr, "Need to increase MAX_PHRASE_DATA to process\n");
+        exit(-1);
+    }
+    word_data[num_word_data].text = &phrase_data[--top_phrase_data];
+
+#define UTF8_FORMAT_STRING(len1, len2) \
+    "%" __stringify(len1) "[^ ]" " " \
+    "%" __stringify(len2) "[^ ]"
+    sscanf(buf, UTF8_FORMAT_STRING(16, 16), key_buf, word_data[num_word_data].text->phrase);
+
+    if (strlen(key_buf) > 16) {
+        fprintf(stderr, "Error reading line %d, `%s'\n", line_num, line);
+        exit(-1);
+    }
+    PhoneFromKey(phone_buf, key_buf, KB_DEFAULT, 1);
+    word_data[num_word_data].text->phone[0] = UintFromPhone(phone_buf);
+    word_data[num_word_data].text->type = TYPE_TAILO;
+    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x\n", phone_buf, key_buf,
+			    word_data[num_word_data].text->phrase, word_data[num_word_data].text->phone[0]);
+    word_data[num_word_data].index = num_word_data;
+    ++num_word_data;
+}
+
 void store_word(const char *line, const int line_num)
 {
     char phone_buf[32];
@@ -420,7 +469,8 @@ void store_word(const char *line, const int line_num)
     }
     PhoneFromKey(phone_buf, key_buf, KB_DEFAULT, 1);
     word_data[num_word_data].text->phone[0] = UintFromPhone(phone_buf);
-	    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x\n", phone_buf, key_buf,
+    word_data[num_word_data].text->type = TYPE_HAN;
+    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x\n", phone_buf, key_buf,
 			    word_data[num_word_data].text->phrase, word_data[num_word_data].text->phone[0]);
     word_data[num_word_data].index = num_word_data;
     ++num_word_data;
@@ -480,7 +530,7 @@ void read_tailo_cin(const char *filename)
                 exit(-1);
             }
         } else
-            store_word(buf, line_num);
+            store_tailo(buf, line_num);
     }
 
     fclose(phone_cin);
@@ -588,7 +638,7 @@ NODE *find_or_insert(NODE * parent, uint32_t key)
     return pnew;
 }
 
-void insert_leaf(NODE * parent, long phr_pos, uint32_t freq)
+void insert_leaf(NODE * parent, long phr_pos, uint32_t freq, uint32_t type)
 {
     NODE *prev = NULL;
     NODE *p;
@@ -601,6 +651,7 @@ void insert_leaf(NODE * parent, long phr_pos, uint32_t freq)
     pnew = new_node(0);
     PutUint32((uint32_t) phr_pos, pnew->data.phrase.pos);
     PutUint32(freq, pnew->data.phrase.freq);
+    PutUint32(type, pnew->data.type);
     if (prev == NULL)
         parent->pFirstChild = pnew;
     else
@@ -630,6 +681,7 @@ void construct_phrase_tree()
         levelPtr = new_node(0);
         PutUint32((uint32_t) word_data[i].text->pos, levelPtr->data.phrase.pos);
         PutUint32(word_data[i].text->freq, levelPtr->data.phrase.freq);
+        PutUint32(word_data[i].text->type, levelPtr->data.type);
         levelPtr->pNextSibling = root->pFirstChild->pFirstChild;
         root->pFirstChild->pFirstChild = levelPtr;
     }
@@ -639,7 +691,7 @@ void construct_phrase_tree()
         levelPtr = root;
         for (j = 0; phrase_data[i].phone[j] != 0; ++j)
             levelPtr = find_or_insert(levelPtr, phrase_data[i].phone[j]);
-        insert_leaf(levelPtr, phrase_data[i].pos, phrase_data[i].freq);
+        insert_leaf(levelPtr, phrase_data[i].pos, phrase_data[i].freq, phrase_data[i].type);
     }
 }
 

@@ -194,7 +194,8 @@ void UserUpdatePhraseBegin(ChewingData *pgdata)
     sqlite3_exec(pgdata->static_data.db, "BEGIN", 0, 0, 0);
 }
 
-int UserUpdatePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[])
+
+static int UserUpdatePhrase_Han(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[])
 {
     int ret;
     int action;
@@ -206,10 +207,6 @@ int UserUpdatePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char 
     int user_freq;
     int recent_time;
     int orig_time;
-
-    assert(pgdata);
-    assert(phoneSeq);
-    assert(wordSeq);
 
     phone_len = GetPhoneLen(phoneSeq);
     word_len = ueStrLen(wordSeq);
@@ -338,6 +335,20 @@ int UserUpdatePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char 
     }
 
     return action;
+}
+
+int UserUpdatePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[])
+{
+    int phone_len;
+    int word_len;
+
+    assert(pgdata);
+    assert(phoneSeq);
+    assert(wordSeq);
+
+
+    printf("%s, %d, input word=%s", __func__, __LINE__, wordSeq);
+    return UserUpdatePhrase_Han(pgdata, phoneSeq, wordSeq);
 }
 
 void UserUpdatePhraseEnd(ChewingData *pgdata)
