@@ -51,13 +51,6 @@
 #define MAX_PHRASE_BUF_LEN    (149)
 #define MAX_PHRASE_DATA       (420000)
 
-enum {
-	TYPE_NONE,
-	TYPE_TAILO,
-	TYPE_HAN,
-	TAYPE_END
-};
-
 const char USAGE[] =
     "Usage: %s <phone.cin> <tsi.src>\n"
     "This program creates the following new files:\n"

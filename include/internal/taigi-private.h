@@ -238,6 +238,7 @@ typedef enum Category {
 
 typedef struct PreeditBuf {
     Category category;
+    int	type;
     char char_[MAX_UTF8_SIZE + 1];
 } PreeditBuf;
 

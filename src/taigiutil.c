@@ -586,6 +586,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
     int len;
     int prev_pos = 0;
     int pending_pos = 0;
+    int type = 0;
 
     /*
      * FIXME: pgdata->preferInterval does not consider symbol, so we need to
@@ -598,9 +599,10 @@ void AutoLearnPhrase(ChewingData *pgdata)
         from = pgdata->preferInterval[i].from;
         len = pgdata->preferInterval[i].to - from;
         fromPreeditBuf = toPreeditBufIndex(pgdata, from);
+	type = TaigiTypeAt(from, pgdata);
 
-        LOG_VERBOSE("interval from = %d, fromPreeditBuf = %d, len = %d, pending_pos = %d", from, fromPreeditBuf, len,
-                    pending_pos);
+        printf("interval from = %d, fromPreeditBuf = %d, len = %d, pending_pos = %d, type=%d\n", 
+		from, fromPreeditBuf, len, pending_pos, type);
 
         if (pending_pos != 0 && pending_pos < fromPreeditBuf) {
             /*
@@ -608,7 +610,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
              * connected to current phrase. We store it as
              * userphrase here.
              */
-            UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq);
+            UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
             prev_pos = 0;
             pending_pos = 0;
         }
@@ -623,7 +625,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
             bufPhoneSeq[prev_pos + len] = (uint32_t) 0;
 
             pos = ueStrSeek(bufWordSeq, prev_pos);
-            copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, pos, bufWordSeq + sizeof(bufWordSeq) - pos);
+            type = copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, pos, bufWordSeq + sizeof(bufWordSeq) - pos);
             prev_pos += len;
             pending_pos = fromPreeditBuf + len;
 
@@ -633,19 +635,19 @@ void AutoLearnPhrase(ChewingData *pgdata)
                  * Clean pending phrase because we cannot join
                  * it with current phrase.
                  */
-                UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq);
+                UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
                 prev_pos = 0;
                 pending_pos = 0;
             }
             memcpy(bufPhoneSeq, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
             bufPhoneSeq[len] = (uint32_t) 0;
-            copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, bufWordSeq, sizeof(bufWordSeq));
-            UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq);
+            type = copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, bufWordSeq, sizeof(bufWordSeq));
+            UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
         }
     }
 
     if (pending_pos) {
-        UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq);
+        UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
     }
 
     UserUpdatePhraseEnd(pgdata);
@@ -992,6 +994,14 @@ int ChewingIsChiAt(int chiSymbolCursor, ChewingData *pgdata)
     TRACX("\n");
     return pgdata->preeditBuf[chiSymbolCursor].category == TAIGI_CHINESE;
 }
+
+int TaigiTypeAt(int chiSymbolCursor, ChewingData *pgdata)
+{
+    TRACX("\n");
+    assert(pgdata);
+    return pgdata->preeditBuf[chiSymbolCursor].type;
+}
+
 
 void RemoveSelectElement(int i, ChewingData *pgdata)
 {
@@ -1495,10 +1505,14 @@ void TerminateEasySymbolTable(ChewingData *pgdata)
     }
 }
 
-void copyStringFromPreeditBuf(ChewingData *pgdata, int pos, int len, char *output, int output_len)
+/*
+ * Return type
+ */
+int copyStringFromPreeditBuf(ChewingData *pgdata, int pos, int len, char *output, int output_len)
 {
     int i;
     int x;
+    int ret = 0;
 
     assert(pgdata);
     assert(0 <= pos && (size_t) (pos + len) < ARRAY_SIZE(pgdata->preeditBuf));
@@ -1510,12 +1524,13 @@ void copyStringFromPreeditBuf(ChewingData *pgdata, int pos, int len, char *outpu
     for (i = pos; i < pos + len; ++i) {
         x = strlen(pgdata->preeditBuf[i].char_);
         if (x >= output_len)    // overflow
-            return;
+            return ret;
         memcpy(output, pgdata->preeditBuf[i].char_, x);
         output += x;
         output_len -= x;
     }
     output[0] = 0;
+    return pgdata->preeditBuf[pos].type;
 }
 
 /*
@@ -1546,3 +1561,4 @@ int toPreeditBufIndex(ChewingData *pgdata, int pos)
 
     return i;
 }
+

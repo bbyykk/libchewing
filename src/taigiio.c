@@ -1658,6 +1658,7 @@ CHEWING_API int taigi_handle_CtrlNum(ChewingContext *ctx, int key)
     char addWordSeq[MAX_PHONE_SEQ_LEN * MAX_UTF8_SIZE + 1];
     int phraseState;
     int cursor;
+    int type = 0;
 
     if (!ctx) {
         return -1;
@@ -1693,9 +1694,9 @@ CHEWING_API int taigi_handle_CtrlNum(ChewingContext *ctx, int key)
                 memcpy(addPhoneSeq, &pgdata->phoneSeq[cursor], sizeof(uint32_t) * newPhraseLen);
                 addPhoneSeq[newPhraseLen] = 0;
 
-                copyStringFromPreeditBuf(pgdata, cursor, newPhraseLen, addWordSeq, sizeof(addWordSeq));
+                type = copyStringFromPreeditBuf(pgdata, cursor, newPhraseLen, addWordSeq, sizeof(addWordSeq));
 
-                phraseState = UserUpdatePhrase(pgdata, addPhoneSeq, addWordSeq);
+                phraseState = UserUpdatePhrase(pgdata, addPhoneSeq, addWordSeq, type);
                 SetUpdatePhraseMsg(pgdata, addWordSeq, newPhraseLen, phraseState);
 
                 /* Clear the breakpoint between the New Phrase */
@@ -1710,9 +1711,9 @@ CHEWING_API int taigi_handle_CtrlNum(ChewingContext *ctx, int key)
                 memcpy(addPhoneSeq, &pgdata->phoneSeq[cursor - newPhraseLen], sizeof(uint32_t) * newPhraseLen);
                 addPhoneSeq[newPhraseLen] = 0;
 
-                copyStringFromPreeditBuf(pgdata, cursor - newPhraseLen, newPhraseLen, addWordSeq, sizeof(addWordSeq));
+                type = copyStringFromPreeditBuf(pgdata, cursor - newPhraseLen, newPhraseLen, addWordSeq, sizeof(addWordSeq));
 
-                phraseState = UserUpdatePhrase(pgdata, addPhoneSeq, addWordSeq);
+                phraseState = UserUpdatePhrase(pgdata, addPhoneSeq, addWordSeq, type);
                 SetUpdatePhraseMsg(pgdata, addWordSeq, newPhraseLen, phraseState);
 
                 /* Clear the breakpoint between the New Phrase */
@@ -2030,7 +2031,7 @@ CHEWING_API int taigi_userphrase_add(ChewingContext *ctx, const char *phrase_buf
         return 0;
     }
 
-    ret = UserUpdatePhrase(pgdata, phone_buf, phrase_buf);
+    ret = UserUpdatePhrase(pgdata, phone_buf, phrase_buf, 0);
     free(phone_buf);
 
     if (ret == USER_UPDATE_FAIL) {

@@ -470,7 +470,7 @@ static void ChangeUserData(ChewingData *pgdata, int selectNo)
     len = ueStrLen(pgdata->choiceInfo.totalChoiceStr[selectNo]);
     memcpy(userPhoneSeq, &(pgdata->phoneSeq[PhoneSeqCursor(pgdata)]), len * sizeof(uint32_t));
     userPhoneSeq[len] = 0;
-    UserUpdatePhrase(pgdata, userPhoneSeq, pgdata->choiceInfo.totalChoiceStr[selectNo]);
+    UserUpdatePhrase(pgdata, userPhoneSeq, pgdata->choiceInfo.totalChoiceStr[selectNo], 0);
 }
 
 /** @brief commit the selected phrase. */

@@ -125,7 +125,7 @@ void UserUpdatePhraseBegin(ChewingData *pgdata)
     /* compatibile with sqlite userphrase */
 }
 
-int UserUpdatePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[])
+int UserUpdatePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[], int type)
 {
     HASH_ITEM *pItem;
     UserPhraseData data;

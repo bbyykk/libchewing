@@ -59,13 +59,14 @@ void UserUpdatePhraseBegin(struct ChewingData *pgdata);
  *
  * @param phoneSeq[] Phone sequence
  * @param wordSeq[] Phrase against the phone sequence
+ * @param type Type of the string, TYPE_TAILO, TYPE_HAN
  *
  * @return
  * @retval USER_UPDATE_FAIL Update fail.
  * @retval USER_UPDATE_INSERT Sequence is new, add new entry.
  * @retval USER_UPDATE_MODIFY Sequence is existing, update it's data.
  */
-int UserUpdatePhrase(struct ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[]);
+int UserUpdatePhrase(struct ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[], int type);
 
 void UserUpdatePhraseEnd(struct ChewingData *pgdata);
 int UserRemovePhrase(struct ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[]);

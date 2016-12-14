@@ -98,4 +98,12 @@ typedef int (*CompFuncType)(const void *, const void *);
 #undef LOG_API_TAIGIUTIL
 #undef LOG_LOMAJI
 #define LOG_USERPHRASE_SQL
+
+enum {
+	TYPE_NONE,
+	TYPE_TAILO,
+	TYPE_HAN,
+	TAYPE_END
+};
+
 #endif

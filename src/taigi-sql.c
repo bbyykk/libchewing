@@ -465,7 +465,7 @@ static void MigrateOldFormat(ChewingData *pgdata, const char *path)
         phoneSeq[len] = 0;
 
         ++pos;
-        UserUpdatePhrase(pgdata, phoneSeq, pos);
+        UserUpdatePhrase(pgdata, phoneSeq, pos, 0);
     }
 
   end_remove_hash:

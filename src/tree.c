@@ -551,7 +551,7 @@ static void Discard2(TreeDataType *ptd)
     ptd->nInterval = nInterval2;
 }
 
-static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to)
+static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, int type)
 {
     int i;
     int start = 0;
@@ -562,16 +562,20 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to)
 
     start = toPreeditBufIndex(pgdata, from);
 
-    LOG_VERBOSE("Fill preeditBuf phrase=%s, start = %d, from = %d, to = %d", phrase, start, from, to);
+    printf("Fill preeditBuf phrase=%s, type=%d, start = %d, from = %d, to = %d\n", phrase, type, start, from, to);
+    //LOG_VERBOSE("Fill preeditBuf phrase=%s, type=%d, start = %d, from = %d, to = %d\n", phrase, type, start, from, to);
 
     for (i = start; i < start - from + to; ++i) {
 	if (phrase && IsThePhone(phrase[0])) {
 		strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
+		pgdata->preeditBuf[i].type = type;
 	} else if (phrase && IsTheTaiLoPhone(phrase)) {
 		strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
+		pgdata->preeditBuf[i].type = type;
 	} else {
 		/* Han character */
 		ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
+		pgdata->preeditBuf[i].type = type;
 	}
 	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s", i, pgdata->preeditBuf[i].char_);
     }
@@ -582,15 +586,18 @@ static void OutputRecordStr(ChewingData *pgdata, const TreeDataType *ptd)
 {
     PhraseIntervalType inter;
     int i;
+    int type;
 
     LOG_VERBOSE("%d, ptd->phList->nInter=%d\n", __LINE__, ptd->phList->nInter);
     for (i = 0; i < ptd->phList->nInter; i++) {
         inter = ptd->interval[ptd->phList->arrIndex[i]];
-        FillPreeditBuf(pgdata, inter.p_phr->phrase, inter.from, inter.to);
+        FillPreeditBuf(pgdata, inter.p_phr->phrase, inter.from, inter.to, inter.p_phr->type);
+	type = inter.p_phr->type;
     }
     LOG_VERBOSE("%d, pgdata->nSelect=%d\n", __LINE__, pgdata->nSelect);
+    /* Not sure the diff between phrase and select, use the last one */
     for (i = 0; i < pgdata->nSelect; i++) {
-        FillPreeditBuf(pgdata, pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to);
+        FillPreeditBuf(pgdata, pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to, type);
     }
 }
 
