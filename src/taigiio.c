@@ -2030,7 +2030,6 @@ CHEWING_API int taigi_userphrase_add(ChewingContext *ctx, const char *phrase_buf
         free(phone_buf);
         return 0;
     }
-
     ret = UserUpdatePhrase(pgdata, phone_buf, phrase_buf, 0);
     free(phone_buf);
 

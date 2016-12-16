@@ -29,6 +29,56 @@
 #define LOG_INFO(fmt, ...) printf(fmt, ##__VA_ARGS__)
 #define LOG_WARN(fmt, ...) printf(fmt, ##__VA_ARGS__)
 
+
+const SqlStmtUserphrase SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_COUNT] = {
+    {
+     "SELECT length, phrase, "
+     "phone_0, phone_1, phone_2, phone_3, phone_4, phone_5, "
+     "phone_6, phone_7, phone_8, phone_9, phone_10 " "FROM tailo_v1",
+     {-1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+     },
+    {
+     "SELECT time, orig_freq, max_freq, user_freq, phrase "
+     "FROM tailo_v1 WHERE length = ?5 AND "
+     "phone_0 = ?10 AND phone_1 = ?11 AND phone_2 = ?12 AND "
+     "phone_3 = ?13 AND phone_4 = ?14 AND phone_5 = ?15 AND "
+     "phone_6 = ?16 AND phone_7 = ?17 AND phone_8 = ?18 AND " "phone_9 = ?19 AND phone_10 = ?20",
+     {0, 1, 2, 3, -1, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     },
+    {
+     "SELECT time, orig_freq, max_freq, user_freq "
+     "FROM tailo_v1 WHERE length = ?5 AND phrase = ?6 AND "
+     "phone_0 = ?10 AND phone_1 = ?11 AND phone_2 = ?12 AND "
+     "phone_3 = ?13 AND phone_4 = ?14 AND phone_5 = ?15 AND "
+     "phone_6 = ?16 AND phone_7 = ?17 AND phone_8 = ?18 AND " "phone_9 = ?19 AND phone_10 = ?20",
+     {0, 1, 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     },
+    {
+     "INSERT OR REPLACE INTO tailo_v1 ("
+     "time, orig_freq, max_freq, user_freq, length, phrase, "
+     "phone_0, phone_1, phone_2, phone_3, phone_4, phone_5, "
+     "phone_6, phone_7, phone_8, phone_9, phone_10) "
+     "VALUES (?1, ?2, ?3, ?4, ?5, ?6, " "?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
+     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     },
+    {
+     "DELETE FROM tailo_v1 WHERE length = ?5 AND phrase = ?6 AND "
+     "phone_0 = ?10 AND phone_1 = ?11 AND phone_2 = ?12 AND "
+     "phone_3 = ?13 AND phone_4 = ?14 AND phone_5 = ?15 AND "
+     "phone_6 = ?16 AND phone_7 = ?17 AND phone_8 = ?18 AND " "phone_9 = ?19 AND phone_10 = ?20",
+     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     },
+    {
+     "SELECT MAX(user_freq) FROM tailo_v1 WHERE length = ?5 AND "
+     "phone_0 = ?10 AND phone_1 = ?11 AND phone_2 = ?12 AND "
+     "phone_3 = ?13 AND phone_4 = ?14 AND phone_5 = ?15 AND "
+     "phone_6 = ?16 AND phone_7 = ?17 AND phone_8 = ?18 AND " "phone_9 = ?19 AND phone_10 = ?20",
+     {-1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     },
+};
+
+
+
 const SqlStmtUserphrase SQL_STMT_USERPHRASE[STMT_USERPHRASE_COUNT] = {
     {
      "SELECT length, phrase, "
@@ -373,6 +423,16 @@ static int CreateStmt(ChewingData *pgdata)
         }
     }
 
+    STATIC_ASSERT(ARRAY_SIZE(SQL_STMT_TAILOPHRASE) == ARRAY_SIZE(pgdata->static_data.stmt_tailo));
+    for (i = 0; i < ARRAY_SIZE(SQL_STMT_TAILOPHRASE); ++i) {
+        ret = sqlite3_prepare_v2(pgdata->static_data.db,
+                                 SQL_STMT_TAILOPHRASE[i].stmt, -1, &pgdata->static_data.stmt_tailo[i], NULL);
+        if (ret != SQLITE_OK) {
+            LOG_ERROR("Cannot create stmt %s", SQL_STMT_TAILOPHRASE[i].stmt);
+            return -1;
+        }
+    }
+
     return 0;
 }
 
@@ -544,7 +604,15 @@ void TerminateUserphrase(ChewingData *pgdata)
         pgdata->static_data.stmt_userphrase[i] = NULL;
     }
 
+    for (i = 0; i < ARRAY_SIZE(pgdata->static_data.stmt_tailo); ++i) {
+        sqlite3_finalize(pgdata->static_data.stmt_tailo[i]);
+        pgdata->static_data.stmt_tailo[i] = NULL;
+    }
+
     ret = sqlite3_close(pgdata->static_data.db);
     assert(SQLITE_OK == ret);
     pgdata->static_data.db = NULL;
 }
+
+
+

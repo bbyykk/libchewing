@@ -92,7 +92,7 @@ typedef int (*CompFuncType)(const void *, const void *);
 
 #define __stringify(x)  #x
 
-#undef LOG_API_TAIGIIO
+#define LOG_API_TAIGIIO
 #undef LOG_API_MOD_AUX
 #undef LOG_API_TREE
 #undef LOG_API_TAIGIUTIL

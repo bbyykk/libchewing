@@ -29,6 +29,47 @@
 //#define LOG_ERROR(fmt...)
 #endif
 
+
+static int TailoBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq[], int len)
+{
+    int i;
+    int ret;
+
+    assert(pgdata);
+    assert(phoneSeq);
+
+    LOG_VERBOSE("%s, %d, len=%d\n", __func__, __LINE__, len);
+    if (len > MAX_PHRASE_LEN) {
+        LOG_WARN("phoneSeq length %d > MAX_PHRASE_LEN(%d)", len, MAX_PHRASE_LEN);
+        return -1;
+    }
+
+    ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[index], BIND_TAILOPHRASE_LENGTH, len);
+    if (ret != SQLITE_OK) {
+        LOG_ERROR("sqlite3_bind_int returns %d", ret);
+        return ret;
+    }
+
+    for (i = 0; i < len; ++i) {
+        ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[index], BIND_TAILOPHRASE_PHONE_0 + i, phoneSeq[i]);
+        if (ret != SQLITE_OK) {
+            LOG_ERROR("sqlite3_bind_int returns %d, 2nd par=%d, phoneSeq[%d]=%d\n", ret, BIND_TAILOPHRASE_PHONE_0 + i, i, phoneSeq[i]);
+            return ret;
+        }
+    }
+
+    for (i = len; i < MAX_PHRASE_LEN; ++i) {
+        ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[index], BIND_TAILOPHRASE_PHONE_0 + i, 0);
+        if (ret != SQLITE_OK) {
+            LOG_ERROR("sqlite3_bind_int returns %d, 2nd par=%d, phoneSeq[%d]=%d\n", ret, BIND_TAILOPHRASE_PHONE_0 + i, i, phoneSeq[i]);
+            return ret;
+        }
+    }
+
+    return SQLITE_OK;
+}
+
+
 static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq[], int len)
 {
     int i;
@@ -76,6 +117,8 @@ static int LoadOriginalFreq(ChewingData *pgdata, const uint32_t phoneSeq[], cons
     int retval;
     Phrase *phrase = ALC(Phrase, 1);
 
+
+    LOG_VERBOSE("%s, %d, len=%d\n", __func__, __LINE__, len);
     tree_pos = TreeFindPhrase(pgdata, 0, len - 1, phoneSeq);
     if (tree_pos) {
         GetPhraseFirst(pgdata, phrase, tree_pos);
@@ -102,6 +145,7 @@ static int LoadMaxFreq(ChewingData *pgdata, const uint32_t phoneSeq[], int len)
     int max_userphrase_freq;
     int ret;
 
+    LOG_VERBOSE("%s, %d, len=%d\n", __func__, __LINE__, len);
     tree_pos = TreeFindPhrase(pgdata, 0, len - 1, phoneSeq);
     if (tree_pos) {
         GetPhraseFirst(pgdata, phrase, tree_pos);
@@ -207,30 +251,26 @@ static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[]
     int recent_time;
     int orig_time;
 
-    printf("%s, %d, input word=%s", __func__, __LINE__, wordSeq);
 
     phone_len = GetPhoneLen(phoneSeq);
-    word_len = ueStrLen(wordSeq);
-
-    if (phone_len != word_len) {
-        LOG_WARN("Do not update userphrase because phoneSeq length %d != wordSeq length %d", phone_len, word_len);
-        return USER_UPDATE_FAIL;
-    }
+    word_len = strlen(wordSeq);
+    LOG_ERROR("%s, %d, input word=%s, phone_len=%d, word_len=%d\n",
+	    __func__, __LINE__, wordSeq, phone_len, word_len);
 
     if (word_len > MAX_PHRASE_LEN) {
         LOG_WARN("wordSeq length %d > MAX_PHRASE_LEN (%d)", word_len, MAX_PHRASE_LEN);
         return USER_UPDATE_FAIL;
     }
 
-    ret = UserBindPhone(pgdata, STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE, phoneSeq, phone_len);
+    ret = TailoBindPhone(pgdata, STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE, phoneSeq, phone_len);
     if (ret != SQLITE_OK) {
-        LOG_ERROR("UserBindPhone returns %d", ret);
+        LOG_ERROR("TailoBindPhone returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }
 
-    ret = sqlite3_bind_text(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE],
-                            BIND_USERPHRASE_PHRASE, wordSeq, -1, SQLITE_STATIC);
+    ret = sqlite3_bind_text(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE],
+                            BIND_TAILOPHRASE_PHRASE, wordSeq, -1, SQLITE_STATIC);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_bind_text returns %d", ret);
         action = USER_UPDATE_FAIL;
@@ -239,23 +279,23 @@ static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[]
 
     recent_time = GetCurrentLifeTime(pgdata);
 
-    ret = sqlite3_step(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE]);
+    ret = sqlite3_step(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE]);
     if (ret == SQLITE_ROW) {
         action = USER_UPDATE_MODIFY;
 
-        orig_freq = sqlite3_column_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE],
-                                       SQL_STMT_USERPHRASE[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE].column
-                                       [COLUMN_USERPHRASE_ORIG_FREQ]);
+        orig_freq = sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE],
+                                       SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE].column
+                                       [COLUMN_TAILOPHRASE_ORIG_FREQ]);
 
         max_freq = LoadMaxFreq(pgdata, phoneSeq, phone_len);
 
-        user_freq = sqlite3_column_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE],
-                                       SQL_STMT_USERPHRASE[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE].column
-                                       [COLUMN_USERPHRASE_USER_FREQ]);
+        user_freq = sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE],
+                                       SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE].column
+                                       [COLUMN_TAILOPHRASE_USER_FREQ]);
 
-        orig_time = sqlite3_column_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE],
-                                       SQL_STMT_USERPHRASE[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE].column
-                                       [COLUMN_USERPHRASE_TIME]);
+        orig_time = sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE],
+                                       SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE].column
+                                       [COLUMN_TAILOPHRASE_TIME]);
 
         user_freq = UpdateFreq(user_freq, max_freq, orig_freq, recent_time - orig_time);
     } else {
@@ -266,56 +306,56 @@ static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[]
         user_freq = orig_freq;
     }
 
-    assert(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT]);
+    assert(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT]);
 
-    ret = sqlite3_bind_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT],
-                           BIND_USERPHRASE_TIME, recent_time);
+    ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT],
+                           BIND_TAILOPHRASE_TIME, recent_time);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_bind_int returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }
 
-    ret = sqlite3_bind_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT],
-                           BIND_USERPHRASE_USER_FREQ, user_freq);
+    ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT],
+                           BIND_TAILOPHRASE_USER_FREQ, user_freq);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_bind_int returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }
 
-    ret = sqlite3_bind_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT],
-                           BIND_USERPHRASE_MAX_FREQ, max_freq);
+    ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT],
+                           BIND_TAILOPHRASE_MAX_FREQ, max_freq);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_bind_int returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }
 
-    ret = sqlite3_bind_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT],
-                           BIND_USERPHRASE_ORIG_FREQ, orig_freq);
+    ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT],
+                           BIND_TAILOPHRASE_ORIG_FREQ, orig_freq);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_bind_int returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }
 
-    ret = UserBindPhone(pgdata, STMT_USERPHRASE_UPSERT, phoneSeq, phone_len);
+    ret = TailoBindPhone(pgdata, STMT_TAILOPHRASE_UPSERT, phoneSeq, phone_len);
     if (ret != SQLITE_OK) {
-        LOG_ERROR("UserBindPhone returns %d", ret);
+        LOG_ERROR("TailoBindPhone returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }
 
-    ret = sqlite3_bind_text(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT],
-                            BIND_USERPHRASE_PHRASE, wordSeq, -1, SQLITE_STATIC);
+    ret = sqlite3_bind_text(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT],
+                            BIND_TAILOPHRASE_PHRASE, wordSeq, -1, SQLITE_STATIC);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_bind_text returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }
 
-    ret = sqlite3_step(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT]);
+    ret = sqlite3_step(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT]);
     if (ret != SQLITE_DONE) {
         LOG_ERROR("sqlite3_step returns %d", ret);
         action = USER_UPDATE_FAIL;
@@ -325,16 +365,17 @@ static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[]
     LogUserPhrase(pgdata, phoneSeq, wordSeq, orig_freq, max_freq, user_freq, recent_time);
 
   end:
-    ret = sqlite3_reset(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT]);
+    ret = sqlite3_reset(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT]);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_reset returns %d", ret);
     }
 
-    ret = sqlite3_reset(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE_PHRASE]);
+    ret = sqlite3_reset(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE_PHRASE]);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_reset returns %d", ret);
     }
 
+    LOG_ERROR("%s: %d, action=%d\n", __func__, __LINE__, action);
     return action;
 }
 

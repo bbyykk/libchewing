@@ -601,8 +601,8 @@ void AutoLearnPhrase(ChewingData *pgdata)
         fromPreeditBuf = toPreeditBufIndex(pgdata, from);
 	type = TaigiTypeAt(from, pgdata);
 
-        printf("interval from = %d, fromPreeditBuf = %d, len = %d, pending_pos = %d, type=%d\n", 
-		from, fromPreeditBuf, len, pending_pos, type);
+        printf("%s: interval from = %d, fromPreeditBuf = %d, len = %d, pending_pos = %d, type=%d\n", 
+		__func__, from, fromPreeditBuf, len, pending_pos, type);
 
         if (pending_pos != 0 && pending_pos < fromPreeditBuf) {
             /*
@@ -610,6 +610,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
              * connected to current phrase. We store it as
              * userphrase here.
              */
+	    printf("%s, %d\n", __func__, __LINE__);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
             prev_pos = 0;
             pending_pos = 0;
@@ -635,6 +636,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
                  * Clean pending phrase because we cannot join
                  * it with current phrase.
                  */
+		printf("%s, %d\n", __func__, __LINE__);
                 UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
                 prev_pos = 0;
                 pending_pos = 0;
@@ -642,15 +644,17 @@ void AutoLearnPhrase(ChewingData *pgdata)
             memcpy(bufPhoneSeq, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
             bufPhoneSeq[len] = (uint32_t) 0;
             type = copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, bufWordSeq, sizeof(bufWordSeq));
+	    printf("%s, %d\n", __func__, __LINE__);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
         }
     }
 
     if (pending_pos) {
+        printf("%s, %d\n", __func__, __LINE__);
         UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
     }
-
     UserUpdatePhraseEnd(pgdata);
+    printf("%s, %d\n", __func__, __LINE__);
 }
 
 

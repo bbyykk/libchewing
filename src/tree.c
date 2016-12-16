@@ -264,6 +264,9 @@ const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const ui
         PutUint32(phoneSeq[i], target.key);
         range[0] = GetUint32(tree_p->child.begin);
         range[1] = GetUint32(tree_p->child.end);
+
+	printf("%s: phoneSeq[%d]=%d, target.key=%d, range[0]=%d, range[1]=%d\n",
+		__func__, i, phoneSeq[i], target.key, range[0], range[1]);
         assert(range[1] >= range[0]);
         tree_p = (const TreeType *) bsearch(&target, pgdata->static_data.tree + range[0],
                                             range[1] - range[0], sizeof(TreeType), CompTreeType);
