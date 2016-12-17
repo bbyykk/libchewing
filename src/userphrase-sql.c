@@ -238,6 +238,10 @@ void UserUpdatePhraseBegin(ChewingData *pgdata)
     sqlite3_exec(pgdata->static_data.db, "BEGIN", 0, 0, 0);
 }
 
+/*
+ * Note: Currently do NOT support the multiple Tailo word
+ *
+ */
 static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[], const char wordSeq[])
 {
     int ret;
@@ -253,7 +257,10 @@ static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[]
 
 
     phone_len = GetPhoneLen(phoneSeq);
-    word_len = strlen(wordSeq);
+    
+    /* TODO: Currnetly do not support multiple word */
+    word_len = phone_len;
+    printf("%s, Currently Not support multiple Tailo words\n", __func__);
     LOG_ERROR("%s, %d, input word=%s, phone_len=%d, word_len=%d\n",
 	    __func__, __LINE__, wordSeq, phone_len, word_len);
 

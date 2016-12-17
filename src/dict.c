@@ -64,9 +64,9 @@ int InitDict(ChewingData *pgdata, const char *prefix)
  */
 static void GetVocabFromDict(ChewingData *pgdata, Phrase *phr_ptr)
 {
-    snprintf(phr_ptr->phrase, sizeof(phr_ptr->phrase), "%s", pgdata->static_data.dict + GetUint24(pgdata->static_data.tree_cur_pos->phrase.pos));
-    phr_ptr->freq = GetUint24(pgdata->static_data.tree_cur_pos->phrase.freq);
-    phr_ptr->type = GetUint24(pgdata->static_data.tree_cur_pos->type);
+    snprintf(phr_ptr->phrase, sizeof(phr_ptr->phrase), "%s", pgdata->static_data.dict + GetUint32(pgdata->static_data.tree_cur_pos->phrase.pos));
+    phr_ptr->freq = GetUint32(pgdata->static_data.tree_cur_pos->phrase.freq);
+    phr_ptr->type = GetUint32(pgdata->static_data.tree_cur_pos->type);
     pgdata->static_data.tree_cur_pos++;
     printf("%s, %d, get freq=%d, type=%d, phrase=%s\n", __func__, __LINE__, phr_ptr->freq, phr_ptr->type, phr_ptr->phrase);
 }
@@ -102,7 +102,7 @@ int GetPhraseFirst(ChewingData *pgdata, Phrase *phr_ptr, const TreeType *phrase_
 int GetVocabNext(ChewingData *pgdata, Phrase *phr_ptr)
 {
     if (pgdata->static_data.tree_cur_pos >= pgdata->static_data.tree_end_pos
-        || GetUint16(pgdata->static_data.tree_cur_pos->key) != 0)
+        || GetUint32(pgdata->static_data.tree_cur_pos->key) != 0)
         return 0;
     GetVocabFromDict(pgdata, phr_ptr);
     return 1;
