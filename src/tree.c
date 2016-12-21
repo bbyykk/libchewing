@@ -370,8 +370,8 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
                             phrase_parent, begin, end + 1,
                             &p_phrase, pgdata->selectStr, pgdata->selectInterval, pgdata->nSelect)) {
                 pdictphrase = p_phrase;
-	    	TRACX("!!! Use pdictphrase !!!\n");
-            }
+		TRACX("!!! Use pdictphrase, type=%d !!!\n", pdictphrase->type);
+	    }
 
             /* add only one interval, which has the largest freqency
              * but when the phrase is the same, the user phrase overrides
@@ -580,7 +580,7 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, 
 		ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
 		pgdata->preeditBuf[i].type = type;
 	}
-	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s", i, pgdata->preeditBuf[i].char_);
+	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s, type=%d", i, pgdata->preeditBuf[i].char_, pgdata->preeditBuf[i].type);
     }
 }
 

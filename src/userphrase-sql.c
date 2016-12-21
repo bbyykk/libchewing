@@ -362,6 +362,14 @@ static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[]
         goto end;
     }
 
+    ret = sqlite3_bind_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT],
+                           BIND_TAILOPHRASE_TYPE, TYPE_TAILO);
+    if (ret != SQLITE_OK) {
+        LOG_ERROR("sqlite3_bind_int returns %d", ret);
+        action = USER_UPDATE_FAIL;
+        goto end;
+    }
+
     ret = sqlite3_step(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_UPSERT]);
     if (ret != SQLITE_DONE) {
         LOG_ERROR("sqlite3_step returns %d", ret);
@@ -501,6 +509,14 @@ static int UserUpdatePhrase_Han(ChewingData *pgdata, const uint32_t phoneSeq[], 
                             BIND_USERPHRASE_PHRASE, wordSeq, -1, SQLITE_STATIC);
     if (ret != SQLITE_OK) {
         LOG_ERROR("sqlite3_bind_text returns %d", ret);
+        action = USER_UPDATE_FAIL;
+        goto end;
+    }
+
+    ret = sqlite3_bind_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_UPSERT],
+                           BIND_USERPHRASE_TYPE, TYPE_HAN);
+    if (ret != SQLITE_OK) {
+        LOG_ERROR("sqlite3_bind_int returns %d", ret);
         action = USER_UPDATE_FAIL;
         goto end;
     }

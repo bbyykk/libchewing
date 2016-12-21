@@ -38,7 +38,7 @@ typedef SSIZE_T ssize_t;
 #    include "taigi-sql.h"
 #endif
 
-#define MAX_UTF8_SIZE 32
+#define MAX_UTF8_SIZE 64
 #define BOPOMOFO_SIZE 32
 #define PINYIN_SIZE 10
 #define MAX_PHRASE_LEN 11
@@ -342,6 +342,6 @@ typedef struct Phrase {
 } Phrase;
 
 /* *INDENT-OFF* */
-#define TRACX(args, ...) //printf(args, ##__VA_ARGS__)
+#define TRACX(args, ...) printf(args, ##__VA_ARGS__)
 #endif
 /* *INDENT-ON* */

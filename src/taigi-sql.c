@@ -55,11 +55,11 @@ const SqlStmtUserphrase SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_COUNT] = {
      },
     {
      "INSERT OR REPLACE INTO tailo_v1 ("
-     "time, orig_freq, max_freq, user_freq, length, phrase, "
+     "time, orig_freq, max_freq, user_freq, length, phrase, type, "
      "phone_0, phone_1, phone_2, phone_3, phone_4, phone_5, "
      "phone_6, phone_7, phone_8, phone_9, phone_10) "
-     "VALUES (?1, ?2, ?3, ?4, ?5, ?6, " "?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
-     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     "VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, " "?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
+     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
      },
     {
      "DELETE FROM tailo_v1 WHERE length = ?5 AND phrase = ?6 AND "
@@ -104,11 +104,11 @@ const SqlStmtUserphrase SQL_STMT_USERPHRASE[STMT_USERPHRASE_COUNT] = {
      },
     {
      "INSERT OR REPLACE INTO userphrase_v1 ("
-     "time, orig_freq, max_freq, user_freq, length, phrase, "
+     "time, orig_freq, max_freq, user_freq, length, phrase, type, "
      "phone_0, phone_1, phone_2, phone_3, phone_4, phone_5, "
      "phone_6, phone_7, phone_8, phone_9, phone_10) "
-     "VALUES (?1, ?2, ?3, ?4, ?5, ?6, " "?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
-     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     "VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, " "?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)",
+     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
      },
     {
      "DELETE FROM userphrase_v1 WHERE length = ?5 AND phrase = ?6 AND "
@@ -194,6 +194,7 @@ static int CreateTable(ChewingData *pgdata)
                        "phone_9 INTEGER,"
                        "phone_10 INTEGER,"
                        "phrase TEXT,"
+		       "type INTEGER,"
                        "PRIMARY KEY ("
                        "phone_0,"
                        "phone_1,"
@@ -241,6 +242,7 @@ static int CreateTable(ChewingData *pgdata)
                        "phone_9 INTEGER,"
                        "phone_10 INTEGER,"
                        "phrase TEXT,"
+                       "type INTEGER,"
                        "PRIMARY KEY ("
                        "phone_0,"
                        "phone_1,"

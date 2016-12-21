@@ -267,7 +267,6 @@ void store_phrase(const char *line, int line_num)
         fprintf(stderr, "Error reading line %d, `%s'\n", line_num, line);
         exit(-1);
     }
-    printf("phrase=%s\n", phrase);
     strncpy(phrase_data[num_phrase_data].phrase, phrase, sizeof(phrase_data[0].phrase) - 1);
 
     /* read frequency */
@@ -279,7 +278,6 @@ void store_phrase(const char *line, int line_num)
 
     phrase_data[num_phrase_data].freq = strtoul(freq, &endptr, 0);
     phrase_data[num_phrase_data].type = TYPE_HAN;
-    printf("freq=%d\n", phrase_data[num_phrase_data].freq);
     if ((*freq == '\0' || *endptr != '\0') ||
         (phrase_data[num_phrase_data].freq == UINT32_MAX && errno == ERANGE)) {
         fprintf(stderr, "Error reading frequency `%s' in line %d, `%s'\n", freq, line_num, line);
@@ -423,8 +421,9 @@ void store_tailo(const char *line, const int line_num)
     PhoneFromKey(phone_buf, key_buf, KB_DEFAULT, 1);
     word_data[num_word_data].text->phone[0] = UintFromPhone(phone_buf);
     word_data[num_word_data].text->type = TYPE_TAILO;
-    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x\n", phone_buf, key_buf,
-			    word_data[num_word_data].text->phrase, word_data[num_word_data].text->phone[0]);
+    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x, type=%d\n", phone_buf, key_buf,
+			    word_data[num_word_data].text->phrase, word_data[num_word_data].text->phone[0],
+			    word_data[num_word_data].text->type);
     word_data[num_word_data].index = num_word_data;
     ++num_word_data;
 }
@@ -463,8 +462,9 @@ void store_word(const char *line, const int line_num)
     PhoneFromKey(phone_buf, key_buf, KB_DEFAULT, 1);
     word_data[num_word_data].text->phone[0] = UintFromPhone(phone_buf);
     word_data[num_word_data].text->type = TYPE_HAN;
-    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x\n", phone_buf, key_buf,
-			    word_data[num_word_data].text->phrase, word_data[num_word_data].text->phone[0]);
+    printf("phone_buf=%s, key_buf=%s, phrase=%s, phone=0x%x, type=%d\n", phone_buf, key_buf,
+		    word_data[num_word_data].text->phrase, word_data[num_word_data].text->phone[0],
+		    word_data[num_word_data].text->type);
     word_data[num_word_data].index = num_word_data;
     ++num_word_data;
 }
