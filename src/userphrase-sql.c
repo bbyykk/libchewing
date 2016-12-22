@@ -668,6 +668,10 @@ UserPhraseData *UserGetPhraseNext(ChewingData *pgdata, const uint32_t phoneSeq[]
         sqlite3_column_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE],
                            SQL_STMT_USERPHRASE[STMT_USERPHRASE_SELECT_BY_PHONE].column[COLUMN_USERPHRASE_ORIG_FREQ]);
 
+    pgdata->userphrase_data.type =
+        sqlite3_column_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE],
+                           SQL_STMT_USERPHRASE[STMT_USERPHRASE_SELECT_BY_PHONE].column[COLUMN_USERPHRASE_TYPE]);
+    printf("%s ZZZZZZZZ %d\n", __func__, pgdata->userphrase_data.type);
     return &pgdata->userphrase_data;
 }
 

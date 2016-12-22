@@ -50,6 +50,7 @@ typedef struct UserPhraseData {
     int recentTime;
     int origfreq;               /* the initial frequency of this phrase */
     int maxfreq;                /* the maximum frequency of the phrase of the same pid */
+    int type;
 } UserPhraseData;
 
 void UserUpdatePhraseBegin(struct ChewingData *pgdata);
