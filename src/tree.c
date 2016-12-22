@@ -185,6 +185,7 @@ static int CheckUserChoose(ChewingData *pgdata,
                     ueStrNCpy(p_phr->phrase, pUserPhraseData->wordSeq, user_alloc, 1);
                 }
                 p_phr->freq = pUserPhraseData->userfreq;
+		p_phr->type = pUserPhraseData->type;
                 *pp_phr = p_phr;
             }
         }
