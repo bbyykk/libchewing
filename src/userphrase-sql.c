@@ -21,12 +21,15 @@
 #include "private.h"
 #include "key2pho-private.h"
 
-#define LOG_USERPHRASE_SQL
 #ifndef LOG_USERPHRASE_SQL
-//#undef LOG_WARN
-//#undef LOG_ERROR
-//#define LOG_WARN(fmt...)
-//#define LOG_ERROR(fmt...)
+#undef LOG_WARN
+#undef LOG_ERROR
+#undef LOG_INFO
+#undef LOG_VERBOSE
+#define LOG_WARN(fmt...)
+#define LOG_ERROR(fmt...)
+#define LOG_INFO(fmt...)
+#define LOG_VERBOSE(fmt...)
 #endif
 
 
@@ -78,7 +81,7 @@ static int UserBindPhone(ChewingData *pgdata, int index, const uint32_t phoneSeq
     assert(pgdata);
     assert(phoneSeq);
 
-    LOG_VERBOSE("%s, %d, len=%d\n", __func__, __LINE__, len);
+    LOG_VERBOSE("len=%d\n", len);
     if (len > MAX_PHRASE_LEN) {
         LOG_WARN("phoneSeq length %d > MAX_PHRASE_LEN(%d)", len, MAX_PHRASE_LEN);
         return -1;
@@ -624,7 +627,7 @@ UserPhraseData *UserGetPhraseFirst(ChewingData *pgdata, const uint32_t phoneSeq[
     }
 
     len = GetPhoneLen(phoneSeq);
-    LOG_ERROR("%s, %d, len=%d", __func__, __LINE__, len);
+    LOG_INFO("len=%d", len);
     ret = UserBindPhone(pgdata, STMT_USERPHRASE_SELECT_BY_PHONE, phoneSeq, len);
     if (ret != SQLITE_OK) {
         LOG_ERROR("UserBindPhone returns %d", ret);
@@ -671,7 +674,7 @@ UserPhraseData *UserGetPhraseNext(ChewingData *pgdata, const uint32_t phoneSeq[]
     pgdata->userphrase_data.type =
         sqlite3_column_int(pgdata->static_data.stmt_userphrase[STMT_USERPHRASE_SELECT_BY_PHONE],
                            SQL_STMT_USERPHRASE[STMT_USERPHRASE_SELECT_BY_PHONE].column[COLUMN_USERPHRASE_TYPE]);
-    printf("%s ZZZZZZZZ %d\n", __func__, pgdata->userphrase_data.type);
+    TRACX("%s ZZZZZZZZ %d\n", __func__, pgdata->userphrase_data.type);
     return &pgdata->userphrase_data;
 }
 

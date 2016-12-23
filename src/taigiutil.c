@@ -694,7 +694,7 @@ int AddChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata)
         }
     }
 
-    printf("%s, %d, nPhoneSeq=%d, chiSymbolBufLen=%d, chiSymbolCursor=%d, cursor=%d\n", __func__, __LINE__, 
+    TRACX("%s, %d, nPhoneSeq=%d, chiSymbolBufLen=%d, chiSymbolCursor=%d, cursor=%d\n", __func__, __LINE__, 
 		    pgdata->nPhoneSeq, pgdata->chiSymbolBufLen, pgdata->chiSymbolCursor, cursor);
     /* shift the Brkpt */
     assert(pgdata->nPhoneSeq >= cursor);

@@ -22,12 +22,14 @@
 #include "sqlite3.h"
 #include "userphrase-private.h"
 
-#undef LOG_ERROR
+#ifndef LOG_TAIGI_SQL
 #undef LOG_INFO
 #undef LOG_WARN
-#define LOG_ERROR(fmt, ...) printf(fmt, ##__VA_ARGS__)
-#define LOG_INFO(fmt, ...) printf(fmt, ##__VA_ARGS__)
-#define LOG_WARN(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#undef LOG_VERBOSE
+#define LOG_INFO(fmt, ...)
+#define LOG_WARN(fmt, ...)
+#define LOG_VERBOSE(fmt, ...)
+#endif
 
 
 const SqlStmtUserphrase SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_COUNT] = {

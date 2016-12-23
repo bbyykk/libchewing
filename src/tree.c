@@ -39,8 +39,10 @@
 #ifndef LOG_API_TREE
 #undef LOG_API
 #undef LOG_VERBOSE
+#undef DEBUG_OUT
 #define LOG_API(fmt, ...) 
 #define LOG_VERBOSE(fmt, ...) 
+#define DEBUG_OUT(fmt,...)
 #endif
 
 typedef struct PhraseIntervalType {
@@ -266,7 +268,7 @@ const TreeType *TreeFindPhrase(ChewingData *pgdata, int begin, int end, const ui
         range[0] = GetUint32(tree_p->child.begin);
         range[1] = GetUint32(tree_p->child.end);
 
-	printf("%s: phoneSeq[%d]=%d, target.key=%d, range[0]=%d, range[1]=%d\n",
+	DEBUG_OUT("%s: phoneSeq[%d]=%d, target.key=%d, range[0]=%d, range[1]=%d\n",
 		__func__, i, phoneSeq[i], target.key, range[0], range[1]);
         assert(range[1] >= range[0]);
         tree_p = (const TreeType *) bsearch(&target, pgdata->static_data.tree + range[0],
@@ -355,6 +357,16 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
 
             userphrase = UserGetPhraseFirst(pgdata, new_phoneSeq);
             UserGetPhraseEnd(pgdata, new_phoneSeq);
+
+	    /* Dump the parameter */
+	    {
+		    int i;
+		    printf("new_phoneseq: bgein=%d, end=%d", begin, end);
+		    for(i=0;i<= end - begin;++i) {
+			    printf("%x ", new_phoneSeq[i]);
+		    }
+		    printf("\n");
+	    }
 
             if (userphrase && CheckUserChoose(pgdata, new_phoneSeq, begin, end + 1,
                                               &p_phrase, pgdata->selectStr, pgdata->selectInterval, pgdata->nSelect)) {

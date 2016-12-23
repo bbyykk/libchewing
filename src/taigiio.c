@@ -47,8 +47,8 @@
 #define LOG_API(fmt...) 
 #define DEBUG_OUT(fmt...) 
 #define DEBUG_CHECKPOINT(fmt...) 
-#endif
 #define LOG_SQL(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#endif
 
 const char *const kb_type_str[] = {
     "KB_DEFAULT",

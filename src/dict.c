@@ -68,7 +68,7 @@ static void GetVocabFromDict(ChewingData *pgdata, Phrase *phr_ptr)
     phr_ptr->freq = GetUint32(pgdata->static_data.tree_cur_pos->phrase.freq);
     phr_ptr->type = GetUint32(pgdata->static_data.tree_cur_pos->type);
     pgdata->static_data.tree_cur_pos++;
-    printf("%s, %d, get freq=%d, type=%d, phrase=%s\n", __func__, __LINE__, phr_ptr->freq, phr_ptr->type, phr_ptr->phrase);
+    TRACX("%s, %d, get freq=%d, type=%d, phrase=%s\n", __func__, __LINE__, phr_ptr->freq, phr_ptr->type, phr_ptr->phrase);
 }
 
 int GetCharFirst(ChewingData *pgdata, Phrase *wrd_ptr, uint32_t key)
