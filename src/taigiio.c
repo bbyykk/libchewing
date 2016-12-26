@@ -236,9 +236,7 @@ CHEWING_API ChewingContext *taigi_new2(const char *syspath,
         goto error;
     }
 
-    LOG_SQL("YYYY %s, %d, userphrase_path=%s\n", __func__, __LINE__, userphrase_path);
     ret = InitUserphrase(ctx->data, userphrase_path);
-    LOG_SQL("YYYY %s, %d: ret=%d\n", __func__, __LINE__, ret);
     free(userphrase_path);
 
     if (ret) {

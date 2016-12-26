@@ -40,12 +40,12 @@ const SqlStmtUserphrase SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_COUNT] = {
      {-1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
      },
     {
-     "SELECT time, orig_freq, max_freq, user_freq, phrase "
+     "SELECT time, orig_freq, max_freq, user_freq, phrase, type "
      "FROM tailo_v1 WHERE length = ?5 AND "
      "phone_0 = ?10 AND phone_1 = ?11 AND phone_2 = ?12 AND "
      "phone_3 = ?13 AND phone_4 = ?14 AND phone_5 = ?15 AND "
      "phone_6 = ?16 AND phone_7 = ?17 AND phone_8 = ?18 AND " "phone_9 = ?19 AND phone_10 = ?20",
-     {0, 1, 2, 3, -1, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+     {0, 1, 2, 3, -1, 4, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
      },
     {
      "SELECT time, orig_freq, max_freq, user_freq "

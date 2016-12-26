@@ -89,8 +89,10 @@ UserPhraseData *UserGetPhraseFirst(struct ChewingData *pgdata, const uint32_t ph
  * @return UserPhraseData, if it's not existing then return NULL.
  */
 UserPhraseData *UserGetPhraseNext(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
+UserPhraseData *TailoGetPhraseNext(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
 
 void UserGetPhraseEnd(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
+void TailoGetPhraseEnd(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
 
 void IncreaseLifeTime(struct ChewingData *pgdata);
 

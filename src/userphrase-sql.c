@@ -610,6 +610,85 @@ int UserRemovePhrase(ChewingData *pgdata, const uint32_t phoneSeq[], const char 
     return affected;
 }
 
+UserPhraseData *TailoGetPhraseFirst(ChewingData *pgdata, const uint32_t phoneSeq[])
+{
+    int ret;
+    int len;
+
+    assert(pgdata);
+    assert(phoneSeq);
+
+    assert(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE]);
+    ret = sqlite3_reset(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE]);
+    if (ret != SQLITE_OK) {
+        LOG_ERROR("sqlite3_reset returns %d", ret);
+        return NULL;
+    }
+
+    len = GetPhoneLen(phoneSeq);
+    LOG_INFO("len=%d", len);
+    ret = TailoBindPhone(pgdata, STMT_TAILOPHRASE_SELECT_BY_PHONE, phoneSeq, len);
+    if (ret != SQLITE_OK) {
+        LOG_ERROR("TailoBindPhone returns %d", ret);
+        return NULL;
+    }
+    
+    UserPhraseData *p = TailoGetPhraseNext(pgdata, phoneSeq);
+
+    if (p) {
+	    printf("p=%x\n", p);
+	    printf("p->userfreq=%d\n", p->userfreq);
+    }
+    return p;
+}
+
+UserPhraseData *TailoGetPhraseNext(ChewingData *pgdata, const uint32_t phoneSeq[])
+{
+    int ret;
+
+    assert(pgdata);
+    assert(phoneSeq);
+
+    ret = sqlite3_step(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE]);
+    if (ret != SQLITE_ROW)
+        return NULL;
+
+    /* FIXME: shall not remove const here. */
+    pgdata->tailophrase_data.wordSeq =
+        (char *) sqlite3_column_text(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE],
+                                     SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column
+                                     [COLUMN_TAILOPHRASE_PHRASE]);
+    pgdata->tailophrase_data.phoneSeq = (uint32_t *) phoneSeq;
+
+    pgdata->tailophrase_data.recentTime =
+        sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE],
+                           SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_TIME]);
+
+    pgdata->tailophrase_data.userfreq =
+        sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE],
+                           SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_USER_FREQ]);
+
+    pgdata->tailophrase_data.maxfreq =
+        sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE],
+                           SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_MAX_FREQ]);
+
+    pgdata->tailophrase_data.origfreq =
+        sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE],
+                           SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_ORIG_FREQ]);
+
+    pgdata->tailophrase_data.type =
+        sqlite3_column_int(pgdata->static_data.stmt_tailo[STMT_TAILOPHRASE_SELECT_BY_PHONE],
+                           SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_TYPE]);
+
+    printf("%s TTTTTT type=%d, str=%s\n", __func__, pgdata->tailophrase_data.type, pgdata->tailophrase_data.wordSeq);
+    return &pgdata->tailophrase_data;
+}
+
+void TailoGetPhraseEnd(ChewingData *pgdata UNUSED, const uint32_t phoneSeq[] UNUSED)
+{
+    /* FIXME: Remove this */
+}
+
 
 UserPhraseData *UserGetPhraseFirst(ChewingData *pgdata, const uint32_t phoneSeq[])
 {

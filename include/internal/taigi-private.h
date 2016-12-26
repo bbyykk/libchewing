@@ -279,6 +279,7 @@ typedef struct ChewingData {
 
 #if WITH_SQLITE3
     UserPhraseData userphrase_data;
+    UserPhraseData tailophrase_data;
 #else
     struct HASH_ITEM *prev_userphrase;
 #endif

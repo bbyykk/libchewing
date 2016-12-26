@@ -610,7 +610,6 @@ void AutoLearnPhrase(ChewingData *pgdata)
              * connected to current phrase. We store it as
              * userphrase here.
              */
-	    printf("xxxx %s, %d\n", __func__, __LINE__);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
             prev_pos = 0;
             pending_pos = 0;
@@ -629,7 +628,6 @@ void AutoLearnPhrase(ChewingData *pgdata)
             type = copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, pos, bufWordSeq + sizeof(bufWordSeq) - pos);
             prev_pos += len;
             pending_pos = fromPreeditBuf + len;
-	    printf("xxxx %s, %d\n", __func__, __LINE__);
 
         } else {
             if (pending_pos) {
