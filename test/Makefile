@@ -116,7 +116,7 @@ AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-am__EXEEXT_1 = genkeystroke$(EXEEXT)
+#am__EXEEXT_1 = genkeystroke$(EXEEXT)
 am__EXEEXT_2 = test-bopomofo$(EXEEXT) test-config$(EXEEXT) \
 	test-easy-symbol$(EXEEXT) test-error-handling$(EXEEXT) \
 	test-fullshape$(EXEEXT) test-key2pho$(EXEEXT) \
@@ -127,13 +127,13 @@ am__EXEEXT_2 = test-bopomofo$(EXEEXT) test-config$(EXEEXT) \
 	test-struct-size$(EXEEXT) test-userphrase$(EXEEXT) \
 	test-utf8$(EXEEXT)
 am__genkeystroke_SOURCES_DIST = genkeystroke.c
-am_genkeystroke_OBJECTS = genkeystroke.$(OBJEXT)
+#am_genkeystroke_OBJECTS = genkeystroke.$(OBJEXT)
 genkeystroke_OBJECTS = $(am_genkeystroke_OBJECTS)
 am__DEPENDENCIES_1 = $(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/porting_layer/src/libporting_layer.la \
 	$(top_builddir)/test/libtesthelper.la
-genkeystroke_DEPENDENCIES =  \
-	$(am__DEPENDENCIES_1)
+#genkeystroke_DEPENDENCIES =  \
+#	$(am__DEPENDENCIES_1)
 performance_SOURCES = performance.c
 performance_OBJECTS = performance.$(OBJEXT)
 performance_LDADD = $(LDADD)
@@ -562,16 +562,16 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/stresstest.py \
 	$(top_srcdir)/build-aux/depcomp \
 	$(top_srcdir)/build-aux/test-driver README
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/black/zzz/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_CFLAGS =  -Wall -g -O2 -fvisibility=hidden
 AM_DEFAULT_VERBOSITY = 1
 AM_LDFLAGS = -static
 AR = ar
 AS = as
-AUTOCONF = ${SHELL} /home/black/zzz/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/black/zzz/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/black/zzz/build-aux/missing automake-1.15
+AUTOCONF = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=none
@@ -579,7 +579,7 @@ CC_FOR_BUILD = gcc
 CFLAGS = -g -O2
 CPP = gcc -E
 CPPFLAGS = 
-CURSES_LIB = -lncursesw
+CURSES_LIB = 
 CYGPATH_W = echo
 DEFAULT_CPPFLAGS =  -D_GNU_SOURCE
 DEFS = -DHAVE_CONFIG_H
@@ -613,7 +613,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /home/black/zzz/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -640,10 +640,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.5.1
-abs_builddir = /home/black/zzz/test
-abs_srcdir = /home/black/zzz/test
-abs_top_builddir = /home/black/zzz
-abs_top_srcdir = /home/black/zzz
+abs_builddir = /home/black/data/fcitx/src/zzz/test
+abs_srcdir = /home/black/data/fcitx/src/zzz/test
+abs_top_builddir = /home/black/data/fcitx/src/zzz
+abs_top_srcdir = /home/black/data/fcitx/src/zzz
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -673,7 +673,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = /usr/include/x86_64-linux-gnu
 infodir = ${prefix}/share/info
-install_sh = ${SHELL} /home/black/zzz/build-aux/install-sh
+install_sh = ${SHELL} /home/black/data/fcitx/src/zzz/build-aux/install-sh
 libdir = ${prefix}/lib/x86_64-linux-gnu
 libexecdir = ${prefix}/lib/x86_64-linux-gnu
 localedir = ${datarootdir}/locale
@@ -739,10 +739,10 @@ check_HEADERS = \
 	testhelper.h \
 	$(NULL)
 
-#TEXT_UI_BIN = 
-TEXT_UI_BIN = genkeystroke
-genkeystroke_SOURCES = genkeystroke.c
-genkeystroke_LDADD = $(LDADD) -lncursesw
+TEXT_UI_BIN = 
+#TEXT_UI_BIN = genkeystroke
+#genkeystroke_SOURCES = genkeystroke.c
+#genkeystroke_LDADD = $(LDADD) 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/include/internal \

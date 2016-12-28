@@ -427,10 +427,10 @@ static int CreateStmt(ChewingData *pgdata)
         }
     }
 
-    STATIC_ASSERT(ARRAY_SIZE(SQL_STMT_TAILOPHRASE) == ARRAY_SIZE(pgdata->static_data.stmt_tailo));
+    STATIC_ASSERT(ARRAY_SIZE(SQL_STMT_TAILOPHRASE) == ARRAY_SIZE(pgdata->static_data.stmt_tailophrase));
     for (i = 0; i < ARRAY_SIZE(SQL_STMT_TAILOPHRASE); ++i) {
         ret = sqlite3_prepare_v2(pgdata->static_data.db,
-                                 SQL_STMT_TAILOPHRASE[i].stmt, -1, &pgdata->static_data.stmt_tailo[i], NULL);
+                                 SQL_STMT_TAILOPHRASE[i].stmt, -1, &pgdata->static_data.stmt_tailophrase[i], NULL);
         if (ret != SQLITE_OK) {
             LOG_ERROR("Cannot create stmt %s", SQL_STMT_TAILOPHRASE[i].stmt);
             return -1;
@@ -608,9 +608,9 @@ void TerminateUserphrase(ChewingData *pgdata)
         pgdata->static_data.stmt_userphrase[i] = NULL;
     }
 
-    for (i = 0; i < ARRAY_SIZE(pgdata->static_data.stmt_tailo); ++i) {
-        sqlite3_finalize(pgdata->static_data.stmt_tailo[i]);
-        pgdata->static_data.stmt_tailo[i] = NULL;
+    for (i = 0; i < ARRAY_SIZE(pgdata->static_data.stmt_tailophrase); ++i) {
+        sqlite3_finalize(pgdata->static_data.stmt_tailophrase[i]);
+        pgdata->static_data.stmt_tailophrase[i] = NULL;
     }
 
     ret = sqlite3_close(pgdata->static_data.db);

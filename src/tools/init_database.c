@@ -70,39 +70,6 @@ typedef struct {
     int index;                  /* For stable sorting. */
 } WordData;
 
-const PhraseData EXCEPTION_PHRASE[] = {
-    {"\xE5\xA5\xBD\xE8\x90\x8A\xE5\xA1\xA2" /* 好萊塢 */ , 0, {5691, 4138, 256} /* ㄏㄠˇ ㄌㄞˊ ㄨ */ , 0},
-    {"\xE6\x88\x90\xE6\x97\xA5\xE5\xAE\xB6" /* 成日家 */ , 0, {8290, 9220, 6281} /* ㄔㄥˊ ㄖˋ ㄐㄧㄚ˙ */ ,
-     0},
-    {"\xE4\xBF\xBE\xE5\x80\xAA" /* 俾倪 */ , 0, {644, 3716} /* ㄅㄧˋ ㄋㄧˋ */ , 0},
-    {"\xE6\x8F\xA9\xE6\xB2\xB9" /* 揩油 */ , 0, {5128, 194} /* ㄎㄚ ㄧㄡˊ */ , 0},
-    {"\xE6\x95\x81\xE6\x95\xAA" /* 敁敪 */ , 0, {2760, 2833} /* ㄉㄧㄢ ㄉㄨㄛ˙ */ , 0},
-    {"\xE4\xB8\x80\xE9\xAA\xA8\xE7\xA2\x8C" /* 一骨碌 */ , 0, {128, 4866, 4353} /* ㄧ ㄍㄨˊ ㄌㄨ˙ */ , 0},
-    {"\xE9\x82\x8B\xE9\x81\xA2" /* 邋遢 */ , 0, {4106, 3081} /* ㄌㄚˊ ㄊㄚ˙ */ , 0},
-
-    {"\xE6\xBA\x9C\xE9\x81\x94" /* 溜達 */ , 0, {4292, 2569} /* ㄌㄧㄡˋ ㄉㄚ˙ */ , 0},
-    {"\xE9\x81\x9B\xE9\x81\x94" /* 遛達 */ , 0, {4292, 2569} /* ㄌㄧㄡˋ ㄉㄚ˙ */ , 0},
-
-    {"\xE5\xA4\xA7\xE5\xA4\xAB" /* 大夫 */ , 0, {2604, 2305} /* ㄉㄞˋ ㄈㄨ˙ */ , 0},
-
-    {"\xE5\x92\x96\xE5\x96\xB1" /* 咖喱 */ , 0, {4616, 4226} /* ㄍㄚ ㄌㄧˊ */, 0},
-    {"\xE5\x92\x96\xE5\x96\xB1\xE6\xB1\x81" /* 咖喱汁 */ , 0, {4616, 4226, 7680} /* ㄍㄚ ㄌㄧˊ ㄓ */, 0},
-    {"\xE5\x92\x96\xE5\x96\xB1\xE7\xB2\x89" /* 咖喱粉 */ , 0, {4616, 4226, 2131} /* ㄍㄚ ㄌㄧˊ ㄈㄣˇ */, 0},
-    {"\xE5\x92\x96\xE5\x96\xB1\xE9\x9B\x9E" /* 咖喱雞 */ , 0, {4616, 4226, 6272} /* ㄍㄚ ㄌㄧˊ ㄐㄧ */, 0},
-    {"\xE5\x92\x96\xE5\x96\xB1\xE9\xA3\xAF" /* 咖喱飯 */ , 0, {4616, 4226, 2124} /* ㄍㄚ ㄌㄧˊ ㄈㄢˋ */, 0},
-};
-
-/*
- * Some word changes its phone in certain phrases. If it is difficult to list
- * all the phrases to exception phrase list, put the word here so that this
- * won't cause check error.
- */
-const PhraseData EXCEPTION_WORD[] = {
-    {"\xE5\x97\xA6" /* 嗦 */ , 0, {11025} /* ㄙㄨㄛ˙ */ , 0},
-    {"\xE5\xB7\xB4" /* 巴 */ , 0, {521} /* ㄅㄚ˙ */ , 0},
-    {"\xE4\xBC\x99" /* 伙 */ , 0, {5905} /* ㄏㄨㄛ˙ */ , 0},
-};
-
 /*
  * Please see TreeType for data field. pFirstChild points to the first of its
  * child list. pNextSibling points to its right sibling, where it and its right
@@ -192,48 +159,6 @@ int compare_word_no_duplicated(const void *x, const void *y)
 
 int is_exception_phrase(PhraseData *phrase, int pos)
 {
-    size_t i;
-    char word[MAX_UTF8_SIZE + 1];
-
-    ueStrNCpy(word, ueStrSeek(phrase->phrase, pos), 1, 1);
-
-    /*
-     * Check if the phrase is an exception phrase.
-     */
-    for (i = 0; i < sizeof(EXCEPTION_PHRASE) / sizeof(EXCEPTION_PHRASE[0]); ++i) {
-        if (strcmp(phrase->phrase, EXCEPTION_PHRASE[i].phrase) == 0 &&
-            memcmp(phrase->phone, EXCEPTION_PHRASE[i].phone, sizeof(phrase->phone)) == 0) {
-            return 1;
-        }
-    }
-
-    /*
-     * Check if the word in phrase is an exception word.
-     */
-    for (i = 0; i < sizeof(EXCEPTION_WORD) / sizeof(EXCEPTION_WORD[0]); ++i) {
-        if (strcmp(word, EXCEPTION_WORD[i].phrase) == 0 && phrase->phone[pos] == EXCEPTION_WORD[i].phone[0]) {
-            return 1;
-        }
-    }
-
-    /*
-     * If the same word appears continuous in a phrase (疊字), the second
-     * word can change to light tone.
-     * ex:
-     * 爸爸 -> ㄅㄚˋ ㄅㄚ˙
-     */
-    if (pos > 0) {
-        char previous[MAX_UTF8_SIZE + 1];
-
-        ueStrNCpy(previous, ueStrSeek(phrase->phrase, pos - 1), 1, 1);
-
-        if (strcmp(previous, word) == 0) {
-            if (((phrase->phone[pos - 1] & ~0x7) | 0x1) == phrase->phone[pos]) {
-                return 1;
-            }
-        }
-    }
-
     return 0;
 }
 

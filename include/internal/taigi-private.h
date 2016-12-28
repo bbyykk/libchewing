@@ -42,7 +42,7 @@ typedef SSIZE_T ssize_t;
 #define BOPOMOFO_SIZE 32
 #define PINYIN_SIZE 10
 #define MAX_PHRASE_LEN 11
-#define MAX_PHONE_SEQ_LEN 50
+#define MAX_PHONE_SEQ_LEN 64
 #define MIN_CHI_SYMBOL_LEN 0
 #define MAX_CHI_SYMBOL_LEN (MAX_PHONE_SEQ_LEN - MAX_PHRASE_LEN)
 #define MAX_INTERVAL ( ( MAX_PHONE_SEQ_LEN + 1 ) * MAX_PHONE_SEQ_LEN / 2 )
@@ -207,7 +207,7 @@ typedef struct ChewingStaticData {
     sqlite3 *db;
     sqlite3_stmt *stmt_config[STMT_CONFIG_COUNT];
     sqlite3_stmt *stmt_userphrase[STMT_USERPHRASE_COUNT];
-    sqlite3_stmt *stmt_tailo[STMT_TAILOPHRASE_COUNT];
+    sqlite3_stmt *stmt_tailophrase[STMT_TAILOPHRASE_COUNT];
 
     unsigned int original_lifetime;
     unsigned int new_lifetime;

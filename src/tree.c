@@ -137,7 +137,7 @@ int CheckTailoChoose(ChewingData *pgdata,
     IntervalType inte, c;
     int chno, len;
     int user_alloc;
-    UserPhraseData *pTailoPhraseData;
+    UserPhraseData *pTailoPhraseData = NULL;
     Phrase *p_phr = ALC(Phrase, 1);
 
     assert(p_phr);
@@ -145,7 +145,6 @@ int CheckTailoChoose(ChewingData *pgdata,
     inte.to = to;
     *pp_phr = NULL;
 
-    printf("%s, %d\n", __func__, __LINE__);
     /* pass 1
      * if these exist one selected interval which is not contained by inte
      * but has intersection with inte, then inte is an unacceptable interval
@@ -171,31 +170,31 @@ int CheckTailoChoose(ChewingData *pgdata,
         for (chno = 0; chno < nSelect; chno++) {
             c = selectInterval[chno];
 
-	    printf("%s, %d\n", __func__, __LINE__);
             if (IsContain(inte, c)) {
                 /*
                  * find a phrase of ph_id where the text contains
                  * 'selectStr[chno]' test if not ok then return 0,
                  * if ok then continue to test. */
                 len = c.to - c.from;
-                if (memcmp(ueStrSeek(pTailoPhraseData->wordSeq, c.from - from),
+                if (memcmp(ueStrSeek(pgdata->tailophrase_data.wordSeq, c.from - from),
                            selectStr[chno], ueStrNBytes(selectStr[chno], len)))
                     break;
             }
-
-	    printf("%s, %d\n", __func__, __LINE__);
         }
         if (chno == nSelect) {
             /* save phrase data to "pp_phr" */
-	    printf("%s, %d\n", __func__, __LINE__);
-            if (pTailoPhraseData->userfreq > p_phr->freq) {
-		printf("%s, %d\n", __func__, __LINE__);
+	    /* A mistery bug here: the pTailoPhraseData should point to pgdata->tailophrase_data
+	     * However, core dump would happen if using pTailoPhraseData->userfreq and other members
+	     * But use the full pgdata->tailophrase_data is fine
+	     */
+            //if (pTailoPhraseData->userfreq > p_phr->freq) {
+            if (pgdata->tailophrase_data.userfreq > p_phr->freq) {
                 if ((user_alloc = (to - from)) > 0) {
-                    strncpy(p_phr->phrase, pTailoPhraseData->wordSeq, 64);
+                    strncpy(p_phr->phrase, pgdata->tailophrase_data.wordSeq, 64);
                 }
 		printf("%s, %d\n", __func__, __LINE__);
-                p_phr->freq = pTailoPhraseData->userfreq;
-		p_phr->type = pTailoPhraseData->type;
+                p_phr->freq = pgdata->tailophrase_data.userfreq;
+		p_phr->type = pgdata->tailophrase_data.type;
                 *pp_phr = p_phr;
             }
         }
@@ -440,6 +439,8 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
             ptailophrase = puserphrase = pdictphrase = NULL;
 
             i_used_phrase = USED_PHRASE_NONE;
+	    printf("XXXXXX pgdata->userphrase_data=0x%x, pgdata->tailophrase_data=0x%x\n",
+			    &pgdata->userphrase_data, &pgdata->tailophrase_data);
 #if 1 // Waiting for debugging
 	    /* Dump the parameter */
 	    {
