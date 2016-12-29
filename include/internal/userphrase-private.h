@@ -80,6 +80,7 @@ int UserRemovePhrase(struct ChewingData *pgdata, const uint32_t phoneSeq[], cons
  * @return UserPhraseData, if it's not existing then return NULL.
  */
 UserPhraseData *UserGetPhraseFirst(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
+UserPhraseData *TailoGetPhraseFirst(struct ChewingData *pgdata, const uint32_t phoneSeq[]);
 
 /**
  * @brief Read the next phrase of the phone in user phrase database.

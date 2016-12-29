@@ -167,6 +167,7 @@ typedef struct ChoiceInfo {
         /** @brief store possible phrases for being chosen. */
     char totalChoiceStr[MAX_CHOICE][MAX_PHRASE_LEN * MAX_UTF8_SIZE + 1];
         /** @brief number of phrases to choose. */
+    int  totalChoiceType[MAX_CHOICE];
     int nTotalChoice;
     int oldChiSymbolCursor;
     int isSymbol;
@@ -343,6 +344,6 @@ typedef struct Phrase {
 } Phrase;
 
 /* *INDENT-OFF* */
-#define TRACX(args, ...) //printf(args, ##__VA_ARGS__)
+#define TRACX(args, ...) printf(args, ##__VA_ARGS__)
 #endif
 /* *INDENT-ON* */

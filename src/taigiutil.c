@@ -451,6 +451,9 @@ void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
     for (i = 0; i < pgo->commitBufLen; ++i) {
         assert(pos + MAX_UTF8_SIZE + 1 < pgo->commitBuf + sizeof(pgo->commitBuf));
         strcpy(pos, pgdata->preeditBuf[i].char_);
+	printf("%s, %d: pgdata->preeditBuf[%d].char_=%s, type=%d\n",
+		__func__, __LINE__, i, pgdata->preeditBuf[i].char_,
+		pgdata->preeditBuf[i].type);
         pos += strlen(pgdata->preeditBuf[i].char_);
     }
     *pos = 0;

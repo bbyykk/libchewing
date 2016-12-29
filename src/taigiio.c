@@ -1453,7 +1453,7 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     pgdata = ctx->data;
     pgo = ctx->output;
 
-    LOG_API("key = %d", key);
+    LOG_API("key = %d\n", key);
 
     /* Update lifetime */
     IncreaseLifeTime(ctx->data);
@@ -1488,6 +1488,14 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
         num = CountSelKeyNum(key, pgdata);
         if (num >= 0) {
             DoSelect(pgdata, num);
+	    {
+	       int i=0;
+	       for (i=0;i < pgdata->chiSymbolBufLen;++i) {
+			printf("%s, %d: pgdata->preeditBuf[%d].char_=%s, type=%d\n",
+				__func__, __LINE__, i, pgdata->preeditBuf[i].char_,
+			pgdata->preeditBuf[i].type);
+	       }
+	    }
             goto End_keyproc;
         }
 

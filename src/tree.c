@@ -392,38 +392,35 @@ static void AddInterval(TreeDataType *ptd, int begin, int end, Phrase *p_phrase,
 typedef enum {
     USED_PHRASE_NONE,           /**< none of items used */
     USED_PHRASE_USER,           /**< User phrase */
-    USED_PHRASE_DICT            /**< Dict phrase */
+    USED_PHRASE_DICT,            /**< Dict phrase */
+    USED_PHRASE_TAILO,            /**< Dict phrase */
 } UsedPhraseMode;
 
-static void internal_release_Phrase(UsedPhraseMode mode, Phrase *pUser, Phrase *pDict)
+static void internal_release_Phrase(UsedPhraseMode mode, Phrase **pUser, Phrase **pDict, Phrase **pTailo)
 {
     /* we must free unused phrase entry to avoid memory leak. */
-    switch (mode) {
-    case USED_PHRASE_USER:
-        if (pDict != NULL)
-            free(pDict);
-        break;
-    case USED_PHRASE_DICT:
-        if (pUser != NULL)
-            free(pUser);
-        break;
-    default:                   /* In fact, it is always 0 */
-        if (pDict != NULL)
-            free(pDict);
-        if (pUser != NULL)
-            free(pUser);
-        break;
-    }
+	if (*pDict != NULL) {
+	    free(*pDict);
+	    *pDict = NULL;
+	}
+	if (*pUser != NULL) {
+	    free(*pUser);
+	    *pUser = NULL;
+	}
+	if (*pTailo != NULL) {
+	    free(*pTailo);
+	    *pTailo = NULL;
+	}
 }
 
 static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
 {
     int end, begin;
     const TreeType *phrase_parent;
-    Phrase *p_phrase, *puserphrase, *pdictphrase, *ptailophrase;
-    UsedPhraseMode i_used_phrase;
+    Phrase *p_phrase, *puserphrase = NULL, *pdictphrase = NULL, *ptailophrase = NULL;
+    UsedPhraseMode i_used_phrase = USED_PHRASE_NONE;
     uint32_t new_phoneSeq[MAX_PHONE_SEQ_LEN];
-    UserPhraseData *userphrase, *tailophrase;
+    UserPhraseData *userphrase = NULL, *tailophrase = NULL;
 
     TRACX("====== %s, %d START, pgdata->nPhoneSeq=%d\n", __func__,__LINE__, pgdata->nPhoneSeq);
     for (begin = 0; begin < pgdata->nPhoneSeq; begin++) {
@@ -459,27 +456,18 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
             if (tailophrase && CheckTailoChoose(pgdata, new_phoneSeq, begin, end + 1,
                                               &p_phrase, pgdata->selectStr, pgdata->selectInterval, pgdata->nSelect)) {
                 ptailophrase = p_phrase;
-		printf("%s: Get Tailophrase=%s\n", __func__, puserphrase);
+		p_phrase = NULL;
+		printf("%s:%d Get Tailophrase=%s\n", __func__, __LINE__, ptailophrase);
             }
 	    /* Get the Tailo phrase -- End */
 #endif
             userphrase = UserGetPhraseFirst(pgdata, new_phoneSeq);
             UserGetPhraseEnd(pgdata, new_phoneSeq);
 
-	    /* Dump the parameter */
-	    {
-		    int i;
-		    printf("%s: new_phoneseq: bgein=%d, end=%d, selectInterval:from=%d, to=%d, nSelect=%d\n",
-			 __func__, begin, end, pgdata->selectInterval->from, pgdata->selectInterval->to, pgdata->nSelect);
-		    for(i=0;i<= end - begin;++i) {
-			    printf("%x ", new_phoneSeq[i]);
-		    }
-		    printf("\n");
-	    }
-
             if (userphrase && CheckUserChoose(pgdata, new_phoneSeq, begin, end + 1,
                                               &p_phrase, pgdata->selectStr, pgdata->selectInterval, pgdata->nSelect)) {
                 puserphrase = p_phrase;
+		p_phrase = NULL;
 		printf("%s: Get userphrase=%s\n", __func__, puserphrase);
             }
 
@@ -490,28 +478,50 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
                             phrase_parent, begin, end + 1,
                             &p_phrase, pgdata->selectStr, pgdata->selectInterval, pgdata->nSelect)) {
                 pdictphrase = p_phrase;
-		TRACX("!!! Use pdictphrase, type=%d !!!\n", pdictphrase->type);
+		p_phrase = NULL;
+		TRACX("!!! Get pdictphrase, type=%d, phrase=%s !!!\n", pdictphrase->type, pdictphrase);
 	    }
 
             /* add only one interval, which has the largest freqency
              * but when the phrase is the same, the user phrase overrides
              * static dict
              */
-            if (puserphrase != NULL && pdictphrase == NULL) {
+            if (puserphrase != NULL && ptailophrase == NULL && pdictphrase == NULL) {
 		TRACX("%s, %d\n", __func__,__LINE__);
+
                 i_used_phrase = USED_PHRASE_USER;
-            } else if (puserphrase == NULL && pdictphrase != NULL) {
+
+	    } else if (puserphrase == NULL && ptailophrase != NULL && pdictphrase == NULL) {
 		TRACX("%s, %d\n", __func__,__LINE__);
+
+                i_used_phrase = USED_PHRASE_TAILO;
+
+            } else if (puserphrase != NULL && ptailophrase != NULL && pdictphrase == NULL) {
+		TRACX("%s, %d\n", __func__,__LINE__);
+
+		puserphrase->freq > ptailophrase->freq?(i_used_phrase = USED_PHRASE_USER):(i_used_phrase = USED_PHRASE_TAILO);
+
+            } else if (puserphrase == NULL && ptailophrase == NULL && pdictphrase != NULL) {
+		TRACX("%s, %d\n", __func__,__LINE__);
+
                 i_used_phrase = USED_PHRASE_DICT;
-            } else if (puserphrase != NULL && pdictphrase != NULL) {
+
+            } else if (puserphrase != NULL && ptailophrase != NULL && pdictphrase != NULL) {
                 /* the same phrase, userphrase overrides */
-                if (!strcmp(puserphrase->phrase, pdictphrase->phrase)) {
+                if (!strcmp(puserphrase->phrase, pdictphrase->phrase) && strcmp(ptailophrase->phrase, pdictphrase->phrase)) {
 			TRACX("%s, %d\n", __func__,__LINE__);
                     i_used_phrase = USED_PHRASE_USER;
+		} else if (strcmp(puserphrase->phrase, pdictphrase->phrase) && !strcmp(ptailophrase->phrase, pdictphrase->phrase)) {
+			TRACX("%s, %d\n", __func__,__LINE__);
+                    i_used_phrase = USED_PHRASE_TAILO;
                 } else {
                     if (puserphrase->freq > pdictphrase->freq) {
 			TRACX("%s, %d\n", __func__,__LINE__);
                         i_used_phrase = USED_PHRASE_USER;
+			if (ptailophrase->freq > puserphrase->freq) {
+				TRACX("%s, %d\n", __func__,__LINE__);
+				i_used_phrase = USED_PHRASE_TAILO;
+			}
                     } else {
 			TRACX("%s, %d\n", __func__,__LINE__);
                         i_used_phrase = USED_PHRASE_DICT;
@@ -527,12 +537,17 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
 		TRACX("%s, %d\n", __func__,__LINE__);
                 AddInterval(ptd, begin, end, pdictphrase, IS_DICT_PHRASE);
                 break;
+            case USED_PHRASE_TAILO:
+		TRACX("%s, %d\n", __func__,__LINE__);
+                AddInterval(ptd, begin, end, ptailophrase, IS_TAILO_PHRASE);
+                break;
             case USED_PHRASE_NONE:
             default:
 	        TRACX("%s, %d\n", __func__,__LINE__);
                 break;
             }
-            internal_release_Phrase(i_used_phrase, puserphrase, pdictphrase);
+	    /*** Need to recover this *** from later !!!!!! */
+            //internal_release_Phrase(i_used_phrase, &puserphrase, &pdictphrase, &ptailophrase);
         }
     }
 }
@@ -719,7 +734,7 @@ static void OutputRecordStr(ChewingData *pgdata, const TreeDataType *ptd)
     LOG_VERBOSE("%d, pgdata->nSelect=%d\n", __LINE__, pgdata->nSelect);
     /* Not sure the diff between phrase and select, use the last one */
     for (i = 0; i < pgdata->nSelect; i++) {
-        FillPreeditBuf(pgdata, pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to, type);
+        FillPreeditBuf(pgdata, pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to, pgdata->selectInterval[i].type);
     }
 }
 

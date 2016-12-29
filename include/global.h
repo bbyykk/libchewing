@@ -126,6 +126,7 @@ typedef struct IntervalType {
     /*@{ */
     int from;           /**< starting position of certain interval */
     int to;             /**< ending position of certain interval */
+    int type;
     /*@} */
 } IntervalType;
 

@@ -13,6 +13,7 @@
 #define _CHEWING_TREE_PRIVATE_H
 /* *INDENT-ON* */
 
+#define IS_TAILO_PHRASE 2
 #define IS_USER_PHRASE 1
 #define IS_DICT_PHRASE 0
 

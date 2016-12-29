@@ -31,7 +31,7 @@
 #include "key2pho-private.h"
 #include "private.h"
 
-static void ChangeSelectIntervalAndBreakpoint(ChewingData *pgdata, int from, int to, const char *str)
+static void ChangeSelectIntervalAndBreakpoint(ChewingData *pgdata, int from, int to, const char *str, int type)
 {
     int i;
     int user_alloc;
@@ -49,6 +49,7 @@ static void ChangeSelectIntervalAndBreakpoint(ChewingData *pgdata, int from, int
 
     pgdata->selectInterval[pgdata->nSelect].from = from;
     pgdata->selectInterval[pgdata->nSelect].to = to;
+    pgdata->selectInterval[pgdata->nSelect].type = type;
 
     /* No available selection */
     if ((user_alloc = (to - from)) == 0)
@@ -187,19 +188,16 @@ static void ChoiceInfoAppendChi(ChewingData *pgdata, ChoiceInfo *pci, uint32_t p
 			    printf("%02X ", (unsigned char) tempWord.phrase[j]);
 		    }
 	    }
-	    if (len == 1) {
-		    //int is = IsThePhone(tempWord.phrase[0]);
-
-		    printf("This is the phone XXXXXXXXXXXXXXXXXXXXx\n");
-	    }
             if (ChoiceTheSame(pci, tempWord.phrase, len))
                 continue;
             assert(pci->nTotalChoice < MAX_CHOICE);
-	    printf("---- %s, %d Here Copy to Candidate buffer so that adaptor layer can get retrieve-----\n", __func__, __LINE__);
             memcpy(pci->totalChoiceStr[pci->nTotalChoice], tempWord.phrase, len);
-	    printf("---- %s, %d -----\n", __func__, __LINE__);
             pci->totalChoiceStr[pci->nTotalChoice]
                 [len] = '\0';
+	    pci->totalChoiceType[pci->nTotalChoice] = tempWord.type;
+	    printf("---- %s, %d: totalChoiceStr[%d]=%s, type=%d\n", __func__, __LINE__,
+			    pci->nTotalChoice, pci->totalChoiceStr[pci->nTotalChoice],
+			    pci->totalChoiceType[pci->nTotalChoice]);
             pci->nTotalChoice++;
         } while (GetVocabNext(pgdata, &tempWord));
     }
@@ -461,7 +459,7 @@ int ChoiceEndChoice(ChewingData *pgdata)
     return 0;
 }
 
-static void ChangeUserData(ChewingData *pgdata, int selectNo)
+static void ChangeUserData(ChewingData *pgdata, int selectNo, int type)
 {
     uint32_t userPhoneSeq[MAX_PHONE_SEQ_LEN];
     int len;
@@ -470,7 +468,7 @@ static void ChangeUserData(ChewingData *pgdata, int selectNo)
     len = ueStrLen(pgdata->choiceInfo.totalChoiceStr[selectNo]);
     memcpy(userPhoneSeq, &(pgdata->phoneSeq[PhoneSeqCursor(pgdata)]), len * sizeof(uint32_t));
     userPhoneSeq[len] = 0;
-    UserUpdatePhrase(pgdata, userPhoneSeq, pgdata->choiceInfo.totalChoiceStr[selectNo], 0);
+    UserUpdatePhrase(pgdata, userPhoneSeq, pgdata->choiceInfo.totalChoiceStr[selectNo], type);
 }
 
 /** @brief commit the selected phrase. */
@@ -480,11 +478,12 @@ int ChoiceSelect(ChewingData *pgdata, int selectNo)
     AvailInfo *pai = &(pgdata->availInfo);
 
     printf("---- %s, %d -----\n", __func__, __LINE__);
-    ChangeUserData(pgdata, selectNo);
+    ChangeUserData(pgdata, selectNo, pci->totalChoiceType[selectNo]);
     ChangeSelectIntervalAndBreakpoint(pgdata,
                                       PhoneSeqCursor(pgdata),
                                       PhoneSeqCursor(pgdata) + pai->avail[pai->currentAvail].len,
-                                      pci->totalChoiceStr[selectNo]);
+                                      pci->totalChoiceStr[selectNo],
+				      pci->totalChoiceType[selectNo]);
     ChoiceEndChoice(pgdata);
     return 0;
 }
