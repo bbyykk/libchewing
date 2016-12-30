@@ -506,27 +506,34 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
 
                 i_used_phrase = USED_PHRASE_DICT;
 
+            } else if (puserphrase == NULL && ptailophrase != NULL && pdictphrase != NULL) {
+		if (ptailophrase->freq > pdictphrase->freq) {
+		    TRACX("%s, %d\n", __func__,__LINE__);
+		    i_used_phrase = USED_PHRASE_TAILO;
+		} else {
+		    TRACX("%s, %d\n", __func__,__LINE__);
+		    i_used_phrase = USED_PHRASE_DICT;
+		}
+            } else if (puserphrase != NULL && ptailophrase == NULL && pdictphrase != NULL) {
+		if (puserphrase->freq > pdictphrase->freq) {
+		    TRACX("%s, %d\n", __func__,__LINE__);
+		    i_used_phrase = USED_PHRASE_USER;
+		} else {
+		    TRACX("%s, %d\n", __func__,__LINE__);
+		    i_used_phrase = USED_PHRASE_DICT;
+		}
             } else if (puserphrase != NULL && ptailophrase != NULL && pdictphrase != NULL) {
-                /* the same phrase, userphrase overrides */
-                if (!strcmp(puserphrase->phrase, pdictphrase->phrase) && strcmp(ptailophrase->phrase, pdictphrase->phrase)) {
-			TRACX("%s, %d\n", __func__,__LINE__);
-                    i_used_phrase = USED_PHRASE_USER;
-		} else if (strcmp(puserphrase->phrase, pdictphrase->phrase) && !strcmp(ptailophrase->phrase, pdictphrase->phrase)) {
-			TRACX("%s, %d\n", __func__,__LINE__);
-                    i_used_phrase = USED_PHRASE_TAILO;
-                } else {
-                    if (puserphrase->freq > pdictphrase->freq) {
-			TRACX("%s, %d\n", __func__,__LINE__);
-                        i_used_phrase = USED_PHRASE_USER;
-			if (ptailophrase->freq > puserphrase->freq) {
-				TRACX("%s, %d\n", __func__,__LINE__);
-				i_used_phrase = USED_PHRASE_TAILO;
-			}
-                    } else {
-			TRACX("%s, %d\n", __func__,__LINE__);
-                        i_used_phrase = USED_PHRASE_DICT;
-                    }
-                }
+		if (puserphrase->freq > pdictphrase->freq) {
+		    TRACX("%s, %d\n", __func__,__LINE__);
+		    i_used_phrase = USED_PHRASE_USER;
+		    if (ptailophrase->freq > puserphrase->freq) {
+			    TRACX("%s, %d\n", __func__,__LINE__);
+			    i_used_phrase = USED_PHRASE_TAILO;
+		    }
+		} else {
+		    TRACX("%s, %d\n", __func__,__LINE__);
+		    i_used_phrase = USED_PHRASE_DICT;
+		}
             }
             switch (i_used_phrase) {
             case USED_PHRASE_USER:
