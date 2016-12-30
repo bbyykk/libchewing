@@ -633,13 +633,7 @@ UserPhraseData *TailoGetPhraseFirst(ChewingData *pgdata, const uint32_t phoneSeq
         return NULL;
     }
     
-    UserPhraseData *p = TailoGetPhraseNext(pgdata, phoneSeq);
-
-    if (p) {
-	    printf("p=%x\n", p);
-	    printf("p->userfreq=%d\n", p->userfreq);
-    }
-    return p;
+    return TailoGetPhraseNext(pgdata, phoneSeq);
 }
 
 UserPhraseData *TailoGetPhraseNext(ChewingData *pgdata, const uint32_t phoneSeq[])
@@ -668,7 +662,6 @@ UserPhraseData *TailoGetPhraseNext(ChewingData *pgdata, const uint32_t phoneSeq[
         sqlite3_column_int(pgdata->static_data.stmt_tailophrase[STMT_TAILOPHRASE_SELECT_BY_PHONE],
                            SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_USER_FREQ]);
 
-    printf("%s IIIIIIIIII : pgdata->tailophrase_data.userfreq = %d\n", __func__, pgdata->tailophrase_data.userfreq);
     pgdata->tailophrase_data.maxfreq =
         sqlite3_column_int(pgdata->static_data.stmt_tailophrase[STMT_TAILOPHRASE_SELECT_BY_PHONE],
                            SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_MAX_FREQ]);
@@ -681,7 +674,6 @@ UserPhraseData *TailoGetPhraseNext(ChewingData *pgdata, const uint32_t phoneSeq[
         sqlite3_column_int(pgdata->static_data.stmt_tailophrase[STMT_TAILOPHRASE_SELECT_BY_PHONE],
                            SQL_STMT_TAILOPHRASE[STMT_TAILOPHRASE_SELECT_BY_PHONE].column[COLUMN_TAILOPHRASE_TYPE]);
 
-    printf("%s TTTTTT type=%d, str=%s\n", __func__, pgdata->tailophrase_data.type, pgdata->tailophrase_data.wordSeq);
     return &(pgdata->tailophrase_data);
 }
 

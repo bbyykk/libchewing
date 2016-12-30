@@ -54,8 +54,6 @@ static void ChangeSelectIntervalAndBreakpoint(ChewingData *pgdata, int from, int
     /* No available selection */
     if ((user_alloc = (to - from)) == 0)
         return;
-    printf("%s, %d, str=%s, usre_alloc=%d\n", __func__, __LINE__, str, user_alloc);
-    //strncpy(pgdata->selectStr[pgdata->nSelect], str, 16);
     ueStrNCpy(pgdata->selectStr[pgdata->nSelect], str, 16, 1);
     pgdata->nSelect++;
 
@@ -164,7 +162,6 @@ static int ChoiceTheSame(ChoiceInfo *pci, const char *str, int len)
 {
     int i;
 
-    printf("---- %s, %d, len=%d\t(%s) -----\n", __func__, __LINE__, len, str);
     for (i = 0; i < pci->nTotalChoice; i++)
         if (!memcmp(pci->totalChoiceStr[i], str, len))
             return 1;
@@ -176,16 +173,16 @@ static void ChoiceInfoAppendChi(ChewingData *pgdata, ChoiceInfo *pci, uint32_t p
     Phrase tempWord;
     int len;
 
-    printf("---- %s, %d -----\n", __func__, __LINE__);
+    TRACX("---- %s, %d -----\n", __func__, __LINE__);
     if (GetCharFirst(pgdata, &tempWord, phone)) {
         do {
             //len = ueBytesFromChar(tempWord.phrase[0]);
             len = strlen(tempWord.phrase);
-	    printf("---- string len=%d xxxxx\n", strlen(tempWord.phrase));
+	    TRACX("---- string len=%d xxxxx\n", strlen(tempWord.phrase));
 	    {
 		    int j;
 		    for (j=0;j< 10;j++) {
-			    printf("%02X ", (unsigned char) tempWord.phrase[j]);
+			    TRACX("%02X ", (unsigned char) tempWord.phrase[j]);
 		    }
 	    }
             if (ChoiceTheSame(pci, tempWord.phrase, len))
@@ -195,7 +192,7 @@ static void ChoiceInfoAppendChi(ChewingData *pgdata, ChoiceInfo *pci, uint32_t p
             pci->totalChoiceStr[pci->nTotalChoice]
                 [len] = '\0';
 	    pci->totalChoiceType[pci->nTotalChoice] = tempWord.type;
-	    printf("---- %s, %d: totalChoiceStr[%d]=%s, type=%d\n", __func__, __LINE__,
+	    TRACX("---- %s, %d: totalChoiceStr[%d]=%s, type=%d\n", __func__, __LINE__,
 			    pci->nTotalChoice, pci->totalChoiceStr[pci->nTotalChoice],
 			    pci->totalChoiceType[pci->nTotalChoice]);
             pci->nTotalChoice++;
