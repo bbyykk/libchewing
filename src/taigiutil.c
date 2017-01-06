@@ -450,6 +450,12 @@ void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
     pos = pgo->commitBuf;
     for (i = 0; i < pgo->commitBufLen; ++i) {
         assert(pos + MAX_UTF8_SIZE + 1 < pgo->commitBuf + sizeof(pgo->commitBuf));
+	//Adding the '-' betweeen tailo
+	if (i > 0) {
+		if (pgdata->preeditBuf[i-1].type == TYPE_TAILO && pgdata->preeditBuf[i].type == TYPE_TAILO) {
+			*pos++ = '-';
+		}
+	}
         strcpy(pos, pgdata->preeditBuf[i].char_);
 	printf("%s, %d: pgdata->preeditBuf[%d].char_=%s, type=%d\n",
 		__func__, __LINE__, i, pgdata->preeditBuf[i].char_,
@@ -542,39 +548,8 @@ int ReleaseChiSymbolBuf(ChewingData *pgdata, ChewingOutput *pgo)
 
 static int ChewingIsBreakPoint(int cursor, ChewingData *pgdata)
 {
-    static const char *const BREAK_WORD[] = {
-        "\xE6\x98\xAF", "\xE7\x9A\x84", "\xE4\xBA\x86", "\xE4\xB8\x8D",
-        /* 是              的              了              不 */
-        "\xE4\xB9\x9F", "\xE8\x80\x8C", "\xE4\xBD\xA0", "\xE6\x88\x91",
-        /* 也              而              你              我 */
-        "\xE4\xBB\x96", "\xE8\x88\x87", "\xE5\xAE\x83", "\xE5\xA5\xB9",
-        /* 他              與              它              她 */
-        "\xE5\x85\xB6", "\xE5\xB0\xB1", "\xE5\x92\x8C", "\xE6\x88\x96",
-        /* 其              就              和              或 */
-        "\xE5\x80\x91", "\xE6\x80\xA7", "\xE5\x93\xA1", "\xE5\xAD\x90",
-        /* 們              性              員              子 */
-        "\xE4\xB8\x8A", "\xE4\xB8\x8B", "\xE4\xB8\xAD", "\xE5\x85\xA7",
-        /* 上              下              中              內 */
-        "\xE5\xA4\x96", "\xE5\x8C\x96", "\xE8\x80\x85", "\xE5\xAE\xB6",
-        /* 外              化              者              家 */
-        "\xE5\x85\x92", "\xE5\xB9\xB4", "\xE6\x9C\x88", "\xE6\x97\xA5",
-        /* 兒              年              月              日 */
-        "\xE6\x99\x82", "\xE5\x88\x86", "\xE7\xA7\x92", "\xE8\xA1\x97",
-        /* 時              分              秒              街 */
-        "\xE8\xB7\xAF", "\xE6\x9D\x91",
-        /* 路              村 */
-        "\xE5\x9C\xA8",
-        /* 在 */
-    };
-    size_t i;
-
     if (!ChewingIsChiAt(cursor, pgdata))
         return 1;
-
-    for (i = 0; i < ARRAY_SIZE(BREAK_WORD); ++i)
-        if (!strcmp(pgdata->preeditBuf[cursor].char_, BREAK_WORD[i]))
-            return 1;
-
     return 0;
 }
 
@@ -597,15 +572,16 @@ void AutoLearnPhrase(ChewingData *pgdata)
      */
 
     UserUpdatePhraseBegin(pgdata);
-
+    memset(bufPhoneSeq, 0, sizeof(bufPhoneSeq));
+    memset(bufWordSeq, 0, sizeof(bufWordSeq));
     for (i = 0; i < pgdata->nPrefer; i++) {
         from = pgdata->preferInterval[i].from;
         len = pgdata->preferInterval[i].to - from;
         fromPreeditBuf = toPreeditBufIndex(pgdata, from);
 	type = TaigiTypeAt(from, pgdata);
 
-        printf("---- %s: pgdata->preferInterval[%d].from=%d, len=%d, fromPreeditBuf = %d, pending_pos = %d, type=%d ---\n", 
-		__func__, i, from, len, fromPreeditBuf, pending_pos, type);
+        printf("---- %s:%d pgdata->preferInterval[%d].from=%d, type=%d, len=%d, fromPreeditBuf = %d\n, pending_pos = %d, prev_pos=%d,  ---\n", 
+		__func__, __LINE__, i, from, type, len, fromPreeditBuf, pending_pos, prev_pos);
 
         if (pending_pos != 0 && pending_pos < fromPreeditBuf) {
             /*
@@ -613,6 +589,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
              * connected to current phrase. We store it as
              * userphrase here.
              */
+	    printf("xxxx %s, %d\n", __func__, __LINE__);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
             prev_pos = 0;
             pending_pos = 0;
@@ -627,11 +604,18 @@ void AutoLearnPhrase(ChewingData *pgdata)
             memcpy(bufPhoneSeq + prev_pos, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
             bufPhoneSeq[prev_pos + len] = (uint32_t) 0;
 
-            pos = ueStrSeek(bufWordSeq, prev_pos);
+	    if (pgdata->preeditBuf[fromPreeditBuf].type == TYPE_TAILO) {
+		    pos = bufWordSeq + strlen(bufWordSeq);
+	    } else {
+		    pos = ueStrSeek(bufWordSeq, prev_pos);
+	    }
+
             type = copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, pos, bufWordSeq + sizeof(bufWordSeq) - pos);
             prev_pos += len;
             pending_pos = fromPreeditBuf + len;
 
+	    printf("xxxx %s, %d, prev_pos=%d, len=%d, pending_pos=%d, bufWordSeq=%s\n", __func__, __LINE__,
+		prev_pos, len, pending_pos,  bufWordSeq);
         } else {
             if (pending_pos) {
                 /*
@@ -643,17 +627,17 @@ void AutoLearnPhrase(ChewingData *pgdata)
                 prev_pos = 0;
                 pending_pos = 0;
             }
-	    printf("xxxx %s, %d\n", __func__, __LINE__);
             memcpy(bufPhoneSeq, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
             bufPhoneSeq[len] = (uint32_t) 0;
             type = copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, bufWordSeq, sizeof(bufWordSeq));
+	    printf("xxxx %s, %d, len=%d, from=%d, bufWordSeq=%s\n", __func__, __LINE__, len, from, bufWordSeq);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
         }
         printf("xxxx %s, %d, loop[%d] done\n", __func__, __LINE__, i);
     }
 
     if (pending_pos) {
-        printf("%s, %d\n", __func__, __LINE__);
+        printf("%s, %d, bufWordSeq=%s\n", __func__, __LINE__, bufWordSeq);
         UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
     }
     UserUpdatePhraseEnd(pgdata);
@@ -843,7 +827,19 @@ static void MakePreferInterval(ChewingData *pgdata)
             Union(belong_set[i - 1], belong_set[i], parent);
         }
     }
+    {
+	 int a;
 
+	 printf("belong_set[]=");
+	 for(a=0; a < 4; ++a) {
+		 printf(" %d", belong_set[a]);
+	 }
+	 printf("\nparent[]=");
+	 for(a=0; a < 4; ++a) {
+		 printf(" %d", belong_set[a]);
+	 }
+	 printf("\n");
+    }
     /* generate new intervals */
     pgdata->nPrefer = 0;
     i = 0;
@@ -856,6 +852,10 @@ static void MakePreferInterval(ChewingData *pgdata)
         pgdata->preferInterval[pgdata->nPrefer].to = j;
         pgdata->nPrefer++;
         i = j;
+	printf("%s, %d, pgdata->preferInterval[%d].from=%d, to=%d\n", __func__, __LINE__,
+			pgdata->nPrefer, pgdata->preferInterval[pgdata->nPrefer].from,
+			pgdata->preferInterval[pgdata->nPrefer].to
+	      );
     }
 }
 
@@ -887,15 +887,23 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
     char *pos;
 
     /* fill zero to chiSymbolBuf first */
-    //pgo->preeditBuf[0] = 0;
-    //pgo->bopomofoBuf[0] = 0;
     memset(pgo->preeditBuf, 0, sizeof(pgo->preeditBuf));
     memset(pgo->bopomofoBuf, 0, sizeof(pgo->bopomofoBuf));
 
     pos = pgo->preeditBuf;
     for (i = 0; i < pgdata->chiSymbolBufLen && pos < pgo->preeditBuf + sizeof(pgo->preeditBuf) + MAX_UTF8_SIZE + 1; ++i) {
-        strncpy(pos, pgdata->preeditBuf[i].char_, MAX_UTF8_SIZE + 1);
-        pos += strlen(pgdata->preeditBuf[i].char_);
+	int len = pgdata->preeditBuf[i].len;
+
+#if 1
+	if (i > 0) {
+		if (pgdata->preeditBuf[i - 1].type == TYPE_TAILO && pgdata->preeditBuf[i].type == TYPE_TAILO) {
+			*pos++='-';
+		}
+	}
+#endif
+        memcpy(pos, pgdata->preeditBuf[i].char_, len);
+        pos += len;
+	/* Add the '-' between two Tailo */
     }
 
     /* fill point */
@@ -920,8 +928,6 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
 	    }
 	    printf("\n");
 	}
-//	strncpy(pgo->bopomofoBuf + strlen(pgo->bopomofoBuf),
-//	    pgdata->bopomofoData.pho_inx, BOPOMOFO_SIZE);
     }
     ShiftInterval(pgo, pgdata);
     memcpy(pgo->dispBrkpt, pgdata->bUserArrBrkpt, sizeof(pgo->dispBrkpt[0]) * (MAX_PHONE_SEQ_LEN + 1));
@@ -1530,9 +1536,16 @@ int copyStringFromPreeditBuf(ChewingData *pgdata, int pos, int len, char *output
     LOG_VERBOSE("Copy pos %d, len %d from preeditBuf", pos, len);
 
     for (i = pos; i < pos + len; ++i) {
-        x = strlen(pgdata->preeditBuf[i].char_);
+        x = pgdata->preeditBuf[i].len;
         if (x >= output_len)    // overflow
             return ret;
+	if(i > 0) {
+		if(pgdata->preeditBuf[i - 1].type == TYPE_TAILO && pgdata->preeditBuf[i].type == TYPE_TAILO) {
+			*output = '-';
+			output += 1;
+			output_len -= 1;
+		}
+	}
         memcpy(output, pgdata->preeditBuf[i].char_, x);
         output += x;
         output_len -= x;

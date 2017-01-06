@@ -23,11 +23,11 @@
 
 #ifndef LOG_USERPHRASE_SQL
 #undef LOG_WARN
-#undef LOG_ERROR
+//#undef LOG_ERROR
 #undef LOG_INFO
 #undef LOG_VERBOSE
 #define LOG_WARN(fmt...)
-#define LOG_ERROR(fmt...)
+//#define LOG_ERROR(fmt...)
 #define LOG_INFO(fmt...)
 #define LOG_VERBOSE(fmt...)
 #endif

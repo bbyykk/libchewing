@@ -517,21 +517,21 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
                 break;
             }
 		if (puserphrase != NULL && i_used_phrase != USED_PHRASE_USER) {
-		    printf("XXXXX %s, %d\n", __func__, __LINE__);
+		    TRACX("XXXXX %s, %d\n", __func__, __LINE__);
 		    free(puserphrase);
 		    puserphrase = NULL;
 		}
 		if (pdictphrase != NULL && i_used_phrase != USED_PHRASE_DICT) {
-		    printf("XXXXX %s, %d\n", __func__, __LINE__);
+		    TRACX("XXXXX %s, %d\n", __func__, __LINE__);
 		    free(pdictphrase);
 		    pdictphrase = NULL;
 		}
 		if (ptailophrase != NULL && i_used_phrase != USED_PHRASE_TAILO) {
-		    printf("XXXXX %s, %d\n", __func__, __LINE__);
+		    TRACX("XXXXX %s, %d\n", __func__, __LINE__);
 		    free(ptailophrase);
 		    ptailophrase = NULL;
 		}
-	    printf("%s, %d XXXXXXXXXXXXXXX\n", __func__, __LINE__);
+	    TRACX("%s, %d XXXXXXXXXXXXXXX\n", __func__, __LINE__);
         }
     }
 }
@@ -677,6 +677,7 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, 
 {
     int i;
     int start = 0;
+    char *next = phrase;
 
     assert(pgdata);
     assert(phrase);
@@ -688,15 +689,23 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, 
 
     for (i = start; i < start - from + to; ++i) {
 	if (phrase && IsThePhone(phrase[0])) {
-		strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
+		strncpy(pgdata->preeditBuf[i].char_, phrase, 32);
 		pgdata->preeditBuf[i].type = type;
+		pgdata->preeditBuf[i].len = strlen(pgdata->preeditBuf[i].char_);
 	} else if (phrase && IsTheTaiLoPhone(phrase)) {
-		strncpy(pgdata->preeditBuf[i].char_, phrase, 16);
+		char *p = strchr(phrase, '-');
+		if (p)
+			*p = 0;
+		strncpy(pgdata->preeditBuf[i].char_, next, 32);
 		pgdata->preeditBuf[i].type = type;
+		pgdata->preeditBuf[i].len = strlen(pgdata->preeditBuf[i].char_);
+		next = p + 1;
 	} else {
 		/* Han character */
+		TRACX("%s, %d\n", __func__, __LINE__);
 		ueStrNCpy(pgdata->preeditBuf[i].char_, ueStrSeek(phrase, i - start), 1, STRNCPY_CLOSE);
 		pgdata->preeditBuf[i].type = type;
+		pgdata->preeditBuf[i].len = strlen(pgdata->preeditBuf[i].char_);
 	}
 	LOG_VERBOSE("pgdata->preeditBuf[%d].char_=%s, type=%d", i, pgdata->preeditBuf[i].char_, pgdata->preeditBuf[i].type);
     }

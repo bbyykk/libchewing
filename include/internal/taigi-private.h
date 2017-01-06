@@ -241,6 +241,7 @@ typedef enum Category {
 typedef struct PreeditBuf {
     Category category;
     int	type;
+    int len;
     char char_[MAX_UTF8_SIZE + 1];
 } PreeditBuf;
 
@@ -344,6 +345,6 @@ typedef struct Phrase {
 } Phrase;
 
 /* *INDENT-OFF* */
-#define TRACX(args, ...) //printf(args, ##__VA_ARGS__)
+#define TRACX(args, ...) printf(args, ##__VA_ARGS__)
 #endif
 /* *INDENT-ON* */
