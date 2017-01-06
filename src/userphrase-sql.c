@@ -23,11 +23,11 @@
 
 #ifndef LOG_USERPHRASE_SQL
 #undef LOG_WARN
-//#undef LOG_ERROR
+#undef LOG_ERROR
 #undef LOG_INFO
 #undef LOG_VERBOSE
 #define LOG_WARN(fmt...)
-//#define LOG_ERROR(fmt...)
+#define LOG_ERROR(fmt...)
 #define LOG_INFO(fmt...)
 #define LOG_VERBOSE(fmt...)
 #endif
@@ -264,7 +264,7 @@ static int UserUpdatePhrase_Tailo(ChewingData *pgdata, const uint32_t phoneSeq[]
     /* TODO: Currnetly do not support multiple word */
     word_len = phone_len;
     printf("%s, Currently Not support multiple Tailo words\n", __func__);
-    LOG_ERROR("%s, %d, input word=%s, phone_len=%d, word_len=%d\n",
+    printf("<<<<< %s, %d, input word=%s, phone_len=%d, word_len=%d >>>> \n",
 	    __func__, __LINE__, wordSeq, phone_len, word_len);
 
     if (word_len > MAX_PHRASE_LEN) {

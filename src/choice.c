@@ -38,6 +38,7 @@ static void ChangeSelectIntervalAndBreakpoint(ChewingData *pgdata, int from, int
 
     IntervalType inte;
 
+    
     inte.from = from;
     inte.to = to;
     for (i = 0; i < pgdata->nSelect; i++) {
@@ -255,6 +256,8 @@ static void SetChoiceInfo(ChewingData *pgdata)
 
         memcpy(userPhoneSeq, &phoneSeq[cursor], sizeof(uint32_t) * len);
         userPhoneSeq[len] = 0;
+
+	/* Get User Phrase here */
         pUserPhraseData = UserGetPhraseFirst(pgdata, userPhoneSeq);
         if (pUserPhraseData) {
             do {
@@ -263,12 +266,28 @@ static void SetChoiceInfo(ChewingData *pgdata)
                     continue;
                 /* otherwise store it */
                 ueStrNCpy(pci->totalChoiceStr[pci->nTotalChoice], pUserPhraseData->wordSeq, len, 1);
-		printf("\tCopying: len=%d\t, (%s)\n", len, pUserPhraseData->wordSeq);
+		pci->totalChoiceType[pci->nTotalChoice] = TYPE_HAN;
+		printf("\tCopying User: len=%d\t, (%s)\n", len, pUserPhraseData->wordSeq);
                 pci->nTotalChoice++;
             } while ((pUserPhraseData = UserGetPhraseNext(pgdata, userPhoneSeq)) != NULL);
         }
         UserGetPhraseEnd(pgdata, userPhoneSeq);
 
+	/* Get Tailo Phrase here */
+        pUserPhraseData = TailoGetPhraseFirst(pgdata, userPhoneSeq);
+        if (pUserPhraseData) {
+            do {
+                /* check if the phrase is already in the choice list */
+                //if (ChoiceTheSame(pci, pUserPhraseData->wordSeq, strlen(pUserPhraseData->wordSeq[0])))
+                 //   continue;
+                /* otherwise store it */
+                strncpy(pci->totalChoiceStr[pci->nTotalChoice], pUserPhraseData->wordSeq, MAX_PHRASE_LEN * MAX_UTF8_SIZE + 1);
+		pci->totalChoiceType[pci->nTotalChoice] = TYPE_TAILO;
+		printf("\tCopying Tailo: len=%d\t, (%s)\n", len, pUserPhraseData->wordSeq);
+                pci->nTotalChoice++;
+            } while ((pUserPhraseData = TailoGetPhraseNext(pgdata, userPhoneSeq)) != NULL);
+        }
+        TailoGetPhraseEnd(pgdata, userPhoneSeq);
     }
 
     /* magic number */
@@ -460,9 +479,21 @@ static void ChangeUserData(ChewingData *pgdata, int selectNo, int type)
 {
     uint32_t userPhoneSeq[MAX_PHONE_SEQ_LEN];
     int len;
+    char *p = NULL;
 
-    printf("---- %s, %d -----\n", __func__, __LINE__);
-    len = ueStrLen(pgdata->choiceInfo.totalChoiceStr[selectNo]);
+    /* This function is used to determine how many word there, len is Number of word */
+    if (pgdata->choiceInfo.totalChoiceType[selectNo] == TYPE_TAILO) {
+	    p = pgdata->choiceInfo.totalChoiceStr[selectNo];
+	    len = 1;
+	    while (p = strchr(p, '-')) {
+		    ++p;
+		    ++len;
+	    }
+    }  else
+	    len = ueStrLen(pgdata->choiceInfo.totalChoiceStr[selectNo]);
+
+
+    TRACX("<<<<<---- %s, %d, selectNo=%d, type=%d, str=%s, len=%d ----->>>>\n", __func__, __LINE__, selectNo, type, pgdata->choiceInfo.totalChoiceStr[selectNo], len);
     memcpy(userPhoneSeq, &(pgdata->phoneSeq[PhoneSeqCursor(pgdata)]), len * sizeof(uint32_t));
     userPhoneSeq[len] = 0;
     UserUpdatePhrase(pgdata, userPhoneSeq, pgdata->choiceInfo.totalChoiceStr[selectNo], type);
@@ -474,7 +505,7 @@ int ChoiceSelect(ChewingData *pgdata, int selectNo)
     ChoiceInfo *pci = &(pgdata->choiceInfo);
     AvailInfo *pai = &(pgdata->availInfo);
 
-    printf("---- %s, %d -----\n", __func__, __LINE__);
+    TRACX("---- %s, %d -----\n", __func__, __LINE__);
     ChangeUserData(pgdata, selectNo, pci->totalChoiceType[selectNo]);
     ChangeSelectIntervalAndBreakpoint(pgdata,
                                       PhoneSeqCursor(pgdata),

@@ -457,7 +457,7 @@ void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
 		}
 	}
         strcpy(pos, pgdata->preeditBuf[i].char_);
-	printf("%s, %d: pgdata->preeditBuf[%d].char_=%s, type=%d\n",
+	TRACX("%s, %d: pgdata->preeditBuf[%d].char_=%s, type=%d\n",
 		__func__, __LINE__, i, pgdata->preeditBuf[i].char_,
 		pgdata->preeditBuf[i].type);
         pos += strlen(pgdata->preeditBuf[i].char_);
@@ -961,7 +961,13 @@ int AddSelect(ChewingData *pgdata, int sel_i)
     nSelect = pgdata->nSelect;
 
     /* change "selectStr" , "selectInterval" , and "nSelect" of ChewingData */
-    ueStrNCpy(pgdata->selectStr[nSelect], pgdata->choiceInfo.totalChoiceStr[sel_i], length, 1);
+    if (pgdata->choiceInfo.totalChoiceType[sel_i] == TYPE_TAILO) {
+	    printf("<<<< %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, nSelect, pgdata->selectStr[nSelect]);
+	    strncpy(pgdata->selectStr[nSelect], pgdata->choiceInfo.totalChoiceStr[sel_i], MAX_PHONE_SEQ_LEN * MAX_UTF8_SIZE + 1);
+    } else {
+	    printf(">>>> %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, nSelect, pgdata->selectStr[nSelect]);
+	    ueStrNCpy(pgdata->selectStr[nSelect], pgdata->choiceInfo.totalChoiceStr[sel_i], length, 1);
+    }
     cursor = PhoneSeqCursor(pgdata);
     pgdata->selectInterval[nSelect].from = cursor;
     pgdata->selectInterval[nSelect].to = cursor + length;

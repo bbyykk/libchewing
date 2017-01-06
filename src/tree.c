@@ -145,6 +145,7 @@ int CheckTailoChoose(ChewingData *pgdata,
     inte.to = to;
     *pp_phr = NULL;
 
+    printf("%s, %d\n");
     /* pass 1
      * if these exist one selected interval which is not contained by inte
      * but has intersection with inte, then inte is an unacceptable interval
@@ -156,6 +157,7 @@ int CheckTailoChoose(ChewingData *pgdata,
         }
     }
 
+    printf("%s, %d\n");
     /* pass 2
      * if there exist one phrase satisfied all selectStr then return 1, else return 0.
      * also store the phrase with highest freq
@@ -176,8 +178,9 @@ int CheckTailoChoose(ChewingData *pgdata,
                  * if ok then continue to test. */
                 len = c.to - c.from;
                 if (memcmp(ueStrSeek(pgdata->tailophrase_data.wordSeq, c.from - from),
-                           selectStr[chno], ueStrNBytes(selectStr[chno], len)))
+                           selectStr[chno], ueStrNBytes(selectStr[chno], len))) {
                     break;
+		}
             }
         }
         if (chno == nSelect) {
@@ -255,8 +258,9 @@ static int CheckUserChoose(ChewingData *pgdata,
                  * if ok then continue to test. */
                 len = c.to - c.from;
                 if (memcmp(ueStrSeek(pUserPhraseData->wordSeq, c.from - from),
-                           selectStr[chno], ueStrNBytes(selectStr[chno], len)))
+                           selectStr[chno], ueStrNBytes(selectStr[chno], len))) {
                     break;
+		}
             }
 
         }
@@ -313,8 +317,9 @@ static int CheckChoose(ChewingData *pgdata,
                  */
                 len = c.to - c.from;
                 if (memcmp(ueStrSeek(phrase->phrase, c.from - from),
-                           selectStr[chno], ueStrNBytes(selectStr[chno], len)))
+                           selectStr[chno], ueStrNBytes(selectStr[chno], len))) {
                     break;
+		}
             } else if (IsIntersect(inte, selectInterval[chno])) {
 		    goto end;
             }
@@ -685,15 +690,21 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, 
 
     start = toPreeditBufIndex(pgdata, from);
 
-    LOG_VERBOSE("Fill preeditBuf phrase=%s, type=%d, start = %d, from = %d, to = %d\n", phrase, type, start, from, to);
+    printf("Fill preeditBuf phrase=%s, type=%d, start = %d, from = %d, to = %d\n", phrase, type, start, from, to);
 
     for (i = start; i < start - from + to; ++i) {
 	if (phrase && IsThePhone(phrase[0])) {
-		strncpy(pgdata->preeditBuf[i].char_, phrase, 32);
+		TRACX("%s, %d\n", __func__, __LINE__);
+		char *p = strchr(next, '-');
+		if (p)
+			*p = 0;
+		strncpy(pgdata->preeditBuf[i].char_, next, 32);
 		pgdata->preeditBuf[i].type = type;
 		pgdata->preeditBuf[i].len = strlen(pgdata->preeditBuf[i].char_);
+		next = p + 1;
 	} else if (phrase && IsTheTaiLoPhone(phrase)) {
-		char *p = strchr(phrase, '-');
+		TRACX("%s, %d\n", __func__, __LINE__);
+		char *p = strchr(next, '-');
 		if (p)
 			*p = 0;
 		strncpy(pgdata->preeditBuf[i].char_, next, 32);
@@ -716,13 +727,11 @@ static void OutputRecordStr(ChewingData *pgdata, const TreeDataType *ptd)
 {
     PhraseIntervalType inter;
     int i;
-    int type = 0;
 
     LOG_VERBOSE("%d, ptd->phList->nInter=%d\n", __LINE__, ptd->phList->nInter);
     for (i = 0; i < ptd->phList->nInter; i++) {
         inter = ptd->interval[ptd->phList->arrIndex[i]];
         FillPreeditBuf(pgdata, inter.p_phr->phrase, inter.from, inter.to, inter.p_phr->type);
-	type = inter.p_phr->type;
     }
     LOG_VERBOSE("%d, pgdata->nSelect=%d\n", __LINE__, pgdata->nSelect);
     /* Not sure the diff between phrase and select, use the last one */
