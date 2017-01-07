@@ -55,7 +55,11 @@ static void ChangeSelectIntervalAndBreakpoint(ChewingData *pgdata, int from, int
     /* No available selection */
     if ((user_alloc = (to - from)) == 0)
         return;
-    ueStrNCpy(pgdata->selectStr[pgdata->nSelect], str, 16, 1);
+    
+    if(pgdata->selectInterval[pgdata->nSelect].type == TYPE_TAILO)
+	    strncpy(pgdata->selectStr[pgdata->nSelect], str, 32);
+    else
+	    ueStrNCpy(pgdata->selectStr[pgdata->nSelect], str, 16, 1);
     pgdata->nSelect++;
 
     if (user_alloc > 1) {

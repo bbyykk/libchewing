@@ -770,11 +770,29 @@ int CallPhrasing(ChewingData *pgdata, int all_phrasing)
         }
     }
 
+    {
+	    int i;
+	    for (i = 0; i < pgdata->nSelect; i++) {
+		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+	    }
+    }
     ShowChewingData(pgdata);
 
+    {
+	    int i;
+	    for (i = 0; i < pgdata->nSelect; i++) {
+		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+	    }
+    }
     /* then phrasing */
     Phrasing(pgdata, all_phrasing);
 
+    {
+	    int i;
+	    for (i = 0; i < pgdata->nSelect; i++) {
+		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+	    }
+    }
     /* and then make prefer interval */
     MakePreferInterval(pgdata);
 
@@ -962,10 +980,8 @@ int AddSelect(ChewingData *pgdata, int sel_i)
 
     /* change "selectStr" , "selectInterval" , and "nSelect" of ChewingData */
     if (pgdata->choiceInfo.totalChoiceType[sel_i] == TYPE_TAILO) {
-	    printf("<<<< %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, nSelect, pgdata->selectStr[nSelect]);
 	    strncpy(pgdata->selectStr[nSelect], pgdata->choiceInfo.totalChoiceStr[sel_i], MAX_PHONE_SEQ_LEN * MAX_UTF8_SIZE + 1);
     } else {
-	    printf(">>>> %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, nSelect, pgdata->selectStr[nSelect]);
 	    ueStrNCpy(pgdata->selectStr[nSelect], pgdata->choiceInfo.totalChoiceStr[sel_i], length, 1);
     }
     cursor = PhoneSeqCursor(pgdata);

@@ -1471,7 +1471,7 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     CheckAndResetRange(pgdata);
 
     DEBUG_CHECKPOINT();
-    DEBUG_OUT("   key=%d", key);
+    DEBUG_OUT("   key=%d\n", key);
 
     /* Dvorak Hsu */
     if (pgdata->bopomofoData.kbtype == KB_DVORAK_HSU) {
@@ -1480,18 +1480,18 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 
     /* selecting */
     if (pgdata->bSelect) {
-	printf("%s, %d\n", __func__, __LINE__);
         if (key == ' ') {
             return taigi_handle_Down(ctx);
 	}
         /* num starts from 0 */
         num = CountSelKeyNum(key, pgdata);
         if (num >= 0) {
+	    printf("%s, %d\n", __func__, __LINE__);
             DoSelect(pgdata, num);
 	    {
 	       int i=0;
 	       for (i=0;i < pgdata->chiSymbolBufLen;++i) {
-			printf("%s, %d: pgdata->preeditBuf[%d].char_=%s, type=%d\n",
+			DEBUG_OUT("%s, %d: pgdata->preeditBuf[%d].char_=%s, type=%d\n",
 				__func__, __LINE__, i, pgdata->preeditBuf[i].char_,
 			pgdata->preeditBuf[i].type);
 	       }
@@ -1623,13 +1623,27 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 
   End_keyproc:
     if (!bQuickCommit) {
+	printf("%s, %d\n", __func__, __LINE__);
+	    {
+		    int i;
+		    for (i = 0; i < pgdata->nSelect; i++) {
+			TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+		    }
+	    }
         CallPhrasing(pgdata, 0);
+	    {
+		    int i;
+		    for (i = 0; i < pgdata->nSelect; i++) {
+			TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+		    }
+	    }
 	if (ReleaseChiSymbolBuf(pgdata, pgo) != 0) {
             keystrokeRtn = KEYSTROKE_COMMIT;
 	}
     }
     /* Quick commit */
     else {
+        printf("%s, %d\n", __func__, __LINE__);
         WriteChiSymbolToCommitBuf(pgdata, pgo, 1);
         pgdata->chiSymbolBufLen = 0;
         pgdata->chiSymbolCursor = 0;

@@ -157,7 +157,7 @@ int CheckTailoChoose(ChewingData *pgdata,
         }
     }
 
-    printf("%s, %d\n");
+    printf("%s, %d\n", __func__, __LINE__);
     /* pass 2
      * if there exist one phrase satisfied all selectStr then return 1, else return 0.
      * also store the phrase with highest freq
@@ -177,8 +177,9 @@ int CheckTailoChoose(ChewingData *pgdata,
                  * 'selectStr[chno]' test if not ok then return 0,
                  * if ok then continue to test. */
                 len = c.to - c.from;
-                if (memcmp(ueStrSeek(pgdata->tailophrase_data.wordSeq, c.from - from),
-                           selectStr[chno], ueStrNBytes(selectStr[chno], len))) {
+                if (memcmp(pgdata->tailophrase_data.wordSeq,
+                           selectStr[chno], strlen(selectStr[chno]))) {
+		    TRACY("%s, %d, selectStr=%s\n", __func__, __LINE__, selectStr[chno]);
                     break;
 		}
             }
@@ -194,10 +195,12 @@ int CheckTailoChoose(ChewingData *pgdata,
                 if ((user_alloc = (to - from)) > 0) {
                     strncpy(p_phr->phrase, pgdata->tailophrase_data.wordSeq, 64);
                 }
-		TRACX("%s, %d\n", __func__, __LINE__);
                 p_phr->freq = pgdata->tailophrase_data.userfreq;
 		p_phr->type = pgdata->tailophrase_data.type;
+		if(!p_phr->type)
+			p_phr->type = TYPE_TAILO;
                 *pp_phr = p_phr;
+		TRACY("%s, %d, *pp_phr->phrase=%s\n", __func__, __LINE__, (*pp_phr)->phrase);
             }
         }
     } while ((pTailoPhraseData = TailoGetPhraseNext(pgdata, new_phoneSeq)) != NULL);
@@ -273,8 +276,12 @@ static int CheckUserChoose(ChewingData *pgdata,
                 }
                 p_phr->freq = pUserPhraseData->userfreq;
 		p_phr->type = pUserPhraseData->type;
+		if(!p_phr->type)
+			p_phr->type = TYPE_HAN;
+			
                 *pp_phr = p_phr;
-		printf("%s, %d, pp_phr=0x%x\n", __func__, __LINE__, (uint32_t) *pp_phr);
+		printf("%s, %d, pp_phr=0x%x, freq=%d, type=%d\n", __func__, __LINE__,
+				(uint32_t) *pp_phr, p_phr->freq, p_phr->type);
             }
         }
     } while ((pUserPhraseData = UserGetPhraseNext(pgdata, new_phoneSeq)) != NULL);
@@ -505,20 +512,20 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
             }
             switch (i_used_phrase) {
             case USED_PHRASE_USER:
-		TRACX("%s, %d\n", __func__,__LINE__);
+		TRACY("%s, %d, Using User, phrase=%s\n", __func__,__LINE__, puserphrase->phrase);
                 AddInterval(ptd, begin, end, puserphrase, IS_USER_PHRASE);
                 break;
             case USED_PHRASE_DICT:
-		TRACX("%s, %d\n", __func__,__LINE__);
+		TRACY("%s, %d, Using Dict, phase=%s\n", __func__,__LINE__, pdictphrase->phrase);
                 AddInterval(ptd, begin, end, pdictphrase, IS_DICT_PHRASE);
                 break;
             case USED_PHRASE_TAILO:
-		printf("%s, %d\n", __func__,__LINE__);
+		printf("%s, %d, Using Tailo, phrase=%s\n", __func__,__LINE__, ptailophrase->phrase);
                 AddInterval(ptd, begin, end, ptailophrase, IS_TAILO_PHRASE);
                 break;
             case USED_PHRASE_NONE:
             default:
-	        TRACX("%s, %d\n", __func__,__LINE__);
+	        TRACY("%s, %d, Not Using it\n", __func__,__LINE__);
                 break;
             }
 		if (puserphrase != NULL && i_used_phrase != USED_PHRASE_USER) {
@@ -682,7 +689,7 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, 
 {
     int i;
     int start = 0;
-    char *next = phrase;
+    char *str_start = phrase;
 
     assert(pgdata);
     assert(phrase);
@@ -693,24 +700,38 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, 
     printf("Fill preeditBuf phrase=%s, type=%d, start = %d, from = %d, to = %d\n", phrase, type, start, from, to);
 
     for (i = start; i < start - from + to; ++i) {
+	if (!pgdata->preeditBuf[i].char_) {
+		printf("%s, %d, !!!!! preeditBuf[%d]._char_ is NULL\n", __func__, __LINE__);
+		break;
+	}
 	if (phrase && IsThePhone(phrase[0])) {
 		TRACX("%s, %d\n", __func__, __LINE__);
-		char *p = strchr(next, '-');
-		if (p)
-			*p = 0;
-		strncpy(pgdata->preeditBuf[i].char_, next, 32);
+		char *end = strchr(str_start, '-');
+		int len = 0;
+		if (end) {
+			len = end - str_start;
+		} else
+			len = strlen(str_start);
+
+		memcpy(pgdata->preeditBuf[i].char_, str_start, len);
+		pgdata->preeditBuf[i].char_[len] = 0;
 		pgdata->preeditBuf[i].type = type;
 		pgdata->preeditBuf[i].len = strlen(pgdata->preeditBuf[i].char_);
-		next = p + 1;
+		str_start = end + 1;
 	} else if (phrase && IsTheTaiLoPhone(phrase)) {
 		TRACX("%s, %d\n", __func__, __LINE__);
-		char *p = strchr(next, '-');
-		if (p)
-			*p = 0;
-		strncpy(pgdata->preeditBuf[i].char_, next, 32);
+		char *end = strchr(str_start, '-');
+		int len = 0;
+		if (end) {
+			len = end - str_start;
+		} else
+			len = strlen(str_start);
+
+		memcpy(pgdata->preeditBuf[i].char_, str_start, len);
+		pgdata->preeditBuf[i].char_[len] = 0;
 		pgdata->preeditBuf[i].type = type;
 		pgdata->preeditBuf[i].len = strlen(pgdata->preeditBuf[i].char_);
-		next = p + 1;
+		str_start = end + 1;
 	} else {
 		/* Han character */
 		TRACX("%s, %d\n", __func__, __LINE__);
@@ -733,7 +754,7 @@ static void OutputRecordStr(ChewingData *pgdata, const TreeDataType *ptd)
         inter = ptd->interval[ptd->phList->arrIndex[i]];
         FillPreeditBuf(pgdata, inter.p_phr->phrase, inter.from, inter.to, inter.p_phr->type);
     }
-    LOG_VERBOSE("%d, pgdata->nSelect=%d\n", __LINE__, pgdata->nSelect);
+    LOG_VERBOSE("\n%d, pgdata->nSelect=%d\n", __LINE__, pgdata->nSelect);
     /* Not sure the diff between phrase and select, use the last one */
     for (i = 0; i < pgdata->nSelect; i++) {
         FillPreeditBuf(pgdata, pgdata->selectStr[i], pgdata->selectInterval[i].from, pgdata->selectInterval[i].to, pgdata->selectInterval[i].type);
@@ -1146,6 +1167,12 @@ static void DoDpPhrasing(ChewingData *pgdata, TreeDataType *pdt)
      */
 
     /* The interval shall be sorted by the increase order of end. */
+    {
+	    int i;
+	    for (i = 0; i < pgdata->nSelect; i++) {
+		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+	    }
+    }
     qsort(pdt->interval, pdt->nInterval, sizeof(pdt->interval[0]), SortByIncreaseEnd);
 
     for (interval_id = 0; interval_id < pdt->nInterval; ++interval_id) {
@@ -1183,6 +1210,13 @@ static void DoDpPhrasing(ChewingData *pgdata, TreeDataType *pdt)
 
     for (end = 0; end < pgdata->nPhoneSeq - 1; ++end)
         FreeRecord(highest_score[end]);
+
+    {
+	    int i;
+	    for (i = 0; i < pgdata->nSelect; i++) {
+		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+	    }
+    }
 }
 
 int Phrasing(ChewingData *pgdata, int all_phrasing)
@@ -1190,7 +1224,7 @@ int Phrasing(ChewingData *pgdata, int all_phrasing)
     TreeDataType treeData;
 
     DEBUG_OUT("\n");
-    TRACX("^^^^^ %s, %d, all_pharseing=%d\n", __func__, __LINE__, all_phrasing);
+    TRACY("^^^^^ %s, %d, all_pharseing=%d\n", __func__, __LINE__, all_phrasing);
     InitPhrasing(&treeData);
 
     FindInterval(pgdata, &treeData);
@@ -1198,21 +1232,37 @@ int Phrasing(ChewingData *pgdata, int all_phrasing)
     Discard1(&treeData);
     Discard2(&treeData);
     if (all_phrasing) {
+	TRACY("%s, %d\n", __func__, __LINE__);
         SaveList(&treeData);
         CountMatchCnnct(&treeData, pgdata->bUserArrCnnct, pgdata->nPhoneSeq);
         SortListByScore(&treeData);
         NextCut(&treeData, &pgdata->phrOut);
     } else {
+	TRACY("%s, %d\n", __func__, __LINE__);
         DoDpPhrasing(pgdata, &treeData);
     }
 
     ShowList(pgdata, &treeData);
 
+    TRACY("%s, %d\n", __func__, __LINE__);
+    {
+	    int i;
+	    for (i = 0; i < pgdata->nSelect; i++) {
+		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+	    }
+    }
     /* set phrasing output */
     OutputRecordStr(pgdata, &treeData);
+    {
+	    int i;
+	    for (i = 0; i < pgdata->nSelect; i++) {
+		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
+	    }
+    }
     SaveDispInterval(&pgdata->phrOut, &treeData);
 
     /* free "phrase" */
     CleanUpMem(&treeData);
+    TRACY("%s, %d\n", __func__, __LINE__);
     return 0;
 }
