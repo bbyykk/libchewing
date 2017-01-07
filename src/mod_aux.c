@@ -200,6 +200,10 @@ CHEWING_API int taigi_cursor_Raw(const ChewingContext *ctx)
     }
     pgdata = ctx->data;
     for (i=0; i < ctx->output->chiSymbolCursor; ++i) {
+	    if (i > 0) {
+		    if(pgdata->preeditBuf[i-1].type == TYPE_TAILO && pgdata->preeditBuf[i].type == TYPE_TAILO)
+			raw_cursor += 1;
+	    }
 	    raw_cursor += strlen(pgdata->preeditBuf[i].char_);
     }
     return raw_cursor;
@@ -317,7 +321,7 @@ CHEWING_API const char *taigi_cand_String_static(ChewingContext *ctx)
 
     if (taigi_cand_hasNext(ctx)) {
         s = ctx->output->pci->totalChoiceStr[ctx->cand_no];
-	printf("%s, Get: %s\n", __func__, s);
+	LOG_API("%s, Get: %s\n", __func__, s);
         ctx->cand_no++;
     }
 

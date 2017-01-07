@@ -145,7 +145,7 @@ int CheckTailoChoose(ChewingData *pgdata,
     inte.to = to;
     *pp_phr = NULL;
 
-    printf("%s, %d\n");
+    TRACY("%s, %d\n");
     /* pass 1
      * if these exist one selected interval which is not contained by inte
      * but has intersection with inte, then inte is an unacceptable interval
@@ -157,7 +157,6 @@ int CheckTailoChoose(ChewingData *pgdata,
         }
     }
 
-    printf("%s, %d\n", __func__, __LINE__);
     /* pass 2
      * if there exist one phrase satisfied all selectStr then return 1, else return 0.
      * also store the phrase with highest freq
@@ -280,7 +279,7 @@ static int CheckUserChoose(ChewingData *pgdata,
 			p_phr->type = TYPE_HAN;
 			
                 *pp_phr = p_phr;
-		printf("%s, %d, pp_phr=0x%x, freq=%d, type=%d\n", __func__, __LINE__,
+		TRACY("%s, %d, pp_phr=0x%x, freq=%d, type=%d\n", __func__, __LINE__,
 				(uint32_t) *pp_phr, p_phr->freq, p_phr->type);
             }
         }
@@ -520,7 +519,7 @@ static void FindInterval(ChewingData *pgdata, TreeDataType *ptd)
                 AddInterval(ptd, begin, end, pdictphrase, IS_DICT_PHRASE);
                 break;
             case USED_PHRASE_TAILO:
-		printf("%s, %d, Using Tailo, phrase=%s\n", __func__,__LINE__, ptailophrase->phrase);
+		TRACY("%s, %d, Using Tailo, phrase=%s\n", __func__,__LINE__, ptailophrase->phrase);
                 AddInterval(ptd, begin, end, ptailophrase, IS_TAILO_PHRASE);
                 break;
             case USED_PHRASE_NONE:
@@ -697,11 +696,11 @@ static void FillPreeditBuf(ChewingData *pgdata, char *phrase, int from, int to, 
 
     start = toPreeditBufIndex(pgdata, from);
 
-    printf("Fill preeditBuf phrase=%s, type=%d, start = %d, from = %d, to = %d\n", phrase, type, start, from, to);
+    TRACX("Fill preeditBuf phrase=%s, type=%d, start = %d, from = %d, to = %d\n", phrase, type, start, from, to);
 
     for (i = start; i < start - from + to; ++i) {
 	if (!pgdata->preeditBuf[i].char_) {
-		printf("%s, %d, !!!!! preeditBuf[%d]._char_ is NULL\n", __func__, __LINE__);
+		TRACZ("%s, %d, !!!!! preeditBuf[%d]._char_ is NULL\n", __func__, __LINE__);
 		break;
 	}
 	if (phrase && IsThePhone(phrase[0])) {

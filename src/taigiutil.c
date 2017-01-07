@@ -580,7 +580,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
         fromPreeditBuf = toPreeditBufIndex(pgdata, from);
 	type = TaigiTypeAt(from, pgdata);
 
-        printf("---- %s:%d pgdata->preferInterval[%d].from=%d, type=%d, len=%d, fromPreeditBuf = %d\n, pending_pos = %d, prev_pos=%d,  ---\n", 
+        TRACX("---- %s:%d pgdata->preferInterval[%d].from=%d, type=%d, len=%d, fromPreeditBuf = %d\n, pending_pos = %d, prev_pos=%d,  ---\n", 
 		__func__, __LINE__, i, from, type, len, fromPreeditBuf, pending_pos, prev_pos);
 
         if (pending_pos != 0 && pending_pos < fromPreeditBuf) {
@@ -589,7 +589,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
              * connected to current phrase. We store it as
              * userphrase here.
              */
-	    printf("xxxx %s, %d\n", __func__, __LINE__);
+	    TRACY("xxxx %s, %d\n", __func__, __LINE__);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
             prev_pos = 0;
             pending_pos = 0;
@@ -614,7 +614,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
             prev_pos += len;
             pending_pos = fromPreeditBuf + len;
 
-	    printf("xxxx %s, %d, prev_pos=%d, len=%d, pending_pos=%d, bufWordSeq=%s\n", __func__, __LINE__,
+	    TRACY("xxxx %s, %d, prev_pos=%d, len=%d, pending_pos=%d, bufWordSeq=%s\n", __func__, __LINE__,
 		prev_pos, len, pending_pos,  bufWordSeq);
         } else {
             if (pending_pos) {
@@ -622,7 +622,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
                  * Clean pending phrase because we cannot join
                  * it with current phrase.
                  */
-		printf("xxxx %s, %d\n", __func__, __LINE__);
+		TRACY("xxxx %s, %d\n", __func__, __LINE__);
                 UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
                 prev_pos = 0;
                 pending_pos = 0;
@@ -630,18 +630,18 @@ void AutoLearnPhrase(ChewingData *pgdata)
             memcpy(bufPhoneSeq, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
             bufPhoneSeq[len] = (uint32_t) 0;
             type = copyStringFromPreeditBuf(pgdata, fromPreeditBuf, len, bufWordSeq, sizeof(bufWordSeq));
-	    printf("xxxx %s, %d, len=%d, from=%d, bufWordSeq=%s\n", __func__, __LINE__, len, from, bufWordSeq);
+	    TRACY("xxxx %s, %d, len=%d, from=%d, bufWordSeq=%s\n", __func__, __LINE__, len, from, bufWordSeq);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
         }
-        printf("xxxx %s, %d, loop[%d] done\n", __func__, __LINE__, i);
+        TRACX("xxxx %s, %d, loop[%d] done\n", __func__, __LINE__, i);
     }
 
     if (pending_pos) {
-        printf("%s, %d, bufWordSeq=%s\n", __func__, __LINE__, bufWordSeq);
+        TRACX("%s, %d, bufWordSeq=%s\n", __func__, __LINE__, bufWordSeq);
         UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
     }
     UserUpdatePhraseEnd(pgdata);
-    printf("%s, %d\n", __func__, __LINE__);
+    TRACY("%s, %d\n", __func__, __LINE__);
 }
 
 
@@ -770,29 +770,11 @@ int CallPhrasing(ChewingData *pgdata, int all_phrasing)
         }
     }
 
-    {
-	    int i;
-	    for (i = 0; i < pgdata->nSelect; i++) {
-		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
-	    }
-    }
     ShowChewingData(pgdata);
 
-    {
-	    int i;
-	    for (i = 0; i < pgdata->nSelect; i++) {
-		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
-	    }
-    }
     /* then phrasing */
     Phrasing(pgdata, all_phrasing);
 
-    {
-	    int i;
-	    for (i = 0; i < pgdata->nSelect; i++) {
-		TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
-	    }
-    }
     /* and then make prefer interval */
     MakePreferInterval(pgdata);
 
@@ -848,15 +830,15 @@ static void MakePreferInterval(ChewingData *pgdata)
     {
 	 int a;
 
-	 printf("belong_set[]=");
+	 TRACZ("belong_set[]=");
 	 for(a=0; a < 4; ++a) {
-		 printf(" %d", belong_set[a]);
+		 TRACZ(" %d", belong_set[a]);
 	 }
-	 printf("\nparent[]=");
+	 TRACZ("\nparent[]=");
 	 for(a=0; a < 4; ++a) {
-		 printf(" %d", belong_set[a]);
+		 TRACZ(" %d", belong_set[a]);
 	 }
-	 printf("\n");
+	 TRACZ("\n");
     }
     /* generate new intervals */
     pgdata->nPrefer = 0;
@@ -870,7 +852,7 @@ static void MakePreferInterval(ChewingData *pgdata)
         pgdata->preferInterval[pgdata->nPrefer].to = j;
         pgdata->nPrefer++;
         i = j;
-	printf("%s, %d, pgdata->preferInterval[%d].from=%d, to=%d\n", __func__, __LINE__,
+	TRACZ("%s, %d, pgdata->preferInterval[%d].from=%d, to=%d\n", __func__, __LINE__,
 			pgdata->nPrefer, pgdata->preferInterval[pgdata->nPrefer].from,
 			pgdata->preferInterval[pgdata->nPrefer].to
 	      );

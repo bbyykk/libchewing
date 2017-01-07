@@ -1623,27 +1623,13 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 
   End_keyproc:
     if (!bQuickCommit) {
-	printf("%s, %d\n", __func__, __LINE__);
-	    {
-		    int i;
-		    for (i = 0; i < pgdata->nSelect; i++) {
-			TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
-		    }
-	    }
         CallPhrasing(pgdata, 0);
-	    {
-		    int i;
-		    for (i = 0; i < pgdata->nSelect; i++) {
-			TRACZ("@@@@@@ %s, %d, pgdata->selectStr[%d]=%s\n", __func__, __LINE__, i, pgdata->selectStr[i]);
-		    }
-	    }
 	if (ReleaseChiSymbolBuf(pgdata, pgo) != 0) {
             keystrokeRtn = KEYSTROKE_COMMIT;
 	}
     }
     /* Quick commit */
     else {
-        printf("%s, %d\n", __func__, __LINE__);
         WriteChiSymbolToCommitBuf(pgdata, pgo, 1);
         pgdata->chiSymbolBufLen = 0;
         pgdata->chiSymbolCursor = 0;

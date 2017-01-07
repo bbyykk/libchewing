@@ -225,7 +225,6 @@ static void SetChoiceInfo(ChewingData *pgdata)
     int cursor = PhoneSeqCursor(pgdata);
     int candPerPage = pgdata->config.candPerPage;
 
-    printf("---- %s, %d -----\n", __func__, __LINE__);
     /* Clears previous candidates. */
     memset(pci->totalChoiceStr, '\0', MAX_CHOICE * MAX_PHRASE_LEN * MAX_UTF8_SIZE + 1);
 
@@ -235,11 +234,9 @@ static void SetChoiceInfo(ChewingData *pgdata)
 
     /* secondly, read tree phrase */
     if (len == 1) {             /* single character */
-	printf("---- %s, %d -----\n", __func__, __LINE__);
         ChoiceInfoAppendChi(pgdata, pci, phoneSeq[cursor]);
 
         if (phoneSeq[cursor] != phoneSeqAlt[cursor]) {
-            printf("---- %s, %d -----\n", __func__, __LINE__);
             ChoiceInfoAppendChi(pgdata, pci, phoneSeqAlt[cursor]);
         }
     }
@@ -247,7 +244,6 @@ static void SetChoiceInfo(ChewingData *pgdata)
     else {
         if (pai->avail[pai->currentAvail].id) {
             GetPhraseFirst(pgdata, &tempPhrase, pai->avail[pai->currentAvail].id);
-	    printf("---- %s, %d -----\n", __func__, __LINE__);
             do {
                 if (ChoiceTheSame(pci, tempPhrase.phrase, len * ueBytesFromChar(tempPhrase.phrase[0]))) {
                     continue;
@@ -335,22 +331,20 @@ int ChoiceInitAvail(ChewingData *pgdata)
 
     if (pgdata->config.bPhraseChoiceRearward) {
         pgdata->chiSymbolCursor = SeekPhraseHead(pgdata) + CountSymbols(pgdata, pgdata->chiSymbolCursor);
-	printf("<<<< %s, %d, chiSymbolCursor=%d, SeekPhraseHead(pgdata)=%d, end=%d >>>>\n", __func__, __LINE__,
+	TRACZ("<<<< %s, %d, chiSymbolCursor=%d, SeekPhraseHead(pgdata)=%d, end=%d >>>>\n", __func__, __LINE__,
 			SeekPhraseHead(pgdata), CountSymbols(pgdata, pgdata->chiSymbolCursor));
     }
     begin = PhoneSeqCursor(pgdata);
 
     pgdata->bSelect = 1;
 
-    printf("<<<< %s, %d, chiSymbolCursor=%d, begin=%d, end=%d >>>>\n", __func__, __LINE__,
+    TRACZ("<<<< %s, %d, chiSymbolCursor=%d, begin=%d, end=%d >>>>\n", __func__, __LINE__,
 		    pgdata->chiSymbolCursor, begin, end);
     SetAvailInfo(pgdata, begin, end);
 
-    printf("XXX %s, %d XXX\n", __func__, __LINE__);
     if (!pgdata->availInfo.nAvail)
         return ChoiceEndChoice(pgdata);
 
-    printf("XXX %s, %d XXX\n", __func__, __LINE__);
     pgdata->availInfo.currentAvail = pgdata->availInfo.nAvail - 1;
     SetChoiceInfo(pgdata);
     printf("XXX %s, %d XXX\n", __func__, __LINE__);
