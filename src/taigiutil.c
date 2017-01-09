@@ -564,7 +564,7 @@ void AutoLearnPhrase(ChewingData *pgdata)
     int len;
     int prev_pos = 0;
     int pending_pos = 0;
-    int type = 0;
+    int type = 0, last_type = 0;
 
     /*
      * FIXME: pgdata->preferInterval does not consider symbol, so we need to
@@ -578,9 +578,10 @@ void AutoLearnPhrase(ChewingData *pgdata)
         from = pgdata->preferInterval[i].from;
         len = pgdata->preferInterval[i].to - from;
         fromPreeditBuf = toPreeditBufIndex(pgdata, from);
+	last_type = type;
 	type = TaigiTypeAt(from, pgdata);
 
-        TRACX("---- %s:%d pgdata->preferInterval[%d].from=%d, type=%d, len=%d, fromPreeditBuf = %d\n, pending_pos = %d, prev_pos=%d,  ---\n", 
+        TRACY("---- %s:%d pgdata->preferInterval[%d].from=%d, type=%d, len=%d, fromPreeditBuf = %d\n, pending_pos = %d, prev_pos=%d,  ---\n", 
 		__func__, __LINE__, i, from, type, len, fromPreeditBuf, pending_pos, prev_pos);
 
         if (pending_pos != 0 && pending_pos < fromPreeditBuf) {
@@ -590,11 +591,20 @@ void AutoLearnPhrase(ChewingData *pgdata)
              * userphrase here.
              */
 	    TRACY("xxxx %s, %d\n", __func__, __LINE__);
-            UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
+            UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, last_type);
             prev_pos = 0;
             pending_pos = 0;
+	    memset(bufWordSeq, 0, sizeof(bufWordSeq));
         }
 
+	/* Celan phrase if the new type is different from current */
+	if (last_type !=0 && type != last_type) {
+		TRACY("xxxx %s, %d, update prev_type=%d, curr_type=%d, phrase=%s\n", __func__, __LINE__, last_type, type, bufWordSeq);
+		UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, last_type);
+		prev_pos = 0;
+		pending_pos = 0;
+		memset(bufWordSeq, 0, sizeof(bufWordSeq));
+	}
         if (len == 1 && !ChewingIsBreakPoint(fromPreeditBuf, pgdata)) {
             /*
              * There is a length one phrase and it is not a break
@@ -623,9 +633,10 @@ void AutoLearnPhrase(ChewingData *pgdata)
                  * it with current phrase.
                  */
 		TRACY("xxxx %s, %d\n", __func__, __LINE__);
-                UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
+                UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, last_type);
                 prev_pos = 0;
                 pending_pos = 0;
+	        memset(bufWordSeq, 0, sizeof(bufWordSeq));
             }
             memcpy(bufPhoneSeq, &pgdata->phoneSeq[from], sizeof(uint32_t) * len);
             bufPhoneSeq[len] = (uint32_t) 0;
@@ -633,11 +644,11 @@ void AutoLearnPhrase(ChewingData *pgdata)
 	    TRACY("xxxx %s, %d, len=%d, from=%d, bufWordSeq=%s\n", __func__, __LINE__, len, from, bufWordSeq);
             UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
         }
-        TRACX("xxxx %s, %d, loop[%d] done\n", __func__, __LINE__, i);
+        TRACY("xxxx %s, %d, loop[%d] done\n", __func__, __LINE__, i);
     }
 
     if (pending_pos) {
-        TRACX("%s, %d, bufWordSeq=%s\n", __func__, __LINE__, bufWordSeq);
+        TRACY("%s, %d, bufWordSeq=%s\n", __func__, __LINE__, bufWordSeq);
         UserUpdatePhrase(pgdata, bufPhoneSeq, bufWordSeq, type);
     }
     UserUpdatePhraseEnd(pgdata);

@@ -905,14 +905,10 @@ CHEWING_API int taigi_handle_Enter(ChewingContext *ctx)
         pgdata->PointStart = -1;
         pgdata->PointEnd = 0;
     } else {
-	LOG_API("");
         keystrokeRtn = KEYSTROKE_COMMIT;
         WriteChiSymbolToCommitBuf(pgdata, pgo, nCommitStr);
-	LOG_API("");
         AutoLearnPhrase(pgdata);
-	LOG_API("");
         CleanAllBuf(pgdata);
-	LOG_API("");
         pgo->commitBufLen = nCommitStr;
     }
 
