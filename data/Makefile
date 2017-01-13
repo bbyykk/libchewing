@@ -531,7 +531,7 @@ all: $(datas)
 
 $(datas): gendata_stamp
 
-gendata_stamp: phone.cin tsi.src
+gendata_stamp: tailo.cin phone.cin tsi.src
 	$(MAKE) gendata && \
 	touch $@
 
