@@ -194,17 +194,26 @@ CHEWING_API int taigi_cursor_Raw(const ChewingContext *ctx)
     const ChewingData *pgdata;
     int i;
     int raw_cursor = 0;
+    int cursor = ctx->output->chiSymbolCursor;
+    PreeditBuf *preedit = ctx->data->preeditBuf;
 
     if (!ctx) {
         return -1;
     }
     pgdata = ctx->data;
-    for (i=0; i < ctx->output->chiSymbolCursor; ++i) {
+    for (i=0; i < cursor; ++i) {
 	    if (i > 0) {
-		    if(pgdata->preeditBuf[i-1].type == TYPE_TAILO && pgdata->preeditBuf[i].type == TYPE_TAILO)
-			raw_cursor += 1;
+		    if(preedit[i-1].type == TYPE_TAILO && preedit[i].type == TYPE_TAILO)
+			raw_cursor += 1;  //Add the '-' len
 	    }
-	    raw_cursor += strlen(pgdata->preeditBuf[i].char_);
+	    raw_cursor += strlen(preedit[i].char_);
+    }
+    /* The cursor would fall on the '-' between 2 Lomaji */
+    if (cursor < ctx->output->chiSymbolBufLen) {
+	    if(preedit[cursor - 1].type == TYPE_TAILO &&
+			    preedit[cursor].type == TYPE_TAILO) {
+		    ++raw_cursor;
+	    }
     }
     return raw_cursor;
 }

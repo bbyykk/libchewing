@@ -655,6 +655,19 @@ void AutoLearnPhrase(ChewingData *pgdata)
     TRACY("%s, %d\n", __func__, __LINE__);
 }
 
+/*
+ * 1, 2, 3, 5, 6, 7, 9 are exclusive to 4, 8
+ */
+int ExclusiveTone(uint32_t old, uint32_t new)
+{
+	int jip_old = 0, jip_new= 0;
+	if (old == 4 || old == 8)
+		jip_old = 1;
+	if (new == 4 || new == 8)
+		jip_new = 1;
+
+	return jip_old ^ jip_new;
+}
 
 int ModifyChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata, int key)
 {
@@ -671,8 +684,20 @@ int ModifyChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata, int key)
 
     uint32_t phone2 = pgdata->phoneSeq[cursor];
 
+    /** Here do the simple tests for Taigi tone:
+     *  For tone 4, 8 can be interchanged, but others are exclusive
+     */
+    uint32_t old_offset = phone2 & 0xf;
+
+    if (ExclusiveTone(old_offset, offset)) {
+	    /* Do NOT change for different sets */
+	    TRACA("%s, %d, NO UPDATE TONE\n", __func__, __LINE__);
+	    return -1;
+    }
+
     phone2 = (phone2 & 0xfffffff0) + offset; 
     pgdata->phoneSeq[cursor] = phone2;
+    TRACA("%s, %d, Update Tone %d->%d\n", __func__, __LINE__, old_offset, offset);
     return 0;
 }
 

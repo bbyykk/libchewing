@@ -1183,10 +1183,13 @@ static void DoDpPhrasing(ChewingData *pgdata, TreeDataType *pdt)
 
         prev_end = pdt->interval[interval_id].from - 1;
 
-        if (prev_end >= 0)
+        if (prev_end >= 0) {
+	    TRACZ("@@@@@@ %s, %d, highest_score[%d], interval_id=%d\n", __func__, __LINE__,  prev_end, interval_id);
             tmp = DuplicateRecordAndInsertInterval(highest_score[prev_end], pdt, interval_id);
-        else
+	}
+        else {
             tmp = CreateSingleIntervalRecord(pdt, interval_id);
+	}
 
         /* FIXME: shall exit immediately? */
         if (!tmp)

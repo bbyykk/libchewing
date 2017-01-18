@@ -345,8 +345,9 @@ typedef struct Phrase {
 } Phrase;
 
 /* *INDENT-OFF* */
+#define TRACA(args, ...) printf(args, ##__VA_ARGS__)
 #define TRACX(args, ...) //printf(args, ##__VA_ARGS__)
-#define TRACY(args, ...) printf(args, ##__VA_ARGS__)
+#define TRACY(args, ...) //printf(args, ##__VA_ARGS__)
 #define TRACZ(args, ...) //printf(args, ##__VA_ARGS__)
 #endif
 /* *INDENT-ON* */
