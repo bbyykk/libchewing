@@ -675,6 +675,7 @@ int ModifyChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata, int key)
     int cursor = PhoneSeqCursor(pgdata);
     char *pos;
     uint32_t offset = 0;
+    Phrase tempword;
 
     if(cursor >= pgdata->chiSymbolBufLen)
 	    cursor--;
@@ -696,6 +697,12 @@ int ModifyChi(uint32_t phone, uint32_t phoneAlt, ChewingData *pgdata, int key)
     }
 
     phone2 = (phone2 & 0xfffffff0) + offset; 
+
+    /** Test if this Phone has words **/
+    if (GetCharFirst(pgdata, &tempword, phone2) == 0) {
+	printf("%s, %d, No word for such tone=%d, phone=%d\n", __func__, __LINE__, offset, phone2);
+        return -1;
+    }
     pgdata->phoneSeq[cursor] = phone2;
     TRACA("%s, %d, Update Tone %d->%d\n", __func__, __LINE__, old_offset, offset);
     return 0;
