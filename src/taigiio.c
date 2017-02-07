@@ -1479,6 +1479,9 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
         if (key == ' ') {
             return taigi_handle_Down(ctx);
 	}
+	if (key == 'h') {
+	    return taigi_handle_Left(ctx);
+	}
         /* num starts from 0 */
         num = CountSelKeyNum(key, pgdata);
         if (num >= 0) {
@@ -1732,6 +1735,8 @@ CHEWING_API int taigi_handle_CtrlNum(ChewingContext *ctx, int key)
 
 CHEWING_API int taigi_handle_ShiftSpace(ChewingContext *ctx)
 {
+    return taigi_handle_Left(ctx);
+#if 0
     ChewingData *pgdata;
     ChewingOutput *pgo;
     int keystrokeRtn = KEYSTROKE_ABSORB;
@@ -1753,6 +1758,7 @@ CHEWING_API int taigi_handle_ShiftSpace(ChewingContext *ctx)
     CallPhrasing(pgdata, 0);
     MakeOutputWithRtn(pgo, pgdata, keystrokeRtn);
     return 0;
+#endif
 }
 
 CHEWING_API int taigi_handle_Numlock(ChewingContext *ctx, int key)
