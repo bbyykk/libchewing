@@ -197,7 +197,7 @@ static void ChoiceInfoAppendChi(ChewingData *pgdata, ChoiceInfo *pci, uint32_t p
             pci->totalChoiceStr[pci->nTotalChoice]
                 [len] = '\0';
 	    pci->totalChoiceType[pci->nTotalChoice] = tempWord.type;
-	    TRACX("---- %s, %d: totalChoiceStr[%d]=%s, type=%d\n", __func__, __LINE__,
+	    TRACE_TYPE("---- %s, %d: totalChoiceStr[%d]=%s, type=%d\n", __func__, __LINE__,
 			    pci->nTotalChoice, pci->totalChoiceStr[pci->nTotalChoice],
 			    pci->totalChoiceType[pci->nTotalChoice]);
             pci->nTotalChoice++;
@@ -248,9 +248,10 @@ static void SetChoiceInfo(ChewingData *pgdata)
                 if (ChoiceTheSame(pci, tempPhrase.phrase, len * ueBytesFromChar(tempPhrase.phrase[0]))) {
                     continue;
                 }
+		TRACE_TYPE("%s, %d, Got phrase=%s, type=%d\n", __func__, __LINE__, tempPhrase.phrase, tempPhrase.type);
                 ueStrNCpy(pci->totalChoiceStr[pci->nTotalChoice], tempPhrase.phrase, len, 1);
+		pci->totalChoiceType[pci->nTotalChoice] =  tempPhrase.type;
                 pci->nTotalChoice++;
-		printf("---- %s, %d -----\n", __func__, __LINE__);
             } while (GetVocabNext(pgdata, &tempPhrase));
         }
 
@@ -267,7 +268,6 @@ static void SetChoiceInfo(ChewingData *pgdata)
                 /* otherwise store it */
                 ueStrNCpy(pci->totalChoiceStr[pci->nTotalChoice], pUserPhraseData->wordSeq, len, 1);
 		pci->totalChoiceType[pci->nTotalChoice] = TYPE_HAN;
-		printf("\tCopying User: len=%d\t, (%s)\n", len, pUserPhraseData->wordSeq);
                 pci->nTotalChoice++;
             } while ((pUserPhraseData = UserGetPhraseNext(pgdata, userPhoneSeq)) != NULL);
         }
