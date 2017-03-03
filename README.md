@@ -51,6 +51,7 @@ be built.
 ## Prerequisite
 
 Under ubuntu (verified) or debian based system:
+
 	# sudo apt-get install dh-autoreconf libncursesw5-dev libsqlite3-dev libtool texinfo
 
 ## Build
