@@ -49,9 +49,12 @@ be built.
 
 
 ## Prerequisite
-+ Under ubuntu (verified) or debian based system:
+
+Under ubuntu (verified) or debian based system:
 	# sudo apt-get install dh-autoreconf libncursesw5-dev libsqlite3-dev libtool texinfo
+
 ## Build
+
 	# cd libtaigi
 	# ./autogen
 	# ./configure --build=x86_64-linux-gnu --prefix=/usr --includedir=\${prefix}/include \
