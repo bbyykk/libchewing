@@ -57,7 +57,7 @@ Under ubuntu (verified) or debian based system:
 ## Build
 
 	# cd libtaigi
-	# ./autogen
+	# ./autogen.sh
 	# ./configure --build=x86_64-linux-gnu --prefix=/usr --includedir=\${prefix}/include \
 		--mandir=\${prefix}/share/man --infodir=\${prefix}/share/info --sysconfdir=/etc \
 		--localstatedir=/var --disable-silent-rules --libdir=\${prefix}/lib/x86_64-linux-gnu \
