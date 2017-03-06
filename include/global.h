@@ -23,6 +23,7 @@
 */
 
 #define CHINESE_MODE 1
+#define ENGLISH_MODE 2
 #define SYMBOL_MODE 0
 #define FULLSHAPE_MODE 1
 #define HALFSHAPE_MODE 0

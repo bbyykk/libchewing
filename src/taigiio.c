@@ -873,7 +873,7 @@ CHEWING_API int taigi_handle_Enter(ChewingContext *ctx)
 
     nCommitStr = pgdata->chiSymbolBufLen;
 
-    if (!ChewingIsEntering(pgdata)) {
+    if (!ChewingIsEntering(pgdata) && (pgdata->bChiSym != ENGLISH_MODE)) {
 	LOG_API("");
         keystrokeRtn = KEYSTROKE_IGNORE;
     } else if (pgdata->bSelect) {
@@ -885,6 +885,7 @@ CHEWING_API int taigi_handle_Enter(ChewingContext *ctx)
 
 	LOG_API("");
         if (pgdata->PointEnd > 1) {
+	    LOG_API("");
             if (!pgdata->config.bAddPhraseForward) {
                 pgdata->chiSymbolCursor = pgdata->PointStart;
                 key = '0' + pgdata->PointEnd;
@@ -896,6 +897,7 @@ CHEWING_API int taigi_handle_Enter(ChewingContext *ctx)
             taigi_handle_CtrlNum(ctx, key);
             pgdata->chiSymbolCursor = buf;
         } else if (pgdata->PointEnd < 1) {
+	    LOG_API("");
             if (pgdata->config.bAddPhraseForward)
                 pgdata->chiSymbolCursor = buf - pgdata->PointEnd;
             key = '0' - pgdata->PointEnd;
@@ -905,11 +907,23 @@ CHEWING_API int taigi_handle_Enter(ChewingContext *ctx)
         pgdata->PointStart = -1;
         pgdata->PointEnd = 0;
     } else {
+	LOG_API("");
         keystrokeRtn = KEYSTROKE_COMMIT;
-        WriteChiSymbolToCommitBuf(pgdata, pgo, nCommitStr);
-        AutoLearnPhrase(pgdata);
+
+	if(pgdata->bChiSym != ENGLISH_MODE) {
+		WriteChiSymbolToCommitBuf(pgdata, pgo, nCommitStr);
+		AutoLearnPhrase(pgdata);
+		pgo->commitBufLen = nCommitStr;
+	} else {
+		memset(pgo->commitBuf, 0x0, sizeof(pgo->commitBuf));
+		strncpy(pgo->commitBuf, pgo->preeditBuf, sizeof(pgo->commitBuf));
+		pgo->commitBufLen = strlen(pgo->preeditBuf);
+		memset(pgo->preeditBuf, 0x0, sizeof(pgo->preeditBuf));
+		pgdata->bChiSym = CHINESE_MODE;
+		CheckAndResetRange(pgdata);
+		BopomofoRemoveAll(&(pgdata->bopomofoData));
+	}
         CleanAllBuf(pgdata);
-        pgo->commitBufLen = nCommitStr;
     }
 
     MakeOutputWithRtn(pgo, pgdata, keystrokeRtn);
@@ -1473,6 +1487,8 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     if (pgdata->bopomofoData.kbtype == KB_DVORAK_HSU) {
         key = dvorak_convert(key);
     }
+    if (pgdata->bChiSym == ENGLISH_MODE)
+	    goto End_End;
 
     /* selecting */
     if (pgdata->bSelect) {
@@ -1569,8 +1585,8 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
             case BOPOMOFO_IGNORE:
                 DEBUG_OUT("\t\tbefore isupper(key),key=%d\n", key);
                 /* change upper case into lower case */
-                if (isupper(key))
-                    key = tolower(key);
+       //         if (isupper(key))
+        //            key = tolower(key);
 
                 DEBUG_OUT("\t\tafter isupper(key),key=%d\n", key);
 
@@ -1593,9 +1609,13 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
                      * then it's wrong to commit it.
                      */
                     bQuickCommit = 0;
+
+		    /* Switch to English Mode when any unkown character */
                 } else
                     keystrokeRtn = KEYSTROKE_ABSORB;
-
+		
+	        pgdata->bChiSym = ENGLISH_MODE;
+		goto End_End;
                 break;
             default:
                 goto End_KeyDefault;
@@ -1650,7 +1670,23 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
   End_Paging:
     MakeOutputWithRtn(pgo, pgdata, keystrokeRtn);
     return 0;
+  End_End:
+    {
+	    int len = strlen(pgo->preeditBuf);
+
+	    if(len == 0) {
+		    memset(pgo->commitBuf, 0x0, sizeof(pgo->commitBuf));
+		    pgo->commitBufLen = 0;
+	    }
+	    pgo->preeditBuf[len] = key;
+            pgdata->chiSymbolBufLen = 0;
+            pgdata->chiSymbolCursor = 0;
+	    pgo->keystrokeRtn = BOPOMOFO_COMMIT;
+    }
+    return 0;
 }
+
+
 
 CHEWING_API int taigi_handle_CtrlNum(ChewingContext *ctx, int key)
 {

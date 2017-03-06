@@ -1,5 +1,5 @@
 /**
- * chewingutil.c
+ * taigiutil.c
  *
  * Copyright (c) 1999, 2000, 2001
  *      Lu-chuan Kung and Kang-pen Chen.

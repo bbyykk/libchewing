@@ -60,7 +60,7 @@ CHEWING_API char *taigi_commit_String(const ChewingContext *ctx)
     }
     pgdata = ctx->data;
 
-    LOG_API("");
+    LOG_API("%s", ctx->output->commitBuf);
 
     return strdup(ctx->output->commitBuf);
 }
@@ -122,7 +122,7 @@ CHEWING_API char *taigi_buffer_String(const ChewingContext *ctx)
     }
     pgdata = ctx->data;
 
-    LOG_API("");
+    LOG_API("%s", ctx->output->preeditBuf);
 
     return strdup(ctx->output->preeditBuf);
 }
@@ -136,7 +136,7 @@ CHEWING_API const char *taigi_buffer_String_static(const ChewingContext *ctx)
     }
     pgdata = ctx->data;
 
-    LOG_API("");
+    LOG_API("%s", ctx->output->preeditBuf);
 
     return ctx->output->preeditBuf;
 }
