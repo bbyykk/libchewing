@@ -1487,8 +1487,6 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     if (pgdata->bopomofoData.kbtype == KB_DVORAK_HSU) {
         key = dvorak_convert(key);
     }
-    if (pgdata->bChiSym == ENGLISH_MODE)
-	    goto End_End;
 
     /* selecting */
     if (pgdata->bSelect) {
@@ -1615,7 +1613,8 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
                     keystrokeRtn = KEYSTROKE_ABSORB;
 		
 	        pgdata->bChiSym = ENGLISH_MODE;
-		goto End_End;
+                bQuickCommit = 1;
+		goto End_keyproc;
                 break;
             default:
                 goto End_KeyDefault;
@@ -1649,7 +1648,8 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     }
     /* Quick commit */
     else {
-        WriteChiSymbolToCommitBuf(pgdata, pgo, 1);
+	printf("%s, %d, chisymbolBufLen=%d\n", __func__, __LINE__, pgdata->chiSymbolBufLen);
+        WriteChiSymbolToCommitBuf(pgdata, pgo, pgdata->chiSymbolBufLen);
         pgdata->chiSymbolBufLen = 0;
         pgdata->chiSymbolCursor = 0;
         keystrokeRtn = KEYSTROKE_COMMIT;
@@ -1670,23 +1670,7 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
   End_Paging:
     MakeOutputWithRtn(pgo, pgdata, keystrokeRtn);
     return 0;
-  End_End:
-    {
-	    int len = strlen(pgo->preeditBuf);
-
-	    if(len == 0) {
-		    memset(pgo->commitBuf, 0x0, sizeof(pgo->commitBuf));
-		    pgo->commitBufLen = 0;
-	    }
-	    pgo->preeditBuf[len] = key;
-            pgdata->chiSymbolBufLen = 0;
-            pgdata->chiSymbolCursor = 0;
-	    pgo->keystrokeRtn = BOPOMOFO_COMMIT;
-    }
-    return 0;
 }
-
-
 
 CHEWING_API int taigi_handle_CtrlNum(ChewingContext *ctx, int key)
 {
