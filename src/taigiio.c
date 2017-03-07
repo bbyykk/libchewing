@@ -1649,7 +1649,11 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
     /* Quick commit */
     else {
 	printf("%s, %d, chisymbolBufLen=%d\n", __func__, __LINE__, pgdata->chiSymbolBufLen);
+	if(pgdata->bChiSym = ENGLISH_MODE) {
+	    CopyTailoToCommit(pgo, pgdata);
+	}
         WriteChiSymbolToCommitBuf(pgdata, pgo, pgdata->chiSymbolBufLen);
+	BopomofoRemoveAll(&(pgdata->bopomofoData));
         pgdata->chiSymbolBufLen = 0;
         pgdata->chiSymbolCursor = 0;
         keystrokeRtn = KEYSTROKE_COMMIT;

@@ -62,7 +62,11 @@ CHEWING_API char *taigi_commit_String(const ChewingContext *ctx)
 
     LOG_API("%s", ctx->output->commitBuf);
 
-    return strdup(ctx->output->commitBuf);
+    char *p = strdup(ctx->output->commitBuf);
+
+    memset(ctx->output->commitBuf, 0x0, sizeof(ctx->output->commitBuf));
+    ctx->output->commitBufLen = 0;
+    return p;
 }
 
 /**

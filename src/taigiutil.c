@@ -437,6 +437,19 @@ static int FindIntervalFrom(int from, IntervalType inte[], int nInte)
     return -1;
 }
 
+char* CopyTailoToCommit(ChewingOutput *pgo, ChewingData *pgdata)                        
+{   
+    int j;                                                                              
+
+    for(j=0;j<BOPOMOFO_SIZE;j++) {
+	if(pgdata->bopomofoData.pho_inx[j] == 0)                                        
+	    break;
+	pgo->commitBuf[pgo->commitBufLen + j] = pgdata->bopomofoData.pho_inx[j];        
+    }
+    pgo->commitBufLen += j;
+    printf("%s, %d, commitBuf=%s\n", __func__, __LINE__, pgo->commitBuf);               
+} 
+
 void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
 {
     int i;
@@ -445,10 +458,9 @@ void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
     assert(pgdata);
     assert(pgo);
 
-    pgo->commitBufLen = len;
 
-    pos = pgo->commitBuf;
-    for (i = 0; i < pgo->commitBufLen; ++i) {
+    pos = &pgo->commitBuf[pgo->commitBufLen];
+    for (i = 0; i < len; ++i) {
         assert(pos + MAX_UTF8_SIZE + 1 < pgo->commitBuf + sizeof(pgo->commitBuf));
 	//Adding the '-' betweeen tailo
 	if (i > 0) {
@@ -462,6 +474,7 @@ void WriteChiSymbolToCommitBuf(ChewingData *pgdata, ChewingOutput *pgo, int len)
 		pgdata->preeditBuf[i].type);
         pos += strlen(pgdata->preeditBuf[i].char_);
     }
+    pgo->commitBufLen += len;
     *pos = 0;
 }
 
