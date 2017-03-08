@@ -1,6 +1,19 @@
 libtaigi
 
 # libtaigi - The intelligent taigi input method library
+## Brief Usage Guide
++ Currently the usage is simple, may not support all the features that original chewing supports.
++ [Ctrl-Space] to activate/deactiveate :
+    - There are two mode TAIGI mode and ENGLISH mode.
+    - In TAIGI mode, [SPACE] is used to select candidates, [ENTER] is used to commit
+    - It has the auto-learning feature for TAIGI, including single character and phrase.
+    - If you are typing the valid Lomaji, you can type multiple word together, and press ENTER after it is done
+    - Currently The TAIGI mode is 'mixed mode'. That is: the lomaji and Han characters are mixed with the same phone, you can select via number key.
+    - If there is any non-valid TaiLo, it would commit immediately and turn into English mode, it would fall back to TAIGI mode after [ENTER]
+    - If the first characterr is non-valid TaiLo, it would also switch to English mode, until [ENTER] pressed
+    - Please note: the ENGLISH mode is not truly english mode as the one as this input method deactivated, you may need to press double [ENTER] or so. If you feel trouble, pleasee deactivate it
+
+## This package must co-work with fcitx-taigi wrapper, please install fcitx-taigi afterward
 
 ## History
 Start from libchewing, but goes too far

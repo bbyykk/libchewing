@@ -287,6 +287,28 @@ CHEWING_API ChewingContext *taigi_new()
     return taigi_new2(NULL, NULL, NULL, NULL);
 }
 
+static void __reset_pgdata(ChewingData *pgdata)
+{
+    /* bopomofoData */
+    memset(&(pgdata->bopomofoData), 0, sizeof(BopomofoData));
+
+    /* choiceInfo */
+    memset(&(pgdata->choiceInfo), 0, sizeof(ChoiceInfo));
+
+    pgdata->chiSymbolCursor = 0;
+    pgdata->chiSymbolBufLen = 0;
+    pgdata->nPhoneSeq = 0;
+    memset(pgdata->bUserArrCnnct, 0, sizeof(int) * (MAX_PHONE_SEQ_LEN + 1));
+    memset(pgdata->bUserArrBrkpt, 0, sizeof(int) * (MAX_PHONE_SEQ_LEN + 1));
+    pgdata->bChiSym = CHINESE_MODE;
+    pgdata->bFullShape = HALFSHAPE_MODE;
+    pgdata->bSelect = 0;
+    pgdata->nSelect = 0;
+    pgdata->PointStart = -1;
+    pgdata->PointEnd = 0;
+    pgdata->phrOut.nNumCut = 0;
+}
+
 CHEWING_API int taigi_Reset(ChewingContext *ctx)
 {
     ChewingData *pgdata;
@@ -313,24 +335,7 @@ CHEWING_API int taigi_Reset(ChewingContext *ctx)
     pgdata->logger = logger;
     pgdata->loggerData = loggerData;
 
-    /* bopomofoData */
-    memset(&(pgdata->bopomofoData), 0, sizeof(BopomofoData));
-
-    /* choiceInfo */
-    memset(&(pgdata->choiceInfo), 0, sizeof(ChoiceInfo));
-
-    pgdata->chiSymbolCursor = 0;
-    pgdata->chiSymbolBufLen = 0;
-    pgdata->nPhoneSeq = 0;
-    memset(pgdata->bUserArrCnnct, 0, sizeof(int) * (MAX_PHONE_SEQ_LEN + 1));
-    memset(pgdata->bUserArrBrkpt, 0, sizeof(int) * (MAX_PHONE_SEQ_LEN + 1));
-    pgdata->bChiSym = CHINESE_MODE;
-    pgdata->bFullShape = HALFSHAPE_MODE;
-    pgdata->bSelect = 0;
-    pgdata->nSelect = 0;
-    pgdata->PointStart = -1;
-    pgdata->PointEnd = 0;
-    pgdata->phrOut.nNumCut = 0;
+    __reset_pgdata(pgdata);
     return 0;
 }
 
@@ -913,15 +918,20 @@ CHEWING_API int taigi_handle_Enter(ChewingContext *ctx)
 	if(pgdata->bChiSym != ENGLISH_MODE) {
 		WriteChiSymbolToCommitBuf(pgdata, pgo, nCommitStr);
 		AutoLearnPhrase(pgdata);
-		pgo->commitBufLen = nCommitStr;
+		if(nCommitStr != 0) {
+		    pgo->commitBufLen = nCommitStr;
+		} else {
+		    CopyTailoToCommit(pgo, pgdata);
+		    __reset_pgdata(pgdata);
+		    pgdata->bChiSym = CHINESE_MODE;
+		}
 	} else {
 		memset(pgo->commitBuf, 0x0, sizeof(pgo->commitBuf));
 		strncpy(pgo->commitBuf, pgo->preeditBuf, sizeof(pgo->commitBuf));
 		pgo->commitBufLen = strlen(pgo->preeditBuf);
 		memset(pgo->preeditBuf, 0x0, sizeof(pgo->preeditBuf));
 		pgdata->bChiSym = CHINESE_MODE;
-		CheckAndResetRange(pgdata);
-		BopomofoRemoveAll(&(pgdata->bopomofoData));
+		__reset_pgdata(pgdata);
 	}
         CleanAllBuf(pgdata);
     }
@@ -1561,6 +1571,7 @@ CHEWING_API int taigi_handle_Default(ChewingContext *ctx, int key)
 
             if (rtn == BOPOMOFO_KEY_ERROR)
                 rtn = SpecialSymbolInput(key, pgdata);
+
             switch (rtn) {
             case BOPOMOFO_ABSORB:
                 DEBUG_OUT("\t\tBOPOMOFO_ABSORB=%d\n", key);
