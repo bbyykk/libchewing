@@ -1550,8 +1550,8 @@ u 1 u
 算額 500 sng3 giah8 
 種類 500 tsiong2 lui7 
 管顧 500 kuan2 koo3 
-箸籠 500 ti7 lang7 
-箸籠 500 tu7 lang7 
+箸籠 500 ti7 lang7
+箸籠 500 tu7 lang7
 綴人走 500 tue3 lang5 tsau2 
 綴人走 500 te3 lang5 tsau2 
 緊手 500 kin2 tshiu2 
@@ -3757,11 +3757,11 @@ u 1 u
 爛塗糜 500 nua7 thoo5 be5 
 灌腸 500 kuan3 tshiang5 
 灌腸 500 kuan3 tng5 
-攑箸 500 giah8 ti7 
-攑箸 500 giah8 tu7 
+攑箸 500 giah8 ti7
+攑箸 500 giah8 tu7
 爛糊糊 500 nua7 koo5 koo5 
 心腸 500 sim1 tng5 
-攑頭 500 giah8 thau5 
+攑頭 500 giah8 thau5
 攑懸 500 giah8 kuan5 
 爛癬 500 nua7 sian2 
 攝襇 500 liap4 king2 
@@ -20303,7 +20303,8 @@ u 1 u
 風飛沙 500 hong1 pue1 sua1 
 食倯 500 tsiah8 song5 
 面容 500 bin7 iong5 
-食家己 500 tsiah8 ka1 ki7 
+食家己 500 tsiah8 ka1 ki7
+食家己 500 tsiah8 ka1 ti7
 食桌 500 tsiah8 toh4 
 香案 500 hiunn1 uann3 
 大漢 500 tua7 han3 
@@ -20554,8 +20555,10 @@ u 1 u
 大熱 500 tua7 juah8 
 宮女 500 kiong1 li2 
 宮女 500 kiong1 lu2 
-家己 500 ka1 ki7 
-家己人 500 ka1 ki7 lang5 
+家己 500 ka1 ki7
+家己 500 ka1 ti7
+家己人 500 ka1 ki7 lang5
+家己人 500 ka1 ti7 lang5
 容允 500 iong5 in2 
 容允 500 iong5 un2 
 差不多 500 tsha1 put4 to1 
