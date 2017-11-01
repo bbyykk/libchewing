@@ -303,8 +303,6 @@ typedef struct ChewingOutput {
     int chiSymbolBufLen;
         /** @brief current position of the cursor. */
     long chiSymbolCursor;
-    long PointStart;
-    long PointEnd;
     char bopomofoBuf[BOPOMOFO_SIZE * MAX_UTF8_SIZE + 1];
         /** @brief indicate the method of showing sentence break. */
     IntervalType dispInterval[MAX_INTERVAL];    /* from prefer, considering symbol */

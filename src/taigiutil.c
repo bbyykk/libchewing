@@ -962,10 +962,6 @@ int MakeOutput(ChewingOutput *pgo, ChewingData *pgdata)
 	/* Add the '-' between two Tailo */
     }
 
-    /* fill point */
-    pgo->PointStart = pgdata->PointStart;
-    pgo->PointEnd = pgdata->PointEnd;
-
     /* fill other fields */
     pgo->chiSymbolBufLen = pgdata->chiSymbolBufLen;
     pgo->chiSymbolCursor = pgdata->chiSymbolCursor;
